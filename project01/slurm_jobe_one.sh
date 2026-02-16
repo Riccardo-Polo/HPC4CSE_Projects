@@ -18,4 +18,4 @@ module list
 # print CPU model
 lscpu | grep "Model name"
 
-srun ./hello_world
+srun ./build/hello_world

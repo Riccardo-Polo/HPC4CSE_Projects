@@ -1,14 +1,12 @@
 CXX = g++
-TARGET = hello_world
+TARGET = build/hello_world
 SRC = helloworld.cpp
 
 all:
+	mkdir -p build
 	$(CXX) $(SRC) -o $(TARGET)
 
 clean:
-	rm -f $(TARGET)
-	rm -f *.err
-	rm -f *.out
-
+	rm -rf build
 
 .PHONY: all clean

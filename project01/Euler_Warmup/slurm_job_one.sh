@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=slurm_job_one # Job name    (default: sbatch)
-#SBATCH --output=build/%x-%j.out       # Output file (default: slurm-%j.out)
-#SBATCH --error=build/%x-%j.err        # Error file  (default: slurm-%j.out)
+#SBATCH --output=build_job_one/%x-%j.out       # Output file (default: slurm-%j.out)
+#SBATCH --error=build_job_one/%x-%j.err        # Error file  (default: slurm-%j.out)
 #SBATCH --ntasks=1               # Number of tasks
 #SBATCH --cpus-per-task=1        # Number of CPUs per task
 #SBATCH --mem-per-cpu=1G         # Memory per CPU
@@ -21,4 +21,4 @@ lscpu | grep "Model name"
 # run (srun: run job on cluster with provided resources/allocation)
 srun hostname
 
-srun ./build/hello_world
+srun ./build_job_one/hello_world

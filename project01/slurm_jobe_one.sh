@@ -18,5 +18,6 @@ module list
 # print CPU model
 lscpu | grep "Model name"
 
-# run (srun: run job on cluster with provided resources/allocation)
-srun hostname
+g++ helloworld.cpp -o hello_world
+
+srun ./hello_world

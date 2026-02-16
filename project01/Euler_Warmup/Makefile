@@ -3,8 +3,6 @@ TARGET = build/hello_world
 SRC = helloworld.cpp
 
 all:
-	mkdir -p build_job_one
-	mkdir -p build_job_two
 	$(CXX) $(SRC) -o build_job_one/hello_world
 	$(CXX) $(SRC) -o build_job_two/hello_world
 

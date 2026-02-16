@@ -18,6 +18,4 @@ module list
 # print CPU model
 lscpu | grep "Model name"
 
-g++ helloworld.cpp -o hello_world
-
 srun ./hello_world

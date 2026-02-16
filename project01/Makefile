@@ -8,7 +8,5 @@ all:
 
 clean:
 	rm -rf build
-	rm *.out
-	rm *.err
 
 .PHONY: all clean

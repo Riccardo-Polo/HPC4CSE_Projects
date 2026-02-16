@@ -1,3 +1,4 @@
 *.out
 *.err
-/build
+/build_job_one/
+/build_job_two/

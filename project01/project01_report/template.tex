@@ -142,7 +142,7 @@ We report in table the results. We do not report here the ouputs. One can find t
   \centering
   \begin{tabular}{| l | c |}
     \hline
-    Main memory (total) & $\approx 249$ GB \\
+    Main memory (total) & $ 249$ GB \\
     \hline
     L3 cache (total) & 512 MB (32 $\times$ 16 MB) \\
     \hline
@@ -167,9 +167,40 @@ We report in table the results. We do not report here the ouputs. One can find t
    \label{fig:hwloc-ls_EPYC_7H12}
  \end{figure}
 
+ \begin{table}[hbt]
+  \centering
+  \begin{tabular}{| l | c |}
+    \hline
+    Main memory (total) & $249$ GB \\
+    \hline
+    L3 cache (total) & 512 MB (16 $\times$ 32 MB) \\
+    \hline
+    L2 cache (per core) & 512 KB \\
+    \hline
+    L1 data cache (per core) & 32 KB \\
+    \hline
+    L1 instruction cache (per core) & 32 KB \\
+    \hline
+  \end{tabular}
+  \caption{Memory hierarchy of an Euler compute node with AMD EPYC 7763
+  (2 sockets, 64 cores per socket). Each core has private L1 and L2 caches,
+  while the L3 cache is organized in 16 blocks of 32\,MB shared among groups of cores.}
+  \label{tab:perf_mem_EPYC_7763}
+\end{table}
+
+% template for the memory topology figure (adapt accordingly!)
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{images/EPYC_7663.pdf}
+  \caption{Topology of an Euler compute node with AMD EPYC 7763 (2 sockets, 64 cores per socket).}
+  \label{fig:hwloc-ls_EPYC_7763}
+\end{figure}
+
+\newpage
 \subsection{Bandwidth: STREAM benchmark [10 Points]}
 
 
+  newpage
 \subsection{Performance model: A simple roofline model [16 Points]}
 
 

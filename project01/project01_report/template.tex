@@ -136,41 +136,36 @@ We can now compute all the peak performance parameters for both Euler VII phases
 
 \newpage
 \subsubsection{Cache and main memory size}
-ripolo@eu-login-20:~$ lscpu
-Architecture:                x86_64
-  CPU op-mode(s):            32-bit, 64-bit
-  Address sizes:             39 bits physical, 48 bits virtual
-  Byte Order:                Little Endian
-CPU(s):                      8
-  On-line CPU(s) list:       0-7
-Vendor ID:                   GenuineIntel
-  Model name:                Intel(R) Xeon(R) CPU E3-1585L v5 @ 3.00GHz
-    CPU family:              6
-    Model:                   94
-    Thread(s) per core:      2
-    Core(s) per socket:      4
-    Socket(s):               1
-    Stepping:                3
-    CPU max MHz:             3700.0000
-    CPU min MHz:             800.0000
-    BogoMIPS:                6000.00
-    Flags:                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mm
-                             x fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon peb
-                             s bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_
-                             cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt ts
-                             c_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb invpci
-                             d_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc
-                             _adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt x
-                             savec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp md_clear
-                              flush_l1d arch_capabilities ibpb_exit_to_user
-Virtualization features:
-  Virtualization:            VT-x
-Caches (sum of all):
-  L1d:                       128 KiB (4 instances)
-  L1i:                       128 KiB (4 instances)
-  L2:                        1 MiB (4 instances)
-  L3:                        8 MiB (1 instance)
+We report in table the results. We do not report here the ouputs. One can find the in the given files of the repo
 
+ \begin{table}[hbt]
+  \centering
+  \begin{tabular}{| l | c |}
+    \hline
+    Main memory (total) & $\approx 249$ GB \\
+    \hline
+    L3 cache (total) & 512 MB (32 $\times$ 16 MB) \\
+    \hline
+    L2 cache (per core) & 512 KB \\
+    \hline
+    L1 data cache (per core) & 32 KB \\
+    \hline
+    L1 instruction cache (per core) & 32 KB \\
+    \hline
+  \end{tabular}
+  \caption{Memory hierarchy of an Euler compute node with AMD EPYC 7H12 
+  (2 sockets, 64 cores per socket). Each core has private L1 and L2 caches, 
+  while L3 cache is organized in 32 blocks of 16\,MB shared among groups of 4 cores.}
+  \label{tab:perf_mem}
+\end{table}
+
+% template for the memory topology figure (adapt accordingly!)
+ \begin{figure}[h]
+   \centering
+   \includegraphics[width=0.5\textwidth]{images/EPYC_7H12.pdf}
+   \caption{Topology of Euler VII (phase 1) compute node with AMD EPYC 7H12 (2 sockets, 64 cores per socket). }
+   \label{fig:hwloc-ls_EPYC_7H12}
+ \end{figure}
 
 \subsection{Bandwidth: STREAM benchmark [10 Points]}
 

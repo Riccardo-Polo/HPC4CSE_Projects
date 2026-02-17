@@ -1,7 +1,7 @@
 \documentclass[unicode,10pt,a4paper,oneside,numbers=endperiod,openany]{scrartcl}
 
 \input{assignment.sty}
-
+\usepackage{amsmath}
 \begin{document}
 
 
@@ -61,14 +61,82 @@
 %   \label{fig:hwloc-ls_XEON_E3-1284Lv4}
 % \end{figure}
 
-\newpage
 \subsection{Peak performance [16 Points]}
 
+Proceeding as in the example given in the project description, the hardware specifications can be obtained from the Euler webpage. \\
+For Euler VII (phase 1), the system consists of $n_{\text{nodes}} = 292$ nodes, each equipped with $n_{\text{sockets}} = 2$ sockets and $n_{\text{cores}} = 64$ cores per socket, operating at a frequency $f = 2.6\,\text{GHz}$.\\
+ For Euler VII (phase 2), the system consists of $n_{\text{nodes}} = 248$ nodes, each with $n_{\text{sockets}} = 2$ sockets and $n_{\text{cores}} = 64$ cores per socket, operating at a frequency $f = 2.45\,\text{GHz}$.\\
 
-\newpage
+Using the uops.info database provided, we determine both the superscalability factor and the FMA factor for the corresponding AMD architectures. \\
+For both Euler VII phases, which are based on AMD Zen2 and AMD Zen3 respectively, we obtain $n_{\text{super}} = 4$ and $n_{\text{FMA}} = 2$.\\
+
+The FMA factor is determined by observing that all instructions marked as \textbf{FMA} in the table have a corresponding number of micro-operations equal to one. This indicates that the fused multiply-add is executed as a single micro-operation by dedicated hardware. Since an FMA instruction performs the operation $a \cdot b + c$, it consists of one floating-point multiplication and one floating-point addition. Therefore, each FMA instruction corresponds to two floating-point operations, and thus $n_{\text{FMA}} = 2$.
+
+The superscalability is defined as the number of floating-point operations that the FPU of a core can execute in parallel within a single clock cycle. To determine this value, we analyze the instruction \texttt{VFMADD132PD (YMM, YMM, YMM)} reported in the uops.info table. The table specifies a throughput of $0.50$ cycles per instruction, one micro-operation, and execution on ports FP0/1. A throughput of $0.50$ cycles per instruction implies that
+
+$$
+\frac{1}{0.50} = 2
+$$
+
+FMA instructions can be issued per cycle. The port information FP0/1 confirms the presence of two independent floating-point execution pipelines capable of executing FMA instructions in parallel.
+
+Since two FMA instructions can be executed per cycle and each FMA instruction corresponds to two floating-point operations, the total number of floating-point operations per cycle is
+
+$$
+2 \times 2 = 4.
+$$
+
+Hence, for both AMD Zen~2 and AMD Zen~3, the superscalability is
+
+$$
+4 \text{ floating-point operations per cycle per core}.
+$$
+
+To determine $n_{\text{SIMD}}$, we inspect the floating-point instructions reported in the uops.info table, where instructions such as \texttt{VFMADD132PD (YMM, YMM, YMM)} appear. The presence of YMM operands indicates the use of 256-bit AVX registers, since YMM registers are defined as 256-bit wide in the AVX/AVX2 instruction set. As both AMD Zen~2 and Zen~3 execute these YMM-based instructions, they necessarily support AVX2 with 256-bit SIMD registers. A double-precision floating-point number occupies 64 bits; therefore, the number of doubles that can be processed concurrently by one SIMD instruction is
+
+$$
+n_{\text{SIMD}} = \frac{256}{64} = 4.
+$$
+
+Hence, each SIMD instruction can operate on four double-precision values in parallel.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\hline
+\textbf{Parameter} & \textbf{Euler VII (Phase 1)} & \textbf{Euler VII (Phase 2)} \\
+\hline
+$n_{\text{nodes}}$ & 292 & 248 \\
+$n_{\text{sockets}}$ & 2 & 2 \\
+$n_{\text{cores}}$ (per socket) & 64 & 64 \\
+Clock frequency $f$ & $2.6\,\text{GHz}$ & $2.45\,\text{GHz}$ \\
+$n_{\text{FMA}}$ & 2 & 2 \\
+$n_{\text{super}}$ (FP ops/cycle/core) & 4 & 4 \\
+$n_{\text{SIMD}}$ (doubles per SIMD instr.) & 4 & 4 \\
+\hline
+\end{tabular}
+\caption{Summary of hardware parameters and architectural factors used for peak performance estimation.}
+\end{table}
+We can now compute all the peak performance parameters for both Euler VII phases :
+\begin{align*}
+&P_{\text{core,1}} =  n_{\text{super}} \times  n_{\text{FMA}} \times n_{\text{SIMD}} \times f = 4 \times 2 \times 4 \times 2.6\,\text{GHz} = 83.2\,\text{GFLOPS/core}. \\
+&P_{\text{CPU,1}} = n_{\text{cores}} \times P_{\text{core,1}} = 64 \times 83.2\,\text{GFLOPS/core} = 5.3248\,\text{TFLOPS/CPU}. \\
+&P_{\text{node,1}} = n_{\text{sockets}} \times P_{\text{CPU,1}} = 2 \times 5.3248\,\text{TFLOPS/node} = 10.6496\,\text{TFLOPS/node}. \\
+&P_{\text{cluster,1}} = n_{\text{nodes}} \times P_{\text{node,1}} = 292 \times 10.6496\,\text{TFLOPS/node} = 3110.08\,\text{TFLOPS}.
+\end{align*}
+
+
+\begin{align*}
+&P_{\text{core,2}} =  n_{\text{super}} \times  n_{\text{FMA}} \times n_{\text{SIMD}} \times f = 4 \times 2 \times 4 \times 2.45\,\text{GHz} = 78.4\,\text{GFLOPS/core}. \\
+&P_{\text{CPU,2}} = n_{\text{cores}} \times P_{\text{core,2}} = 64 \times 78.4\,\text{GFLOPS/core} = 5.017  \,\text{TFLOPS/CPU}. \\
+&P_{\text{node,2}} = n_{\text{sockets}} \times P_{\text{CPU,2}} = 2 \times 5.017\,\text{TFLOPS/node} = 10.034\,\text{TFLOPS/node}. \\
+&P_{\text{cluster,2}} = n_{\text{nodes}} \times P_{\text{node,2}} = 248 \times 10.034\,\text{TFLOPS/node} = 2488.432\,\text{TFLOPS}.
+\end{align*}
+
 \subsection{Memory Hierarchies [8 Points]}
 
 
+\newpage
 \subsubsection{Cache and main memory size}
 
 

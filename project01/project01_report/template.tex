@@ -20,12 +20,48 @@
 
 \newpage
 \section{Euler warm-up [10 points]}
-\textbf{Answer to Question 1.1} \\
+\textbf{Question 1: What is the module system, and how is it used?}\\
+The module system (Lmod, a Lua-based environment modules implementation) is used on HPC systems to dynamically manage software environments. It allows users to load, unload, and switch between different software versions without manually modifying system paths.\\
+Loading all software globally would lead to conflicts between different versions of compilers and libraries. The module system avoids this problem by dynamically modifying environment variables.\\
+In practice, before compiling or running programs on Euler, users load the required modules (e.g., compilers or libraries) inside their batch scripts using commands such as \texttt{module load}.\\
 
-\textbf{Answer to Question 1.2} \\
+\textbf{Question 2: What is Slurm, and what is its purpose?} \\
+Slurm is an open-source workload manager and job scheduler for Linux and Unix-like systems, widely used by supercomputers and clusters. It schedules and executes jobs on compute nodes, handling resource allocation, queuing, and execution control.\\
+In particular (from the Slurm documentation), it provides three main functions:
+\begin{itemize}
+  \item it allocates exclusive and/or non-exclusive access to resources (compute nodes, CPUs, memory, GPUs) to users for a specified duration of time so they can perform work;
+  \item it provides a framework for starting, executing, and monitoring work (normally a parallel job) on the set of allocated nodes.
+  \item it arbitrates contention for resources by managing a queue of pending jobs.
+\end{itemize}
 
-\textbf{Answer to Question 1.3} \\
+We now illustrate how the remaning questions were adressed.\\
+The solution to question 3 and 4 can be found by first running the Makefile provided and then running the file \texttt{slurm\_job\_one.sh}. We already provide the ouputs of the batch script as requested. The output is reported also here for completeness:
+\begin{verbatim}
+  Currently Loaded Modules:
+  1) stack/2025-06   2) gcc/12.2.0
 
+ 
+
+Model name:                              AMD EPYC 9654 96-Core Processor
+eu-g9-101-4
+Hello World from eu-g9-101-4
+\end{verbatim}
+ As we can see we have specified to use a node with AMD EPYC 9654 96-Core Processor, and the job was executed on the node \texttt{eu-g9-101-4}. \\
+
+ The solution to question 5 can be found by running the file \texttt{slurm\_job\_two.sh}. The output of the batch script is reported here for completeness:
+\begin{verbatim}
+  Currently Loaded Modules:
+  1) stack/2025-06   2) gcc/12.2.0
+
+ 
+
+Model name:                              AMD EPYC 7763 64-Core Processor
+eu-a2p-280
+eu-a2p-285
+Hello World from eu-a2p-285
+Hello World from eu-a2p-280
+\end{verbatim}
+We have thus successfully executed the same job on two nodes, both with AMD EPYC 7763 64-Core Processor, and jobs were executed on the nodes \texttt{eu-a2p-280} and \texttt{eu-a2p-285} respectively.
 \newpage
 \section{Performance characteristics [50 points]}
 

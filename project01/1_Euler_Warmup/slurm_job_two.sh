@@ -16,7 +16,7 @@ module load stack gcc
 module list
 
 # print CPU model per node
-lscpu | grep "Model name"
+srun lscpu | grep "Model name"
 
 # run (srun: run job on cluster with provided resources/allocation)
 srun hostname

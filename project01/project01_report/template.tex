@@ -2,6 +2,17 @@
 
 \input{assignment.sty}
 \usepackage{amsmath}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstdefinestyle{grayverbatim}{
+  basicstyle=\ttfamily,%
+  backgroundcolor=\color{gray!10},%
+  frame=single,%
+  framesep=3pt,%
+  breaklines=true,%
+  columns=fullflexible%
+}
 \begin{document}
 
 
@@ -35,33 +46,34 @@ In particular (from the Slurm documentation), it provides three main functions:
 \end{itemize}
 
 We now illustrate how the remaning questions were adressed.\\
-The solution to question 3 and 4 can be found by first running the Makefile provided and then running the file \texttt{slurm\_job\_one.sh}. We already provide the ouputs of the batch script as requested. The output is reported also here for completeness:
-\begin{verbatim}
-  Currently Loaded Modules:
-  1) stack/2025-06   2) gcc/12.2.0
+The solution to question 3 and 4 can be found by first running the Makefile provided in the directory \texttt{1\_Euler\_Warmup} and then running the file \texttt{slurm\_job\_one.sh}. We already provide in the directory \\ \texttt{1\_Euler\_Warmup}\texttt{/build\_job\_one}
+the ouputs of the batch script as requested. The output is reported also here for completeness:
+\begin{lstlisting}[style=grayverbatim]
+Currently Loaded Modules:
+1) stack/2025-06   2) gcc/12.2.0
 
- 
+
 
 Model name:                              AMD EPYC 9654 96-Core Processor
 eu-g9-101-4
 Hello World from eu-g9-101-4
-\end{verbatim}
- As we can see we have specified to use a node with AMD EPYC 9654 96-Core Processor, and the job was executed on the node \texttt{eu-g9-101-4}. \\
-
- The solution to question 5 can be found by running the file \texttt{slurm\_job\_two.sh}. The output of the batch script is reported here for completeness:
-\begin{verbatim}
-  Currently Loaded Modules:
+\end{lstlisting}
+As we can see we have specified to use a node with AMD EPYC 9654 96-Core Processor, and the job was executed on the node \texttt{eu-g9-101-4}. \\
+The solution to question 5 can be found by running the file \texttt{slurm\_job\_two.sh}. The output of the batch script is reported here for completeness:
+\begin{lstlisting}[style=grayverbatim]
+Currently Loaded Modules:
   1) stack/2025-06   2) gcc/12.2.0
 
- 
+
 
 Model name:                              AMD EPYC 7763 64-Core Processor
-eu-a2p-280
-eu-a2p-285
-Hello World from eu-a2p-285
-Hello World from eu-a2p-280
-\end{verbatim}
-We have thus successfully executed the same job on two nodes, both with AMD EPYC 7763 64-Core Processor, and jobs were executed on the nodes \texttt{eu-a2p-280} and \texttt{eu-a2p-285} respectively.
+Model name:                              AMD EPYC 7763 64-Core Processor
+eu-a2p-487
+eu-a2p-482
+Hello World from eu-a2p-487
+Hello World from eu-a2p-482
+\end{lstlisting}
+We have thus successfully executed the same job on two nodes, both with AMD EPYC 7763 64-Core Processor, and jobs were executed on the nodes \texttt{eu-a2p-487} and \texttt{eu-a2p-482} respectively.
 \newpage
 \section{Performance characteristics [50 points]}
 
@@ -74,7 +86,7 @@ For Euler VII (phase 1), the system consists of $n_{\text{nodes}} = 292$ nodes, 
 Using the uops.info database provided, we determine both the superscalability factor and the FMA factor for the corresponding AMD architectures. \\
 For both Euler VII phases, which are based on AMD Zen2 and AMD Zen3 respectively, we obtain $n_{\text{super}} = 4$ and $n_{\text{FMA}} = 2$.\\
 
-The FMA factor is determined by observing that all instructions marked as \textbf{FMA} in the table have a corresponding number of micro-operations equal to one. This indicates that the fused multiply-add is executed as a single micro-operation by dedicated hardware. Since an FMA instruction performs the operation $a \cdot b + c$, it consists of one floating-point multiplication and one floating-point addition. Therefore, each FMA instruction corresponds to two floating-point operations, and thus $n_{\text{FMA}} = 2$.
+The FMA factor is determined by observing that all instructions marked as FMA in the table have a corresponding number of micro-operations equal to one. This indicates that the fused multiply-add is executed as a single micro-operation by dedicated hardware. Since an FMA instruction performs the operation $a \cdot b + c$, it consists of one floating-point multiplication and one floating-point addition. Therefore, each FMA instruction corresponds to two floating-point operations, and thus $n_{\text{FMA}} = 2$.
 
 The superscalability is defined as the number of floating-point operations that the FPU of a core can execute in parallel within a single clock cycle. To determine this value, we analyze the instruction \texttt{VFMADD132PD (YMM, YMM, YMM)} reported in the uops.info table. The table specifies a throughput of $0.50$ cycles per instruction, one micro-operation, and execution on ports FP0/1. A throughput of $0.50$ cycles per instruction implies that
 
@@ -91,10 +103,7 @@ $$
 $$
 
 Hence, for both AMD Zen~2 and AMD Zen~3, the superscalability is
-
-$$
-4 \text{ floating-point operations per cycle per core}.
-$$
+4 \text{ floating-point operations per cycle per core}.\\
 
 To determine $n_{\text{SIMD}}$, we inspect the floating-point instructions reported in the uops.info table, where instructions such as \texttt{VFMADD132PD (YMM, YMM, YMM)} appear. The presence of YMM operands indicates the use of 256-bit AVX registers, since YMM registers are defined as 256-bit wide in the AVX/AVX2 instruction set. As both AMD Zen~2 and Zen~3 execute these YMM-based instructions, they necessarily support AVX2 with 256-bit SIMD registers. A double-precision floating-point number occupies 64 bits; therefore, the number of doubles that can be processed concurrently by one SIMD instruction is
 
@@ -170,11 +179,17 @@ We can now compute all the peak performance parameters for both Euler VII phases
 %   \label{fig:hwloc-ls_XEON_E3-1284Lv4}
 % \end{figure}
 
-\newpage
-\subsubsection{Cache and main memory size}
-We report in table the results. We do not report here the ouputs. One can find the in the given files of the repo
 
- \begin{table}[hbt]
+\subsubsection{Cache and main memory size}
+The solution to this exercise can be found by first running the Makefile
+in \path{2_Performance_Characteristics/Memory_Hierarchies}
+and then executing \path{memory_hierarchies_01.sh}
+for Euler VII (phase 1).
+The batch-script output is available in
+\path{2_Performance_Characteristics/Memory_Hierarchies/build_1}.\\
+We report in table \ref{tab:perf_tabl_EPYC_7H12} the results for Euler VII (phase 1) and in figure \ref{fig:hwloc-ls_EPYC_7H12} the memory topology.\\
+
+ \begin{table}[!h]
   \centering
     \begin{tabular}{| l | c |}
     \hline
@@ -194,26 +209,29 @@ We report in table the results. We do not report here the ouputs. One can find t
   \caption{Memory hierarchy of an Euler compute node with AMD EPYC 7H12 
   (2 sockets, 64 cores per socket). Each core has private L1 and L2 caches, 
   while L3 cache is organized in 32 blocks of 16\,MB shared among groups of 4 cores.}
-  \label{tab:perf_mem}
+  \label{tab:perf_tabl_EPYC_7H12}
 \end{table}
 
 % template for the memory topology figure (adapt accordingly!)
- \begin{figure}[h]
+ \begin{figure}[!h]
    \centering
    \includegraphics[width=0.5\textwidth]{images/EPYC_7H12.pdf}
    \caption{Topology of Euler VII (phase 1) compute node with AMD EPYC 7H12 (2 sockets, 64 cores per socket). }
    \label{fig:hwloc-ls_EPYC_7H12}
  \end{figure}
 
- \begin{table}[hbt]
+ We proceed in the same way for Euler VII (phase 2) by executing \path{memory_hierarchies_02.sh} and we report in table \ref{tab:perf_mem_EPYC_7763} the results for Euler VII (phase 2) and in figure \ref{fig:hwloc-ls_EPYC_7763} the memory topology.\\
+
+ \begin{table}[!h]
   \centering
    \begin{tabular}{| l | c |}
     \hline
     Main memory (total) & 249 GB \\
     \hline
-    L3 cache (per socket) & 256 MB (8 $\times$ 32 MB) \\
-    \hline
     L3 cache (total) & 512 MB (16 $\times$ 32 MB) \\
+    
+    \hline
+    L3 cache (per socket) & 256 MB (8 $\times$ 32 MB) \\
     \hline
     L2 cache (per core) & 512 KB \\
     \hline
@@ -229,7 +247,7 @@ We report in table the results. We do not report here the ouputs. One can find t
 \end{table}
 
 % template for the memory topology figure (adapt accordingly!)
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering
   \includegraphics[width=0.5\textwidth]{images/EPYC_7663.pdf}
   \caption{Topology of an Euler compute node with AMD EPYC 7763 (2 sockets, 64 cores per socket).}
@@ -238,6 +256,101 @@ We report in table the results. We do not report here the ouputs. One can find t
 
 \newpage
 \subsection{Bandwidth: STREAM benchmark [10 Points]}
+For this exercise one can run the Makefile in \path{2_Performance_Characteristics/STREAM_Benchmark} and then execute \path{stream_one.sh} for Euler VII (phase 1) and \path{stream_two.sh} for Euler VII (phase 2). The batch-script outputs are available in \path{2_Performance_Characteristics/STREAM_Benchmark/build_1} and \path{2_Performance_Characteristics/STREAM_Benchmark/build_2} respectively.\\
+
+For Euler VII (phase 1), we run the file stream.c with the parameters specified in the following code snippet, which corresponds to the command used in the batch script \path{stream_one.sh}:
+\begin{lstlisting}[style=grayverbatim]
+gcc -O3 -march=native -mcmodel=medium -DSTREAM_TYPE=double -DSTREAM_ARRAY_SIZE=268435456 -DNTIMES=20 stream.c -o build_1/stream_one_c.exe
+\end{lstlisting}
+We used as array size the value of $2^{28}$, which corresponds to 2 GB per array, and we set the number of iterations to 20. The corresponding output of the batch script is reported here for completeness:
+\begin{lstlisting}[style=grayverbatim]
+  Currently Loaded Modules:
+  1) stack/2025-06   2) gcc/12.2.0
+
+ 
+
+Model name:                              AMD EPYC 7H12 64-Core Processor
+eu-a2p-476
+-------------------------------------------------------------
+STREAM version \$Revision: 5.10 \$
+-------------------------------------------------------------
+This system uses 8 bytes per array element.
+-------------------------------------------------------------
+Array size = 268435456 (elements), Offset = 0 (elements)
+Memory per array = 2048.0 MiB (= 2.0 GiB).
+Total memory required = 6144.0 MiB (= 6.0 GiB).
+Each kernel will be executed 20 times.
+ The *best* time for each kernel (excluding the first iteration)
+ will be used to compute the reported bandwidth.
+-------------------------------------------------------------
+Your clock granularity/precision appears to be 1 microseconds.
+Each test below will take on the order of 151041 microseconds.
+   (= 151041 clock ticks)
+Increase the size of the arrays if this shows that
+you are not getting at least 20 clock ticks per test.
+-------------------------------------------------------------
+WARNING -- The above is only a rough guideline.
+For best results, please be sure you know the
+precision of your system timer.
+-------------------------------------------------------------
+Function    Best Rate MB/s  Avg time     Min time     Max time
+Copy:           33537.1     0.133024     0.128066     0.146805
+Scale:          18170.2     0.246928     0.236374     0.258205
+Add:            20230.7     0.332126     0.318450     0.354032
+Triad:          19668.1     0.341913     0.327558     0.364689
+-------------------------------------------------------------
+Solution Validates: avg error less than 1.000000e-13 on all three arrays
+-------------------------------------------------------------
+
+\end{lstlisting}
+For Euler VII (phase 2), we run the file stream.c with the parameters specified in the following code snippet, which corresponds to the command used in the batch script \path{stream_two.sh}:
+\begin{lstlisting}[style=grayverbatim]
+gcc -O3 -march=native -mcmodel=medium -DSTREAM_TYPE=double -DSTREAM_ARRAY_SIZE=20000000 -DNTIMES=20 stream.c -o build_2/stream_two_c.exe
+\end{lstlisting}
+Here instead we used as array size the value of $2 \times 10^7$, which corresponds to 1.6 GB per array, and we set the number of iterations to 20. 
+The corresponding output of the batch script is reported here for completeness:
+\begin{lstlisting}[style=grayverbatim]
+Currently Loaded Modules:
+  1) stack/2025-06   2) gcc/12.2.0
+
+ 
+
+Model name:                              AMD EPYC 7763 64-Core Processor
+eu-a2p-527
+-------------------------------------------------------------
+STREAM version $Revision: 5.10 $
+-------------------------------------------------------------
+This system uses 8 bytes per array element.
+-------------------------------------------------------------
+Array size = 20000000 (elements), Offset = 0 (elements)
+Memory per array = 152.6 MiB (= 0.1 GiB).
+Total memory required = 457.8 MiB (= 0.4 GiB).
+Each kernel will be executed 20 times.
+ The *best* time for each kernel (excluding the first iteration)
+ will be used to compute the reported bandwidth.
+-------------------------------------------------------------
+Your clock granularity/precision appears to be 1 microseconds.
+Each test below will take on the order of 14061 microseconds.
+   (= 14061 clock ticks)
+Increase the size of the arrays if this shows that
+you are not getting at least 20 clock ticks per test.
+-------------------------------------------------------------
+WARNING -- The above is only a rough guideline.
+For best results, please be sure you know the
+precision of your system timer.
+-------------------------------------------------------------
+Function    Best Rate MB/s  Avg time     Min time     Max time
+Copy:           29744.9     0.011587     0.010758     0.012729
+Scale:          19885.6     0.017333     0.016092     0.019567
+Add:            15889.9     0.032855     0.030208     0.040448
+Triad:          17459.6     0.031916     0.027492     0.044562
+-------------------------------------------------------------
+Solution Validates: avg error less than 1.000000e-13 on all three arrays
+-------------------------------------------------------------
+\end{lstlisting}
+\textbf{Comment both outputs}
+
+
 
 
 \newpage

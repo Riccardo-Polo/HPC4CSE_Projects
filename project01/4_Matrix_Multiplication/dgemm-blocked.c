@@ -7,13 +7,33 @@ const char* dgemm_desc = "Blocked dgemm.";
  * where A, B, and C are lda-by-lda matrices stored in column-major format.
  * On exit, A and B maintain their input values.
  */
-void square_dgemm(int n, double* A, double* B, double* C) {
-  // TODO: Implement the blocking optimization
-  //       (The following is a placeholder naive three-loop dgemm)
-  for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < n; ++j) {
-      for(int k = 0; k < n; ++k) {
-	C[i+j*n] += A[i+k*n] * B[k+j*n];
+#ifndef BS
+#define BS 64   
+#endif
+
+static inline int imin(int a, int b) { return (a < b) ? a : b; }
+
+void square_dgemm(int n, const double *A, const double *B, double *C)
+{
+  for (int jj = 0; jj < n; jj += BS) {
+    int jmax = imin(jj + BS, n);
+
+    for (int kk = 0; kk < n; kk += BS) {
+      int kmax = imin(kk + BS, n);
+
+      for (int ii = 0; ii < n; ii += BS) {
+        int imax = imin(ii + BS, n);
+
+        
+        for (int j = jj; j < jmax; ++j) {
+          for (int k = kk; k < kmax; ++k) {
+            double bkj = B[k + j * n];          
+            for (int i = ii; i < imax; ++i) {
+              C[i + j * n] += A[i + k * n] * bkj; 
+            }
+          }
+        }
+
       }
     }
   }

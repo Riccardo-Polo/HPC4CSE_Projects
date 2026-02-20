@@ -415,6 +415,20 @@ $I_{\text{ridge}} = P_{\text{peak}}/B$ [Flops/Byte] & 4.23 & 4.49 \\
 \caption{Inputs and ridge point of the single-core roofline models.}
 \label{tab:roofline_params}
 \end{table}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale = 0.5]{images/roofline_phase1.pdf}
+  \caption{Naive roofline model for a single core on Euler VII (phase 1). The ridge point is at $I_{\text{ridge}} \approx 4.23$ Flops/Byte.}
+  \label{fig:roofline_phase1}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale = 0.5]{images/roofline_phase2.pdf}
+  \caption{Naive roofline model for a single core on Euler VII (phase 2). The ridge point is at $I_{\text{ridge}} \approx 4.49$ Flops/Byte.}
+  \label{fig:roofline_phase2}
+\end{figure}
 \newpage
 
 
@@ -429,6 +443,7 @@ $I_{\text{ridge}} = P_{\text{peak}}/B$ [Flops/Byte] & 4.23 & 4.49 \\
 
 \textbf{Question 5: what can be done if automatic vectorization by the compiler fails or is sub-optimal?}
 
+\newpage
 \section{Matrix multiplication optimization [30 points]}
 
 

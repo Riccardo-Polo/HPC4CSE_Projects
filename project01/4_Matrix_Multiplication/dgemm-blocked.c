@@ -13,7 +13,7 @@ const char* dgemm_desc = "Blocked dgemm.";
 
 static inline int imin(int a, int b) { return (a < b) ? a : b; }
 
-void square_dgemm(int n, const double *A, const double *B, double *C)
+void square_dgemm(int n, double* A, double* B, double* C)
 {
   for (int jj = 0; jj < n; jj += BS) {
     int jmax = imin(jj + BS, n);

@@ -307,12 +307,12 @@ Solution Validates: avg error less than 1.000000e-13 on all three arrays
 -------------------------------------------------------------
 
 \end{lstlisting}
-
+We choose $\texttt{STREAM\_ARRAY\_SIZE}=2^{28}$ (268,435,456 doubles) so that each array occupies 2\,GiB and the total working set (3 arrays $\approx$ 6\,GiB) is well beyond the last-level cache. This reduces cache effects and makes the reported rates representative of sustained main-memory bandwidth. STREAM reports the \emph{Best Rate} excluding the first iteration; for the roofline model we use the Triad kernel as a proxy for sustainable bandwidth, since it stresses both loads and stores and is commonly the most representative. The Copy kernel can appear faster because it benefits from efficient store handling (e.g., write combining), whereas Add/Triad are more load-intensive. Here, Triad achieves 19.7\,GB/s (19,668\,MB/s), which we use to define $B_1$ (after converting MB/s to GB/s).
 For Euler VII (phase 2), we run the file stream.c with the parameters specified in the following code snippet, which corresponds to the command used in the batch script \path{stream_two.sh}:
 \begin{lstlisting}[style=grayverbatim]
 gcc -O3 -march=native -mcmodel=medium -DSTREAM_TYPE=double -DSTREAM_ARRAY_SIZE=20000000 -DNTIMES=20 stream.c -o build_2/stream_two_c.exe
 \end{lstlisting}
-Here instead we used as array size the value of $2 \times 10^7$, which corresponds to 1.6 GB per array, and we set the number of iterations to 20. 
+Here instead we used as array size the value of $2 \times 10^7$, which corresponds to 160 MB per array, and we set the number of iterations to 20. 
 The corresponding output of the batch script is reported here for completeness:
 
 % (*@colorbox{}{})
@@ -355,7 +355,15 @@ Triad:          (*@\colorbox{lightbluehighlight}{17459.6}@*)     0.031916     0.
 Solution Validates: avg error less than 1.000000e-13 on all three arrays
 -------------------------------------------------------------
 \end{lstlisting}
-\textbf{Comment both outputs}
+Note that $\texttt{STREAM\_ARRAY\_SIZE}=2\times 10^{7}$ with \texttt{STREAM\_TYPE=double} corresponds to
+$2\times 10^{7}\cdot 8 \approx 160$\,MB per array (as confirmed by STREAM: 152.6\,MiB).
+Therefore the total working set is only $\approx 0.4$\,GiB (three arrays), which is comparable to (or smaller than)
+the last-level cache and can lead to cache-influenced bandwidth numbers rather than sustained DRAM bandwidth.
+For a fair roofline bound, the array size should be increased so that the three arrays clearly exceed LLC (e.g., by
+a factor $\gtrsim 4\times$), similarly to phase~1. Using the current run as-is, we still take the Triad kernel as a
+proxy for sustainable bandwidth (here $\approx 17.46$\,GB/s), but we interpret it cautiously because it may overestimate
+(or otherwise bias) the true main-memory bandwidth due to caching effects.\\
+
 \subsection{Performance model: A simple roofline model [16 Points]}
 A (naive) roofline model provides an upper bound on the attainable performance of a kernel as a function of
 its operational intensity $I$ (in Flops/Byte). For a given hardware, the attainable performance is bounded by:
@@ -445,6 +453,82 @@ $I_{\text{ridge}} = P_{\text{peak}}/B$ [Flops/Byte] & 4.23 & 4.49 \\
 
 \newpage
 \section{Matrix multiplication optimization [30 points]}
+\textbf{Task 1: Improve the loop ordering in \path{dgemm_jki.c}.}\\
+The original naive implementation uses the loop order $i$--$j$--$k$:
+\begin{lstlisting}[style=grayverbatim,language=C]
+void square_dgemm(int n, double* A, double* B, double* C) {
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < n; ++j) {
+      for(int k = 0; k < n; ++k) {
+        C[i+j*n] += A[i+k*n] * B[k+j*n];
+      }
+    }
+  }
+}
+\end{lstlisting}
+Although correct, this ordering is not cache-friendly for column-major storage (indexing $i + jn$). In particular, in the innermost loop over $k$ the access to $A[i+k n]$ jumps across different columns of $A$ with stride $n$, limiting spatial locality.
 
+To improve data locality, we reorder the loops to $j$--$k$--$i$ and hoist invariant quantities out of the innermost loop:
+\begin{lstlisting}[style=grayverbatim,language=C]
+void square_dgemm(int n, double* A, double* B, double* C) {
+  for (int j = 0; j < n; ++j) {
+    double* Ccol = C + j*n;              // C(:,j)
+    for (int k = 0; k < n; ++k) {
+      const double bkj = B[k + j*n];     // B(k,j) reused for all i
+      const double* Acol = A + k*n;      // A(:,k)
+      for (int i = 0; i < n; ++i) {
+        Ccol[i] += Acol[i] * bkj;        // stride-one on C and A
+      }
+    }
+  }
+}
+\end{lstlisting}
+
+With column-major layout, full columns are contiguous in memory. Therefore, for fixed $(j,k)$ the innermost loop over $i$ accesses both $A(:,k)$ and $C(:,j)$ with \emph{stride 1} (contiguous memory), improving cache utilization and hardware prefetching, and enabling better SIMD vectorization. Additionally, loading $B(k,j)$ once into a scalar (\texttt{bkj}) and using column pointers (\texttt{Acol}, \texttt{Ccol}) reduces repeated address computations and memory loads. The computation remains mathematically identical, since it still accumulates
+\[
+C_{i,j} \mathrel{+}= \sum_{k=0}^{n-1} A_{i,k} B_{k,j},
+\]
+but with a more efficient memory-access pattern.\\
+
+\textbf{Task 2: Implement blocking for square matrix multiplication in \url{URLdgemm_blocked.c}}\\
+To further increase performance, we implement \emph{blocking} for the matrix multiplication. Instead of multiplying the full matrices at once, we split the iteration space into smaller $BS\times BS$ tiles and compute partial products tile-by-tile:
+\begin{lstlisting}[style=grayverbatim,language=C]
+void square_dgemm(int n, double* A, double* B, double* C)
+{
+  for (int jj = 0; jj < n; jj += BS) {
+    int jmax = imin(jj + BS, n);
+
+    for (int kk = 0; kk < n; kk += BS) {
+      int kmax = imin(kk + BS, n);
+
+      for (int ii = 0; ii < n; ii += BS) {
+        int imax = imin(ii + BS, n);
+
+        for (int j = jj; j < jmax; ++j) {
+          for (int k = kk; k < kmax; ++k) {
+            double bkj = B[k + j * n];
+            for (int i = ii; i < imax; ++i) {
+              C[i + j * n] += A[i + k * n] * bkj;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+\end{lstlisting}
+
+The outer loops \texttt{jj}, \texttt{kk}, and \texttt{ii} iterate over tiles of columns/rows with step size \texttt{BS}. For each block triple, the inner loops perform the same $j$--$k$--$i$ update as in the reordered implementation, but restricted to the current subranges:
+\[
+j \in [jj, j_{\max}),\quad k \in [kk, k_{\max}),\quad i \in [ii, i_{\max}).
+\]
+The helper \texttt{imin} ensures correct handling of boundary tiles when $n$ is not a multiple of $BS$.
+
+Blocking improves cache efficiency because, for a fixed $(jj,kk,ii)$ triple, the algorithm repeatedly reuses the same tiles of $A$ and $B$ while updating the corresponding tile of $C$. This increases \emph{temporal locality} and reduces the number of times data is fetched from main memory. Inside each tile, the innermost loop still runs over $i$, giving stride-1 (contiguous) access for $A(:,k)$ and $C(:,j)$ in column-major format. Finally, loading \texttt{bkj = B(k,j)} once per $(j,k)$ pair (scalar reuse) avoids redundant memory loads within the innermost loop.\\
+We set the default block size to $BS=64$, which is a commonly used baseline for tiled DGEMM. 
+Blocking aims to improve temporal locality by reusing submatrices (tiles) of $A$ and $B$ while updating a tile of $C$ before moving to the next region. 
+With double-precision elements, a $64\times 64$ tile corresponds to $64^2\cdot 8 \approx 32$\,KiB per matrix tile; the combined working set of the three tiles $(A,B,C)$ is about $3\cdot 32 \approx 96$\,KiB, which is small enough to benefit from cache reuse while being large enough to amortize loop overhead. 
+Moreover, using a power-of-two block size simplifies addressing and often interacts well with cache-line behavior. 
+The block size is kept configurable via \texttt{\#ifndef BS} so that alternative values (e.g.\ 32 or 48) can be explored if further tuning is desired.
 
 \end{document}

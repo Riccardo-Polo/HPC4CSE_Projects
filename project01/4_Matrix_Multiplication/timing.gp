@@ -7,9 +7,8 @@ set logscale y 10
 set terminal pdf
 set output "timing.pdf"
 
-plot "timing_naive_dgemm.data"   using 2:4 title "Naive dgemm"      \
-                                 with linespoints,                  \
-     "timing_jki_dgemm.data"     using 2:4 title "Stride-one dgemm" \
+
+plot "timing_jki_dgemm.data"     using 2:4 title "Stride-one dgemm" \
                                  with linespoints,                  \
      "timing_blocked_dgemm.data" using 2:4 title "Blocked dgemm"    \
                                  with linespoints,                  \

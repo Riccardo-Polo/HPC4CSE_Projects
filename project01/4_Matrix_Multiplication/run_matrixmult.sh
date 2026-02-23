@@ -5,7 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --constraint=EPYC_7763
-#SBATCH --time=00:20:00
+#SBATCH --time=01:00:00
 
 # load some modules & list loaded modules
 # GCC

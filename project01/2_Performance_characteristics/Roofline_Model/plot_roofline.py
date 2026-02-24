@@ -3,29 +3,40 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-def make_roofline(P_peak_gflops, B_gbs, out_pdf, title):
-    # Operational intensity range (Flops/Byte), log-spaced
-    I = np.logspace(-2, 2, 1000)
-
-    # Bandwidth roof (GFlops/s) since (GB/s)*(Flops/Byte) = GFlops/s
+def roofline_curve(P_peak_gflops, B_gbs, I):
+    """Return bandwidth line, compute line, and roofline bound."""
     P_bw = B_gbs * I
-
-    # Roofline: min(peak, bandwidth line)
-    P = np.minimum(P_peak_gflops, P_bw)
-
-    # Ridge point
+    P_comp = P_peak_gflops * np.ones_like(I)
+    P = np.minimum(P_comp, P_bw)
     I_ridge = P_peak_gflops / B_gbs
+    return P_bw, P_comp, P, I_ridge
 
-    # Plot
+def make_roofline_both(out_pdf):
+    # Match the "simple" look: powers-of-two-ish ticks like the screenshot
+    I = 2.0 ** np.linspace(-6, 10, 1200)  # Flops/Byte
+
+    # Phase 1
+    P1_peak = 41.6
+    B1 = 19.6681
+    P1_bw, P1_comp, P1, I1_ridge = roofline_curve(P1_peak, B1, I)
+
+    # Phase 2 (updated bandwidth)
+    P2_peak = 39.2
+    B2 = 14.20
+    P2_bw, P2_comp, P2, I2_ridge = roofline_curve(P2_peak, B2, I)
+
+    # One figure, both rooflines (simple graphics: just the bound lines)
     plt.figure()
-    plt.loglog(I, P_bw, label=r"$B \cdot I$ (memory roof)")
-    plt.loglog(I, P_peak_gflops * np.ones_like(I), label=r"$P_{\mathrm{peak}}$ (compute roof)")
-    plt.loglog(I, P, label="Roofline bound", linewidth=2)
-    plt.scatter([I_ridge], [P_peak_gflops], zorder=5, label=rf"Ridge point ($I \approx {I_ridge:.2f}$)")
+    plt.loglog(I, P1, linewidth=2, label="Phase 1 (EPYC 7H12)")
+    plt.loglog(I, P2, linewidth=2, label="Phase 2 (EPYC 7763)")
 
-    plt.xlabel("Operational intensity I [Flops/Byte]")
-    plt.ylabel("Performance P [GFlops/s]")
-    plt.title(title)
+    # Optional: ridge-point markers (still simple)
+    plt.scatter([I1_ridge], [P1_peak], zorder=5, s=25)
+    plt.scatter([I2_ridge], [P2_peak], zorder=5, s=25)
+
+    plt.xlabel("Operational Intensity $I$ [Flops/Byte]")
+    plt.ylabel("Performance $P$ [GFlops/s]")
+    plt.title("Naive roofline model (single core) - Euler VII (Phase 1 vs Phase 2)")
     plt.grid(True, which="both")
     plt.legend()
 
@@ -34,19 +45,4 @@ def make_roofline(P_peak_gflops, B_gbs, out_pdf, title):
     plt.close()
 
 if __name__ == "__main__":
-    # Values from the report (Table roofline_params):
-    # Phase 1 (EPYC 7H12): P_peak = 41.6 GFlops/s, STREAM Triad = 19668.1 MB/s = 19.6681 GB/s
-    make_roofline(
-        P_peak_gflops=41.6,
-        B_gbs=19.6681,
-        out_pdf="images/roofline_phase1.pdf",
-        title="Roofline model (single core) - Euler VII Phase 1 (EPYC 7H12)"
-    )
-
-    # Phase 2 (EPYC 7763): P_peak = 39.2 GFlops/s, STREAM Triad = 17459.6 MB/s = 17.4596 GB/s
-    make_roofline(
-        P_peak_gflops=39.2,
-        B_gbs=17.4596,
-        out_pdf="images/roofline_phase2.pdf",
-        title="Roofline model (single core) - Euler VII Phase 2 (EPYC 7763)"
-    )
+    make_roofline_both("images/roofline_both.pdf")

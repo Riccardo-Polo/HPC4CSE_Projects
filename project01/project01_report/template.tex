@@ -299,9 +299,9 @@ We choose $\texttt{STREAM\_ARRAY\_SIZE}=2^{28}$ (268,435,456 doubles) so that ea
 
 For Euler VII (phase 2), we run the file stream.c with the parameters specified in the following code snippet, which corresponds to the command used in the batch script \path{stream_two.sh}:
 \begin{lstlisting}[style=grayverbatim]
-gcc -O3 -march=native -mcmodel=medium -DSTREAM_TYPE=double -DSTREAM_ARRAY_SIZE=20000000 -DNTIMES=20 stream.c -o build_2/stream_two_c.exe
+gcc -O3 -march=native -mcmodel=medium -DSTREAM_TYPE=double -DSTREAM_ARRAY_SIZE=268435456 -DNTIMES=20 stream.c -o build_2/stream_two_c.exe
 \end{lstlisting}
-Here instead we used as array size the value of $2 \times 10^7$, which corresponds to 160 MB per array, and we set the number of iterations to 20. 
+Here instead we used as array size the value of $2^{28}$, which corresponds to 160 MB per array, and we set the number of iterations to 20. 
 The corresponding output of the batch script is reported here for completeness:
 
 % (*@colorbox{}{})
@@ -309,25 +309,25 @@ The corresponding output of the batch script is reported here for completeness:
 Currently Loaded Modules:
   1) stack/2025-06   2) gcc/12.2.0
 
- 
 
-Model name:                              (*@\colorbox{lightbluehighlight}{AMD EPYC 7763 64-Core Processor}@*)
-eu-a2p-527
+
+Model name:                              (*@\colorbox{lightbluehighlight}{AMD EPYC 7763 64-Core}@*) Processor
+eu-a2p-509
 -------------------------------------------------------------
 STREAM version $Revision: 5.10 $
 -------------------------------------------------------------
-This system uses (*@\colorbox{lightbluehighlight}{8 bytes per array element}@*).
+This system uses (*@\colorbox{lightbluehighlight}{8 bytes per array element.}@*)
 -------------------------------------------------------------
-(*@\colorbox{lightbluehighlight}{Array size = 20000000 (elements)}@*), Offset = 0 (elements)
-Memory per array = (*@\colorbox{lightbluehighlight}{152.6 MiB (= 0.1 GiB)}@*).
-Total memory required = (*@\colorbox{lightbluehighlight}{457.8 MiB (= 0.4 GiB)}@*).
-Each kernel will be executed (*@\colorbox{lightbluehighlight}{20 times}@*).
+(*@\colorbox{lightbluehighlight}{Array size = 268435456 (elements)}@*), Offset = 0 (elements)
+Memory per array = (*@\colorbox{lightbluehighlight}{2048.0 MiB (= 2.0 GiB)}@*).
+Total memory required = (*@\colorbox{lightbluehighlight}{6144.0 MiB (= 6.0 GiB)}@*).
+Each kernel will be executed (*@\colorbox{lightbluehighlight}{20 times.}@*)
  The *best* time for each kernel (excluding the first iteration)
  will be used to compute the reported bandwidth.
 -------------------------------------------------------------
-Your clock granularity/precision appears to be (*@\colorbox{lightbluehighlight}{1 microseconds}@*).
-Each test below will take on the order of (*@\colorbox{lightbluehighlight}{14061 microseconds}@*).
-   (= 14061 clock ticks)
+Your clock granularity/precision appears to be (*@\colorbox{lightbluehighlight}{1 microseconds.}@*)
+Each test below will take on the order of (*@\colorbox{lightbluehighlight}{206516 microseconds.}@*)
+   (= 206516 clock ticks)
 Increase the size of the arrays if this shows that
 you are not getting at least 20 clock ticks per test.
 -------------------------------------------------------------
@@ -336,22 +336,21 @@ For best results, please be sure you know the
 precision of your system timer.
 -------------------------------------------------------------
 Function    Best Rate MB/s  Avg time     Min time     Max time
-Copy:           (*@\colorbox{lightbluehighlight}{29744.9}@*)     0.011587     0.010758     0.012729
-Scale:          (*@\colorbox{lightbluehighlight}{19885.6}@*)     0.017333     0.016092     0.019567
-Add:            (*@\colorbox{lightbluehighlight}{15889.9}@*)     0.032855     0.030208     0.040448
-Triad:          (*@\colorbox{lightbluehighlight}{17459.6}@*)     0.031916     0.027492     0.044562
+Copy:           (*@\colorbox{lightbluehighlight}{15183.6}@*)     0.291832     0.282868     0.298069
+Scale:          (*@\colorbox{lightbluehighlight}{13359.4}@*)     0.326391     0.321494     0.331896
+Add:            (*@\colorbox{lightbluehighlight}{12655.6}@*)     0.515276     0.509060     0.519799
+Triad:          (*@\colorbox{lightbluehighlight}{14198.6}@*)     0.468732     0.453738     0.498993
 -------------------------------------------------------------
 Solution Validates: avg error less than 1.000000e-13 on all three arrays
 -------------------------------------------------------------
 \end{lstlisting}
-Note that $\texttt{STREAM\_ARRAY\_SIZE}=2\times 10^{7}$ with \texttt{STREAM\_TYPE=double} corresponds to
-$2\times 10^{7}\cdot 8 \approx 160$\,MB per array (as confirmed by STREAM: 152.6\,MiB).
-Therefore the total working set is only $\approx 0.4$\,GiB (three arrays), which is comparable to (or smaller than)
-the last-level cache and can lead to cache-influenced bandwidth numbers rather than sustained DRAM bandwidth.
-For a fair roofline bound, the array size should be increased so that the three arrays clearly exceed LLC (e.g., by
-a factor $ 4\times$), similarly to phase~1. Using the current run as-is, we still take the Triad kernel as a
-proxy for sustainable bandwidth (here $\approx 17.46$\,GB/s), but we interpret it cautiously because it may overestimate
-(or otherwise bias) the true main-memory bandwidth due to caching effects.\\
+Note that \texttt{STREAM\_ARRAY\_SIZE}$=268435456$ with \texttt{STREAM\_TYPE=double} corresponds to
+$268435456 \cdot 8 = 2^{28}\cdot 8 = 2^{31}$ bytes, i.e.\ 2.0,GiB per array (as confirmed by STREAM: 2048.0,MiB).
+Therefore the total working set is $3 \times 2.0,\text{GiB} \approx 6.0,\text{GiB}$, which is well beyond the last-level
+cache capacity and strongly reduces cache effects. Hence, the reported bandwidth numbers are representative of
+sustained main-memory (DRAM) bandwidth. As for the roofline model, we use the \texttt{Triad} kernel as a proxy for
+sustainable bandwidth; in this run, \texttt{Triad} achieves 14198.6,MB/s ($\approx 14.20$,GB/s), which we take as $B_2$.
+
 
 \subsection{Performance model: A simple roofline model [16 Points]}
 A (naive) roofline model provides an upper bound on the attainable performance of a kernel as a function of
@@ -361,10 +360,9 @@ its operational intensity $I$ (in Flops/Byte). For a given hardware, the attaina
   \item a \textbf{bandwidth ceiling} given by $B \cdot I$, where $B$ is the sustainable memory bandwidth (in GBytes/s).
 \end{itemize}
 Hence the roofline bound is
-\begin{equation}
+$$
 P(I) = \min\left(P_{\text{peak}},\; B \cdot I\right).
-\label{eq:roofline}
-\end{equation}
+$$
 
 The transition between memory-bound and compute-bound regimes occurs at the \textbf{ridge point}:
 \begin{equation}
@@ -374,29 +372,29 @@ I_{\text{ridge}} = \frac{P_{\text{peak}}}{B}.
 A kernel with $I < I_{\text{ridge}}$ is memory-bound, while a kernel with $I > I_{\text{ridge}}$ is compute-bound.\\
 
 From the previous exercises, we have already computed the peak performance $P_{\text{peak}}$ and the sustainable memory bandwidth $B$ for both Euler VII phases. The values of the single core peak performances where
-\begin{align}
+\begin{align*}
 P_{\text{peak,1}} &= 41.6~\text{GFlops/s} \quad \text{(Euler VII phase 1, AMD EPYC 7H12 @ 2.6 GHz)},\\
 P_{\text{peak,2}} &= 39.2~\text{GFlops/s} \quad \text{(Euler VII phase 2, AMD EPYC 7763 @ 2.45 GHz)}.
-\end{align}
+\end{align*}
 \\
 We use the STREAM \texttt{Triad} bandwidth as sustainable memory bandwidth, since it represents a
 typical streaming workload (three arrays, two loads + one store per iteration) and is commonly used in
 roofline constructions.
 From our STREAM outputs, we have the following sustainable memory bandwidths:
-\begin{align}
+\begin{align*}
 B_{1} &= 19668.1~\text{MB/s} = 19.6681~\text{GB/s},\\
-B_{2} &= 17459.6~\text{MB/s} = 17.4596~\text{GB/s},
-\end{align}
+B_{2} &= 149198.6~\text{MB/s} = 14.2~\text{GB/s},
+\end{align*}
 where we convert MB/s to GB/s by dividing by $1000$.\\
-Using Eq.~\eqref{eq:ridge}:
-\begin{align}
+Using Eq.\ref{eq:ridge}:
+\begin{align*}
 I_{\text{ridge,1}} &= \frac{P_{\text{peak,1}}}{B_1}
 = \frac{41.6}{19.6681}
 \approx 2.12~\text{Flops/Byte},\\
 I_{\text{ridge,2}} &= \frac{P_{\text{peak,2}}}{B_2}
-= \frac{39.2}{17.4596}
-\approx 2.24~\text{Flops/Byte}.
-\end{align}
+= \frac{39.2}{14.2}
+\approx 2.76~\text{Flops/Byte}.
+\end{align*}
 \\
 \begin{table}[h]
 \centering
@@ -405,27 +403,23 @@ I_{\text{ridge,2}} &= \frac{P_{\text{peak,2}}}{B_2}
 \textbf{Quantity} & \textbf{Euler VII (Phase 1)} & \textbf{Euler VII (Phase 2)} \\
 \hline
 $P_{\text{peak}}$ [GFlops/s] & 41.6 & 39.2 \\
-$B$ (STREAM Triad) [GB/s] & 19.6681 & 17.4596 \\
-$I_{\text{ridge}} = P_{\text{peak}}/B$ [Flops/Byte] & 2.12 & 2.24 \\
+$B$ (STREAM Triad) [GB/s] & 19.6681 & 14.20 \\
+
+$I_{\text{ridge}} = P_{\text{peak}}/B$ [Flops/Byte] & 2.12 & 2.76 \\
 \hline
 \end{tabular}
 \caption{Inputs and ridge point of the single-core roofline models.}
 \label{tab:roofline_params}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering
-  \includegraphics[scale = 0.5]{images/roofline_phase1.pdf}
-  \caption{Naive roofline model for a single core on Euler VII (phase 1). The ridge point is at $I_{\text{ridge}} \approx 2.12$ Flops/Byte.}
-  \label{fig:roofline_phase1}
+  \includegraphics[scale = 0.5]{images/roofline_both.pdf}
+  \caption{Naive roofline model for a single core on Euler VII (both phases). The ridge points are at $I_{\text{ridge,1}} \approx 2.12$ Flops/Byte and $I_{\text{ridge,2}} \approx 2.76$ Flops/Byte for phase 1 and phase 2 respectively.}
+  \label{fig:roofline}
 \end{figure}
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[scale = 0.5]{images/roofline_phase2.pdf}
-  \caption{Naive roofline model for a single core on Euler VII (phase 2). The ridge point is at $I_{\text{ridge}} \approx 2.24$ Flops/Byte.}
-  \label{fig:roofline_phase2}
-\end{figure}
+
 
 
 \newpage
@@ -551,8 +545,7 @@ j \in [jj, j_{\max}),\quad k \in [kk, k_{\max}),\quad i \in [ii, i_{\max}).
 The helper \texttt{imin} ensures correct handling of boundary tiles when $n$ is not a multiple of $BS$.\\
 Blocking improves cache efficiency because, for a fixed $(jj,kk,ii)$ triple, the algorithm repeatedly reuses the same tiles of $A$ and $B$ while updating the corresponding tile of $C$. This increases \emph{temporal locality} and reduces the number of times data is fetched from main memory. Inside each tile, the innermost loop still runs over $i$, giving stride-1 (contiguous) access for $A(:,k)$ and $C(:,j)$ in column-major format. Finally, loading \texttt{bkj = B(k,j)} once per $(j,k)$ pair (scalar reuse) avoids redundant memory loads within the innermost loop.\\
 
-We set the default block size to $BS=64$, which is a commonly used baseline for tiled DGEMM. 
-Blocking aims to improve temporal locality by reusing submatrices (tiles) of $A$ and $B$ while updating a tile of $C$ before moving to the next region. 
+We set the default block size to $BS=64$, which is a commonly used baseline for tiled DGEMM.
 With double-precision elements, a $64\times 64$ tile corresponds to $64^2\cdot 8 \approx 32$\,KiB per matrix tile; the combined working set of the three tiles $(A,B,C)$ is about $3\cdot 32 \approx 96$\,KiB, which is small enough to benefit from cache reuse while being large enough to amortize loop overhead. 
 Moreover, using a power-of-two block size simplifies addressing and often interacts well with cache-line behavior. 
 The block size is kept configurable via \texttt{\#ifndef BS} so that alternative values (e.g.\ 32 or 48) can be explored if further tuning is desired.
@@ -560,7 +553,7 @@ The block size is kept configurable via \texttt{\#ifndef BS} so that alternative
 \begin{figure}[!h]
   \centering
   \includegraphics[width=0.8\textwidth]{images/timing.pdf}
-  \caption{}
+  \caption{timing results for the naive, reordered, and blocked implementations of DGEMM. The blocked version achieves significantly better performance than the naive and reordered versions, especially as matrix size increases, due to improved cache utilization.}
   \label{fig:timing}
 \end{figure}
 

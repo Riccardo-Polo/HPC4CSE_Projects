@@ -35,17 +35,17 @@ def make_roofline(P_peak_gflops, B_gbs, out_pdf, title):
 
 if __name__ == "__main__":
     # Values from the report (Table roofline_params):
-    # Phase 1 (EPYC 7H12): P_peak = 83.2 GFlops/s, STREAM Triad = 19668.1 MB/s = 19.6681 GB/s
+    # Phase 1 (EPYC 7H12): P_peak = 41.6 GFlops/s, STREAM Triad = 19668.1 MB/s = 19.6681 GB/s
     make_roofline(
-        P_peak_gflops=83.2,
+        P_peak_gflops=41.6,
         B_gbs=19.6681,
         out_pdf="images/roofline_phase1.pdf",
         title="Roofline model (single core) - Euler VII Phase 1 (EPYC 7H12)"
     )
 
-    # Phase 2 (EPYC 7763): P_peak = 78.4 GFlops/s, STREAM Triad = 17459.6 MB/s = 17.4596 GB/s
+    # Phase 2 (EPYC 7763): P_peak = 39.2 GFlops/s, STREAM Triad = 17459.6 MB/s = 17.4596 GB/s
     make_roofline(
-        P_peak_gflops=78.4,
+        P_peak_gflops=39.2,
         B_gbs=17.4596,
         out_pdf="images/roofline_phase2.pdf",
         title="Roofline model (single core) - Euler VII Phase 2 (EPYC 7763)"

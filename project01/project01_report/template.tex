@@ -92,22 +92,10 @@ For both Euler VII phases, which are based on AMD Zen2 and AMD Zen3 respectively
 
 The FMA factor is determined by observing that all instructions marked as FMA in the table have a corresponding number of micro-operations equal to one. This indicates that the fused multiply-add is executed as a single micro-operation by dedicated hardware. Since an FMA instruction performs the operation $a \cdot b + c$, it consists of one floating-point multiplication and one floating-point addition. Therefore, each FMA instruction corresponds to two floating-point operations, and thus $n_{\text{FMA}} = 2$.
 
-The superscalability is defined as the number of floating-point operations that the FPU of a core can execute in parallel within a single clock cycle. To determine this value, we analyze the instruction \texttt{VFMADD132PD (YMM, YMM, YMM)} reported in the uops.info table. The table specifies a throughput of $0.50$ cycles per instruction, one micro-operation, and execution on ports FP0/1. A throughput of $0.50$ cycles per instruction implies that
-
-$$
-\frac{1}{0.50} = 2
-$$
-
-FMA instructions can be issued per cycle. The port information FP0/1 confirms the presence of two independent floating-point execution pipelines capable of executing FMA instructions in parallel.
-
-Since two FMA instructions can be executed per cycle and each FMA instruction corresponds to two floating-point operations, the total number of floating-point operations per cycle is
-
-$$
-2 \times 2 = 4.
-$$
+The superscalability is defined as the number of floating-point operations that the FPU of a core can execute in parallel within a single clock cycle. To determine this value, we analyze the instruction \texttt{VFMADD132PD (YMM, YMM, YMM)} reported in the uops.info table. The table specifies the throughput $0.50$ cycles/instruction implies 2 vector FMA instructions can be issued per cycle. Since the table indicates execution on FP0/1, we conclude the core can sustain two FMA pipelines, hence $n_{\text{super}} = 2$. The factor $n_{\text{FMA}}=2$ then accounts for mul+add inside FMA a throughput of $0.50$ cycles per instruction, one micro-operation, and execution on ports FP0/1.
 
 Hence, for both AMD Zen~2 and AMD Zen~3, the superscalability is
-4 \text{ floating-point operations per cycle per core}.\\
+2 \text{ floating-point operations per cycle per core}.\\
 
 To determine $n_{\text{SIMD}}$, we inspect the floating-point instructions reported in the uops.info table, where instructions such as \texttt{VFMADD132PD (YMM, YMM, YMM)} appear. The presence of YMM operands indicates the use of 256-bit AVX registers, since YMM registers are defined as 256-bit wide in the AVX/AVX2 instruction set. As both AMD Zen~2 and Zen~3 execute these YMM-based instructions, they necessarily support AVX2 with 256-bit SIMD registers. A double-precision floating-point number occupies 64 bits; therefore, the number of doubles that can be processed concurrently by one SIMD instruction is
 
@@ -128,7 +116,7 @@ $n_{\text{sockets}}$ & 2 & 2 \\
 $n_{\text{cores}}$ (per socket) & 64 & 64 \\
 Clock frequency $f$ & $2.6\,\text{GHz}$ & $2.45\,\text{GHz}$ \\
 $n_{\text{FMA}}$ & 2 & 2 \\
-$n_{\text{super}}$ (FP ops/cycle/core) & 4 & 4 \\
+$n_{\text{super}}$ (FP ops/cycle/core) & 2 & 2 \\
 $n_{\text{SIMD}}$ (doubles per SIMD instr.) & 4 & 4 \\
 \hline
 \end{tabular}
@@ -136,18 +124,18 @@ $n_{\text{SIMD}}$ (doubles per SIMD instr.) & 4 & 4 \\
 \end{table}
 We can now compute all the peak performance parameters for both Euler VII phases :
 \begin{align*}
-&P_{\text{core,1}} =  n_{\text{super}} \times  n_{\text{FMA}} \times n_{\text{SIMD}} \times f = 4 \times 2 \times 4 \times 2.6\,\text{GHz} = 83.2\,\text{GFLOPS/core}. \\
-&P_{\text{CPU,1}} = n_{\text{cores}} \times P_{\text{core,1}} = 64 \times 83.2\,\text{GFLOPS/core} = 5.3248\,\text{TFLOPS/CPU}. \\
-&P_{\text{node,1}} = n_{\text{sockets}} \times P_{\text{CPU,1}} = 2 \times 5.3248\,\text{TFLOPS/node} = 10.6496\,\text{TFLOPS/node}. \\
-&P_{\text{cluster,1}} = n_{\text{nodes}} \times P_{\text{node,1}} = 292 \times 10.6496\,\text{TFLOPS/node} = 3110.08\,\text{TFLOPS}.
+&P_{\text{core,1}} =  n_{\text{super}} \times  n_{\text{FMA}} \times n_{\text{SIMD}} \times f = 2 \times 2 \times 4 \times 2.6\,\text{GHz} = 41.6\,\text{GFLOPS/core}. \\
+&P_{\text{CPU,1}} = n_{\text{cores}} \times P_{\text{core,1}} = 64 \times 41.6\,\text{GFLOPS/core} = 2.6624\,\text{TFLOPS/CPU}. \\
+&P_{\text{node,1}} = n_{\text{sockets}} \times P_{\text{CPU,1}} = 2 \times 2.6624\,\text{TFLOPS/node} = 5.3248\,\text{TFLOPS/node}. \\
+&P_{\text{cluster,1}} = n_{\text{nodes}} \times P_{\text{node,1}} = 292 \times 5.3248\,\text{TFLOPS/node} = 1555.04\,\text{TFLOPS}.
 \end{align*}
 
 
 \begin{align*}
-&P_{\text{core,2}} =  n_{\text{super}} \times  n_{\text{FMA}} \times n_{\text{SIMD}} \times f = 4 \times 2 \times 4 \times 2.45\,\text{GHz} = 78.4\,\text{GFLOPS/core}. \\
-&P_{\text{CPU,2}} = n_{\text{cores}} \times P_{\text{core,2}} = 64 \times 78.4\,\text{GFLOPS/core} = 5.017  \,\text{TFLOPS/CPU}. \\
-&P_{\text{node,2}} = n_{\text{sockets}} \times P_{\text{CPU,2}} = 2 \times 5.017\,\text{TFLOPS/node} = 10.034\,\text{TFLOPS/node}. \\
-&P_{\text{cluster,2}} = n_{\text{nodes}} \times P_{\text{node,2}} = 248 \times 10.034\,\text{TFLOPS/node} = 2488.432\,\text{TFLOPS}.
+&P_{\text{core,2}} =  n_{\text{super}} \times  n_{\text{FMA}} \times n_{\text{SIMD}} \times f = 2 \times 2 \times 4 \times 2.45\,\text{GHz} = 39.2\,\text{GFLOPS/core}. \\
+&P_{\text{CPU,2}} = n_{\text{cores}} \times P_{\text{core,2}} = 64 \times 39.2\,\text{GFLOPS/core} = 2.5088\,\text{TFLOPS/CPU}. \\
+&P_{\text{node,2}} = n_{\text{sockets}} \times P_{\text{CPU,2}} = 2 \times 2.5088\,\text{TFLOPS/node} = 5.0176\,\text{TFLOPS/node}. \\
+&P_{\text{cluster,2}} = n_{\text{nodes}} \times P_{\text{node,2}} = 248 \times 5.0176\,\text{TFLOPS/node} = 1244.3648\,\text{TFLOPS}.
 \end{align*}
 
 \subsection{Memory Hierarchies [8 Points]}
@@ -258,7 +246,7 @@ We report in table \ref{tab:perf_tabl_EPYC_7H12} the results for Euler VII (phas
   \label{fig:hwloc-ls_EPYC_7763}
 \end{figure}
 
-\newpage
+%\newpage
 \subsection{Bandwidth: STREAM benchmark [10 Points]}
 For this exercise one can run the Makefile in \path{2_Performance_Characteristics/STREAM_Benchmark} and then execute \path{stream_one.sh} for Euler VII (phase 1) and \path{stream_two.sh} for Euler VII (phase 2). The batch-script outputs are available in \path{2_Performance_Characteristics/STREAM_Benchmark/build_1} and \path{2_Performance_Characteristics/STREAM_Benchmark/build_2} respectively.\\
 
@@ -307,7 +295,8 @@ Solution Validates: avg error less than 1.000000e-13 on all three arrays
 -------------------------------------------------------------
 
 \end{lstlisting}
-We choose $\texttt{STREAM\_ARRAY\_SIZE}=2^{28}$ (268,435,456 doubles) so that each array occupies 2\,GiB and the total working set (3 arrays $\approx$ 6\,GiB) is well beyond the last-level cache. This reduces cache effects and makes the reported rates representative of sustained main-memory bandwidth. STREAM reports the \emph{Best Rate} excluding the first iteration; for the roofline model we use the Triad kernel as a proxy for sustainable bandwidth, since it stresses both loads and stores and is commonly the most representative. The Copy kernel can appear faster because it benefits from efficient store handling (e.g., write combining), whereas Add/Triad are more load-intensive. Here, Triad achieves 19.7\,GB/s (19,668\,MB/s), which we use to define $B_1$ (after converting MB/s to GB/s).
+We choose $\texttt{STREAM\_ARRAY\_SIZE}=2^{28}$ (268,435,456 doubles) so that each array occupies 2\,GiB and the total working set (3 arrays $\approx$ 6\,GiB) is well beyond the last-level cache. This reduces cache effects and makes the reported rates representative of sustained main-memory bandwidth. STREAM reports the \emph{Best Rate} excluding the first iteration; for the roofline model we use the Triad kernel as a proxy for sustainable bandwidth, since it stresses both loads and stores and is commonly the most representative. The Copy kernel can appear faster because it benefits from efficient store handling (e.g., write combining), whereas Add/Triad are more load-intensive. Here, Triad achieves 19.7\,GB/s (19,668\,MB/s), which we use to define $B_1$ (after converting MB/s to GB/s).\\
+
 For Euler VII (phase 2), we run the file stream.c with the parameters specified in the following code snippet, which corresponds to the command used in the batch script \path{stream_two.sh}:
 \begin{lstlisting}[style=grayverbatim]
 gcc -O3 -march=native -mcmodel=medium -DSTREAM_TYPE=double -DSTREAM_ARRAY_SIZE=20000000 -DNTIMES=20 stream.c -o build_2/stream_two_c.exe
@@ -386,8 +375,8 @@ A kernel with $I < I_{\text{ridge}}$ is memory-bound, while a kernel with $I > I
 
 From the previous exercises, we have already computed the peak performance $P_{\text{peak}}$ and the sustainable memory bandwidth $B$ for both Euler VII phases. The values of the single core peak performances where
 \begin{align}
-P_{\text{peak,1}} &= 83.2~\text{GFlops/s} \quad \text{(Euler VII phase 1, AMD EPYC 7H12 @ 2.6 GHz)},\\
-P_{\text{peak,2}} &= 78.4~\text{GFlops/s} \quad \text{(Euler VII phase 2, AMD EPYC 7763 @ 2.45 GHz)}.
+P_{\text{peak,1}} &= 41.6~\text{GFlops/s} \quad \text{(Euler VII phase 1, AMD EPYC 7H12 @ 2.6 GHz)},\\
+P_{\text{peak,2}} &= 39.2~\text{GFlops/s} \quad \text{(Euler VII phase 2, AMD EPYC 7763 @ 2.45 GHz)}.
 \end{align}
 \\
 We use the STREAM \texttt{Triad} bandwidth as sustainable memory bandwidth, since it represents a
@@ -402,11 +391,11 @@ where we convert MB/s to GB/s by dividing by $1000$.\\
 Using Eq.~\eqref{eq:ridge}:
 \begin{align}
 I_{\text{ridge,1}} &= \frac{P_{\text{peak,1}}}{B_1}
-= \frac{83.2}{19.6681}
-\approx 4.23~\text{Flops/Byte},\\
+= \frac{41.6}{19.6681}
+\approx 2.12~\text{Flops/Byte},\\
 I_{\text{ridge,2}} &= \frac{P_{\text{peak,2}}}{B_2}
-= \frac{78.4}{17.4596}
-\approx 4.49~\text{Flops/Byte}.
+= \frac{39.2}{17.4596}
+\approx 2.24~\text{Flops/Byte}.
 \end{align}
 \\
 \begin{table}[h]
@@ -415,9 +404,9 @@ I_{\text{ridge,2}} &= \frac{P_{\text{peak,2}}}{B_2}
 \hline
 \textbf{Quantity} & \textbf{Euler VII (Phase 1)} & \textbf{Euler VII (Phase 2)} \\
 \hline
-$P_{\text{peak}}$ [GFlops/s] & 83.2 & 78.4 \\
+$P_{\text{peak}}$ [GFlops/s] & 41.6 & 39.2 \\
 $B$ (STREAM Triad) [GB/s] & 19.6681 & 17.4596 \\
-$I_{\text{ridge}} = P_{\text{peak}}/B$ [Flops/Byte] & 4.23 & 4.49 \\
+$I_{\text{ridge}} = P_{\text{peak}}/B$ [Flops/Byte] & 2.12 & 2.24 \\
 \hline
 \end{tabular}
 \caption{Inputs and ridge point of the single-core roofline models.}
@@ -427,29 +416,66 @@ $I_{\text{ridge}} = P_{\text{peak}}/B$ [Flops/Byte] & 4.23 & 4.49 \\
 \begin{figure}[h]
   \centering
   \includegraphics[scale = 0.5]{images/roofline_phase1.pdf}
-  \caption{Naive roofline model for a single core on Euler VII (phase 1). The ridge point is at $I_{\text{ridge}} \approx 4.23$ Flops/Byte.}
+  \caption{Naive roofline model for a single core on Euler VII (phase 1). The ridge point is at $I_{\text{ridge}} \approx 2.12$ Flops/Byte.}
   \label{fig:roofline_phase1}
 \end{figure}
 
 \begin{figure}[h]
   \centering
   \includegraphics[scale = 0.5]{images/roofline_phase2.pdf}
-  \caption{Naive roofline model for a single core on Euler VII (phase 2). The ridge point is at $I_{\text{ridge}} \approx 4.49$ Flops/Byte.}
+  \caption{Naive roofline model for a single core on Euler VII (phase 2). The ridge point is at $I_{\text{ridge}} \approx 2.24$ Flops/Byte.}
   \label{fig:roofline_phase2}
 \end{figure}
+
+
 \newpage
-
-
 \section{Auto-vectorization [10 points]}
-\textbf{Question 1: what is data alignment and is it important for data structures to be aligned?}
 
-\textbf{Question 2: what are some obstacles that can prevent automatic vectorization by the compiler?}
+\textbf{Question 1: what is data alignment and is it important for data structures to be aligned?}\\
+Data alignment refers to placing an object in memory at an address that is a multiple of some power-of-two boundary (for example, 16 bytes). In the document, alignment is discussed as a key performance property for SIMD loads/stores: Intel SSE (and similarly other SIMD ISAs) prefers aligned memory references, and data movement instructions can be significantly more efficient when the data is aligned. The text also warns that using aligned data-movement instructions with incorrectly aligned addresses can even raise an exception (so alignment assertions must be correct).\\
+Because of this, it is generally important that frequently accessed arrays/structures used in vectorized loops are aligned (e.g., 16-byte boundaries for SSE), especially when you want the compiler to generate efficient aligned vector loads/stores and avoid extra fix-up code.\\
 
-\textbf{Question 3: is there a way to help the compiler to vectorize and how?}
+\textbf{Question 2: what are some obstacles that can prevent automatic vectorization by the compiler?}\\
+The PDF emphasizes that some patterns do not always make vectorization impossible, but they often make it unattractive or unsafe, so the compiler may refuse to vectorize. Typical obstacles include: :
+\begin{enumerate}
+  \item \textbf{Non-contiguous memory access}: loops with non-unit stride or indirect addressing (e.g.\ indexing through another array) usually require multiple loads instead of a single packed load, so the compiler often decides vectorization is inefficient. 
+  \item \textbf{Data dependencies across iterations}: SIMD changes the effective order of operations across iterations; if the compiler cannot prove independence, it may report vector dependence and avoid vectorization.
+  \item \textbf{Non-vector-friendly loop form}: to be vectorizable, loops should be countable (trip count known at entry and not data-dependent), have a single entry/exit, and contain straight-line code without unsupported control flow such as \texttt{switch}. 
+  \item \textbf{Function calls inside the loop}: even a print statement can block vectorization; main exceptions are intrinsic math calls or calls that can be inlined.
+  \item \textbf{Pointer aliasing and complex pointer usage}: if the compiler cannot prove that two memory references are distinct (aliased pointers), it must assume possible dependencies and may not vectorize.
+\end{enumerate}
+
+\textbf{Question 3: is there a way to help the compiler to vectorize and how?}\\
+Yes, the guide explicitly states that users can help by supplying additional information (through hints / pragmas / keywords) and by writing code in a vector-friendly style.
+Concrete ways mentioned include:
+\begin{enumerate}
+  \item \textbf{Provide dependence/alignment hints with pragmas}: \texttt{\#pragma ivdep} asks the compiler to ignore assumed vector dependencies; \texttt{\#pragma vector \{aligned|unaligned|always|...\}} can specify how to vectorize and can override efficiency heuristics.
+  \item \textbf{Use \texttt{restrict} to reduce aliasing}: in C99, \texttt{restrict} can assert that pointers do not alias; this can enable vectorization and avoid conservative runtime checks.
+  \item \textbf{Communicate alignment properties}: you can align objects with declarations such as \texttt{\_\_declspec(align(...))} and you can also tell the compiler to assume an alignment via \texttt{\_\_builtin\_assume\_aligned(a,n)} or more generally \texttt{\_\_builtin\_assume(cond)}. 
+  \item \textbf{Adopt vector-friendly data layouts}: the document highlights that SoA (structure of arrays) tends to give unit-stride streams that are more amenable to effective vectorization than AoS (array of structures).
+\end{enumerate}
 
 \textbf{Question 4: which loop optimizations are performed by the compiler to vectorize and pipeline loops?}
+The text connects better vectorization to enabling \emph{high-level optimizations} (HLO, typically \texttt{O3}), which ``enables additional loop optimizations'' that make vectorization easier after transformations.\\
+It also describes transformations that either create a vectorizable innermost loop or improve alignment and memory behavior, notably: 
+\begin{enumerate}
+  \item \textbf{Loop unrolling}: auto-vectorization is described as generating packed SIMD instructions to unroll a loop, and the PDF notes that unrolling is something the compiler does automatically (so manual unrolling is typically discouraged when done only to ``force'' vectorization). 
+  \item \textbf{Loop peeling for alignment}: the document explicitly mentions code restructuring such as loop peeling to obtain aligned memory accesses throughout the program (e.g., to reach 16-byte alignment for SSE).
+  \item \textbf{Loop interchange / collapsing / materialization effects}: vectorization normally targets the innermost loop; however, the PDF notes that prior optimizations such as unrolling, collapsing, or interchange can transform an original outer loop into an innermost loop that becomes the vectorization target.
+\end{enumerate}
+In short, the compiler typically applies loop transformations (especially under higher optimization levels) to produce a regular, countable, straight-line innermost loop, and may add alignment-related transformations (like peeling) so the vector loop can run efficiently. \\
 
 \textbf{Question 5: what can be done if automatic vectorization by the compiler fails or is sub-optimal?}
+The PDF suggests a progression from diagnosis, to restructuring, to stronger user guidance, and finally to more explicit SIMD approaches. 
+A practical sequence is:
+\begin{enumerate}
+  \item \textbf{Inspect vectorization reports and diagnostics}: use compiler optimization reports (e.g.\ \texttt{-qopt-report} in the examples) to see why a loop was not vectorized or why it was considered inefficient. 
+  \item \textbf{Rewrite the loop in a vectorizable style}: simplify termination conditions, ensure the loop is countable, avoid unsupported control flow and most function calls, avoid loop-carried dependencies, and prefer unit-stride array accesses over complex pointer arithmetic. 
+  \item \textbf{Add correct hints/annotations}: apply \texttt{restrict} to eliminate aliasing ambiguity, assert/assume alignment where valid, and use pragmas like \texttt{\#pragma ivdep} or \texttt{\#pragma vector always} to override conservative assumptions or heuristics (with the caution that incorrect use can change program semantics or even crash with misaligned aligned-load instructions). 
+  \item \textbf{Use user-mandated SIMD}: \texttt{\#pragma omp simd} enforces vectorization semantics; unlike mere ``hints'', it makes the compiler warn if it cannot vectorize and provides clauses to specify the required SIMD behavior.
+  \item \textbf{Enable more global optimization context}: enabling IPO (interprocedural optimization) and HLO can provide extra information (trip counts, alignment, dependencies) and enable transformations (and inlining) that improve vectorization opportunities. 
+  \item \textbf{Move to more explicit SIMD programming when needed}: if automatic vectorization remains insufficient, the document points to approaches where vectorization is expressed more explicitly (e.g.\ explicit SIMD extensions), giving you tighter control and reducing reliance on compiler heuristics.
+\end{enumerate}
 
 \newpage
 \section{Matrix multiplication optimization [30 points]}
@@ -490,7 +516,7 @@ C_{i,j} \mathrel{+}= \sum_{k=0}^{n-1} A_{i,k} B_{k,j},
 \]
 but with a more efficient memory-access pattern.\\
 
-\textbf{Task 2: Implement blocking for square matrix multiplication in \url{URLdgemm_blocked.c}}\\
+\textbf{Task 2: Implement blocking for square matrix multiplication in \url{dgemm_blocked.c}}\\
 To further increase performance, we implement \emph{blocking} for the matrix multiplication. Instead of multiplying the full matrices at once, we split the iteration space into smaller $BS\times BS$ tiles and compute partial products tile-by-tile:
 \begin{lstlisting}[style=grayverbatim,language=C]
 void square_dgemm(int n, double* A, double* B, double* C)
@@ -522,13 +548,20 @@ The outer loops \texttt{jj}, \texttt{kk}, and \texttt{ii} iterate over tiles of 
 \[
 j \in [jj, j_{\max}),\quad k \in [kk, k_{\max}),\quad i \in [ii, i_{\max}).
 \]
-The helper \texttt{imin} ensures correct handling of boundary tiles when $n$ is not a multiple of $BS$.
-
+The helper \texttt{imin} ensures correct handling of boundary tiles when $n$ is not a multiple of $BS$.\\
 Blocking improves cache efficiency because, for a fixed $(jj,kk,ii)$ triple, the algorithm repeatedly reuses the same tiles of $A$ and $B$ while updating the corresponding tile of $C$. This increases \emph{temporal locality} and reduces the number of times data is fetched from main memory. Inside each tile, the innermost loop still runs over $i$, giving stride-1 (contiguous) access for $A(:,k)$ and $C(:,j)$ in column-major format. Finally, loading \texttt{bkj = B(k,j)} once per $(j,k)$ pair (scalar reuse) avoids redundant memory loads within the innermost loop.\\
+
 We set the default block size to $BS=64$, which is a commonly used baseline for tiled DGEMM. 
 Blocking aims to improve temporal locality by reusing submatrices (tiles) of $A$ and $B$ while updating a tile of $C$ before moving to the next region. 
 With double-precision elements, a $64\times 64$ tile corresponds to $64^2\cdot 8 \approx 32$\,KiB per matrix tile; the combined working set of the three tiles $(A,B,C)$ is about $3\cdot 32 \approx 96$\,KiB, which is small enough to benefit from cache reuse while being large enough to amortize loop overhead. 
 Moreover, using a power-of-two block size simplifies addressing and often interacts well with cache-line behavior. 
 The block size is kept configurable via \texttt{\#ifndef BS} so that alternative values (e.g.\ 32 or 48) can be explored if further tuning is desired.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/timing.pdf}
+  \caption{}
+  \label{fig:timing}
+\end{figure}
 
 \end{document}

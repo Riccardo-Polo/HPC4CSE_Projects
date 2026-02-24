@@ -3,7 +3,7 @@
 # Euler GCC config
 # (module load stack gcc openblas)
 CC = gcc                         # compiler (& linker)
-OPT =                            # optimization flags (add more here!)
+OPT = -O3 -march=native          # optimization flags (add more here!)
 CFLAGS = -Wall -std=gnu99 $(OPT) # standard compiler flags
 LDLIBS = -lopenblas              # linker options
 

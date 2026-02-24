@@ -88,7 +88,7 @@ For Euler VII (phase 1), the system consists of $n_{\text{nodes}} = 292$ nodes, 
  For Euler VII (phase 2), the system consists of $n_{\text{nodes}} = 248$ nodes, each with $n_{\text{sockets}} = 2$ sockets and $n_{\text{cores}} = 64$ cores per socket, operating at a frequency $f = 2.45\,\text{GHz}$.\\
 
 Using the uops.info database provided, we determine both the superscalability factor and the FMA factor for the corresponding AMD architectures. \\
-For both Euler VII phases, which are based on AMD Zen2 and AMD Zen3 respectively, we obtain $n_{\text{super}} = 4$ and $n_{\text{FMA}} = 2$.\\
+For both Euler VII phases, which are based on AMD Zen2 and AMD Zen3 respectively, we obtain $n_{\text{super}} = 2$ and $n_{\text{FMA}} = 2$.\\
 
 The FMA factor is determined by observing that all instructions marked as FMA in the table have a corresponding number of micro-operations equal to one. This indicates that the fused multiply-add is executed as a single micro-operation by dedicated hardware. Since an FMA instruction performs the operation $a \cdot b + c$, it consists of one floating-point multiplication and one floating-point addition. Therefore, each FMA instruction corresponds to two floating-point operations, and thus $n_{\text{FMA}} = 2$.
 
@@ -116,7 +116,7 @@ $n_{\text{sockets}}$ & 2 & 2 \\
 $n_{\text{cores}}$ (per socket) & 64 & 64 \\
 Clock frequency $f$ & $2.6\,\text{GHz}$ & $2.45\,\text{GHz}$ \\
 $n_{\text{FMA}}$ & 2 & 2 \\
-$n_{\text{super}}$ (FP ops/cycle/core) & 2 & 2 \\
+$n_{\text{super}}$ (FMA instructions per cycle per core) & 2 & 2 \\
 $n_{\text{SIMD}}$ (doubles per SIMD instr.) & 4 & 4 \\
 \hline
 \end{tabular}
@@ -349,7 +349,7 @@ $2\times 10^{7}\cdot 8 \approx 160$\,MB per array (as confirmed by STREAM: 152.6
 Therefore the total working set is only $\approx 0.4$\,GiB (three arrays), which is comparable to (or smaller than)
 the last-level cache and can lead to cache-influenced bandwidth numbers rather than sustained DRAM bandwidth.
 For a fair roofline bound, the array size should be increased so that the three arrays clearly exceed LLC (e.g., by
-a factor $\gtrsim 4\times$), similarly to phase~1. Using the current run as-is, we still take the Triad kernel as a
+a factor $ 4\times$), similarly to phase~1. Using the current run as-is, we still take the Triad kernel as a
 proxy for sustainable bandwidth (here $\approx 17.46$\,GB/s), but we interpret it cautiously because it may overestimate
 (or otherwise bias) the true main-memory bandwidth due to caching effects.\\
 

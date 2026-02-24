@@ -21,6 +21,6 @@ lscpu | grep "Model name"
 # run (srun: run job on cluster with provided resources/allocation)
 srun hostname
 
-gcc -O3 -march=native -mcmodel=medium -DSTREAM_TYPE=double -DSTREAM_ARRAY_SIZE=20000000 -DNTIMES=20 stream.c -o build_2/stream_two_c.exe
+gcc -O3 -march=native -mcmodel=medium -DSTREAM_TYPE=double -DSTREAM_ARRAY_SIZE=268435456 -DNTIMES=20 stream.c -o build_2/stream_two_c.exe
 
 srun build_2/stream_two_c.exe

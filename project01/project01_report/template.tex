@@ -473,8 +473,9 @@ A practical sequence is:
 
 \newpage
 \section{Matrix multiplication optimization [30 points]}
+
 \textbf{Task 1: Improve the loop ordering in \path{dgemm_jki.c}.}\\
-The original naive implementation uses the loop order $i$--$j$--$k$:
+The original implementation uses the loop order $i$--$j$--$k$:
 \begin{lstlisting}[style=grayverbatim,language=C]
 void square_dgemm(int n, double* A, double* B, double* C) {
   for (int i = 0; i < n; ++i) {
@@ -486,9 +487,12 @@ void square_dgemm(int n, double* A, double* B, double* C) {
   }
 }
 \end{lstlisting}
-Although correct, this ordering is not cache-friendly for column-major storage (indexing $i + jn$). In particular, in the innermost loop over $k$ the access to $A[i+k n]$ jumps across different columns of $A$ with stride $n$, limiting spatial locality.
+This loop ordering is correct, but it performs poorly for column-major storage (indexing $i + jn$). 
+In the innermost loop over $k$, the access to $A[i + k n]$ moves across different columns of $A$ with a stride of $n$, i.e., it repeatedly jumps to memory locations that are far apart. 
+This limits spatial locality and makes it difficult for the cache hierarchy and hardware prefetchers to be effective. 
+By contrast, $B[k + jn]$ is read contiguously in the $k$-loop (a whole column of $B$), so the main bottleneck of the naive ordering is the strided access pattern to $A$.\\
 
-To improve data locality, we reorder the loops to $j$--$k$--$i$ and hoist invariant quantities out of the innermost loop:
+To improve locality, we reorder the loops to $j$--$k$--$i$ and hoist invariant quantities out of the innermost loop:
 \begin{lstlisting}[style=grayverbatim,language=C]
 void square_dgemm(int n, double* A, double* B, double* C) {
   for (int j = 0; j < n; ++j) {
@@ -504,14 +508,18 @@ void square_dgemm(int n, double* A, double* B, double* C) {
 }
 \end{lstlisting}
 
-With column-major layout, full columns are contiguous in memory. Therefore, for fixed $(j,k)$ the innermost loop over $i$ accesses both $A(:,k)$ and $C(:,j)$ with \emph{stride 1} (contiguous memory), improving cache utilization and hardware prefetching, and enabling better SIMD vectorization. Additionally, loading $B(k,j)$ once into a scalar (\texttt{bkj}) and using column pointers (\texttt{Acol}, \texttt{Ccol}) reduces repeated address computations and memory loads. The computation remains mathematically identical, since it still accumulates
+With column-major layout, full columns are contiguous in memory. For fixed $(j,k)$, the innermost loop over $i$ streams through $A(:,k)$ and updates $C(:,j)$ with \emph{stride 1} (contiguous memory) in both arrays. 
+This improves cache utilization and makes prefetching more effective, since consecutive iterations access consecutive memory locations. 
+Moreover, loading $B(k,j)$ once into a scalar (\texttt{bkj}) and using column pointers (\texttt{Acol}, \texttt{Ccol}) reduces redundant address computations and avoids repeatedly reloading the same element of $B$. 
+The computation is unchanged, since we still perform
 \[
 C_{i,j} \mathrel{+}= \sum_{k=0}^{n-1} A_{i,k} B_{k,j},
 \]
-but with a more efficient memory-access pattern.\\
+but with a memory-access pattern that is more favorable for the cache hierarchy and that typically facilitates SIMD vectorization in the innermost loop.\\[0.5em]
 
-\textbf{Task 2: Implement blocking for square matrix multiplication in \url{dgemm_blocked.c}}\\
-To further increase performance, we implement \emph{blocking} for the matrix multiplication. Instead of multiplying the full matrices at once, we split the iteration space into smaller $BS\times BS$ tiles and compute partial products tile-by-tile:
+\textbf{Task 2: Implement blocking for square matrix multiplication in \path{dgemm_blocked.c}.}\\
+To further increase performance, we implement \emph{blocking} (tiling) in all three loop dimensions. 
+Instead of working on the full iteration space at once, we partition the indices into blocks of size $BS$ along $i$, $j$, and $k$, and compute the product block-by-block:
 \begin{lstlisting}[style=grayverbatim,language=C]
 void square_dgemm(int n, double* A, double* B, double* C)
 {
@@ -538,23 +546,32 @@ void square_dgemm(int n, double* A, double* B, double* C)
 }
 \end{lstlisting}
 
-The outer loops \texttt{jj}, \texttt{kk}, and \texttt{ii} iterate over tiles of columns/rows with step size \texttt{BS}. For each block triple, the inner loops perform the same $j$--$k$--$i$ update as in the reordered implementation, but restricted to the current subranges:
+The outer loops \texttt{jj}, \texttt{kk}, and \texttt{ii} select the current block ranges
 \[
-j \in [jj, j_{\max}),\quad k \in [kk, k_{\max}),\quad i \in [ii, i_{\max}).
+j \in [jj, j_{\max}), \qquad 
+k \in [kk, k_{\max}), \qquad 
+i \in [ii, i_{\max}),
 \]
-The helper \texttt{imin} ensures correct handling of boundary tiles when $n$ is not a multiple of $BS$.\\
-Blocking improves cache efficiency because, for a fixed $(jj,kk,ii)$ triple, the algorithm repeatedly reuses the same tiles of $A$ and $B$ while updating the corresponding tile of $C$. This increases \emph{temporal locality} and reduces the number of times data is fetched from main memory. Inside each tile, the innermost loop still runs over $i$, giving stride-1 (contiguous) access for $A(:,k)$ and $C(:,j)$ in column-major format. Finally, loading \texttt{bkj = B(k,j)} once per $(j,k)$ pair (scalar reuse) avoids redundant memory loads within the innermost loop.\\
+and the helper \texttt{imin} ensures correct handling of boundary tiles when $n$ is not a multiple of $BS$. 
+Within each block triple, the inner kernel performs the same $j$--$k$--$i$ update as in Task~1, but restricted to the current submatrices.\\
 
-We set the default block size to $BS=64$, which is a commonly used baseline for tiled DGEMM.
-With double-precision elements, a $64\times 64$ tile corresponds to $64^2\cdot 8 \approx 32$\,KiB per matrix tile; the combined working set of the three tiles $(A,B,C)$ is about $3\cdot 32 \approx 96$\,KiB, which is small enough to benefit from cache reuse while being large enough to amortize loop overhead. 
-Moreover, using a power-of-two block size simplifies addressing and often interacts well with cache-line behavior. 
-The block size is kept configurable via \texttt{\#ifndef BS} so that alternative values (e.g.\ 32 or 48) can be explored if further tuning is desired.
+Blocking improves performance by increasing \emph{temporal locality}. 
+For a fixed $(jj,kk,ii)$ triple, the algorithm repeatedly reuses the same sub-blocks of $A$ and $B$ while accumulating into the corresponding sub-block of $C$, reducing the frequency at which data must be fetched from main memory. 
+Inside each block, the innermost loop still runs over $i$, so the access to $A(:,k)$ and $C(:,j)$ remains stride-1 in column-major format. 
+Finally, loading \texttt{bkj = B(k,j)} once per $(j,k)$ pair provides scalar reuse and avoids redundant loads in the innermost loop.\\
+
+We set the default block size to $BS=64$, a common baseline choice for a first cache-blocked DGEMM implementation.
+With double-precision elements, a $64\times 64$ tile contains $64^2$ entries and occupies $64^2\cdot 8 \approx 32$\,KiB.
+The combined footprint of the three tiles $(A,B,C)$ involved in the update is therefore about $3\cdot 32 \approx 96$\,KiB. 
+This working set does not fit in L1 data cache, but it fits comfortably in the per-core L2 cache, allowing substantial reuse from L2 rather than repeatedly streaming the same data from main memory. 
+The block size is kept configurable via \texttt{\#ifndef BS} so that alternative values can be tested empirically on the target architecture if further tuning is desired.\\
 
 \begin{figure}[!h]
   \centering
   \includegraphics[width=0.8\textwidth]{images/timing.pdf}
-  \caption{timing results for the naive, reordered, and blocked implementations of DGEMM. The blocked version achieves significantly better performance than the naive and reordered versions, especially as matrix size increases, due to improved cache utilization.}
+  \caption{Performance results for the naive, reordered (stride-one), blocked and BLAS implementations of DGEMM (single core, log-scale $y$-axis).}
   \label{fig:timing}
+  
 \end{figure}
-
+ Loop reordering improves locality and blocking yields a further speedup, while optimized BLAS remains fastest due to architecture-tuned vectorized micro-kernels and packing.
 \end{document}

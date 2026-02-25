@@ -39,7 +39,7 @@ all: $(targets)
 
 benchmark-naive: benchmark.o dgemm-naive.o
 	$(CC) -o $@ $^ $(LDLIBS)
-benchmark-jki: benchmark.o dgemm-jki.c
+benchmark-jki: benchmark.o dgemm-jki.o
 	$(CC) -o $@ $^ $(LDLIBS)
 benchmark-blocked: benchmark.o dgemm-blocked.o
 	$(CC) -o $@ $^ $(LDLIBS)

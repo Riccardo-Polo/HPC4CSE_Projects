@@ -1,0 +1,333 @@
+
+Currently Loaded Modules:
+  1) stack/2025-06   2) gcc/12.2.0   3) openblas/0.3.28
+
+ 
+
+rm -f benchmark-naive benchmark-jki benchmark-blocked benchmark-blas benchmark.o dgemm-naive.o dgemm-jki.o dgemm-blocked.o dgemm-blas.o
+gcc                          -c -Wall -std=gnu99 -O3 -march=native            benchmark.c
+gcc                          -c -Wall -std=gnu99 -O3 -march=native            dgemm-naive.c
+gcc                          -o benchmark-naive benchmark.o dgemm-naive.o -lopenblas              
+gcc                          -c -Wall -std=gnu99 -O3 -march=native            dgemm-jki.c
+gcc                          -o benchmark-jki benchmark.o dgemm-jki.o -lopenblas              
+gcc                          -c -Wall -std=gnu99 -O3 -march=native            dgemm-blocked.c
+gcc                          -o benchmark-blocked benchmark.o dgemm-blocked.o -lopenblas              
+gcc                          -c -Wall -std=gnu99 -O3 -march=native            dgemm-blas.c
+gcc                          -o benchmark-blas benchmark.o dgemm-blas.o -lopenblas              
+==== benchmark-naive ======================
+# Description:	Naive, three-loop dgemm.
+
+Size:       31	Gflop/s:     2.92	Percentage:    7.46
+Size:       32	Gflop/s:     2.83	Percentage:    7.22
+Size:       96	Gflop/s:     2.14	Percentage:    5.47
+Size:       97	Gflop/s:     2.79	Percentage:    7.12
+Size:      127	Gflop/s:     2.60	Percentage:    6.63
+Size:      128	Gflop/s:     1.50	Percentage:    3.82
+Size:      129	Gflop/s:     2.59	Percentage:    6.60
+Size:      191	Gflop/s:     2.41	Percentage:    6.15
+Size:      192	Gflop/s:     1.53	Percentage:    3.90
+Size:      229	Gflop/s:     2.35	Percentage:    6.00
+Size:      255	Gflop/s:     2.32	Percentage:    5.91
+Size:      256	Gflop/s:     1.12	Percentage:    2.85
+Size:      257	Gflop/s:     2.32	Percentage:    5.92
+Size:      319	Gflop/s:     2.28	Percentage:    5.83
+Size:      320	Gflop/s:     1.47	Percentage:    3.75
+Size:      321	Gflop/s:     2.28	Percentage:    5.81
+Size:      417	Gflop/s:     2.23	Percentage:    5.69
+Size:      479	Gflop/s:     2.22	Percentage:    5.66
+Size:      480	Gflop/s:     2.13	Percentage:    5.44
+Size:      511	Gflop/s:     2.20	Percentage:    5.62
+Size:      512	Gflop/s:     0.53	Percentage:    1.34
+Size:      639	Gflop/s:     2.17	Percentage:    5.54
+Size:      640	Gflop/s:     1.34	Percentage:    3.43
+Size:      767	Gflop/s:     2.17	Percentage:    5.53
+Size:      768	Gflop/s:     0.83	Percentage:    2.11
+Size:      769	Gflop/s:     2.16	Percentage:    5.51
+Size:      800	Gflop/s:     2.09	Percentage:    5.34
+Size:      895	Gflop/s:     2.16	Percentage:    5.52
+Size:      896	Gflop/s:     1.18	Percentage:    3.00
+Size:      900	Gflop/s:     2.16	Percentage:    5.51
+Size:     1000	Gflop/s:     2.15	Percentage:    5.50
+Size:     1023	Gflop/s:     2.14	Percentage:    5.46
+Size:     1024	Gflop/s:     0.29	Percentage:    0.75
+Size:     1025	Gflop/s:     2.14	Percentage:    5.46
+Size:     1100	Gflop/s:     2.16	Percentage:    5.51
+Size:     1151	Gflop/s:     2.16	Percentage:    5.50
+Size:     1152	Gflop/s:     1.15	Percentage:    2.93
+Size:     1200	Gflop/s:     2.13	Percentage:    5.42
+Size:     1279	Gflop/s:     2.15	Percentage:    5.49
+Size:     1280	Gflop/s:     0.74	Percentage:    1.90
+Size:     1281	Gflop/s:     2.15	Percentage:    5.48
+Size:     1400	Gflop/s:     2.14	Percentage:    5.47
+Size:     1407	Gflop/s:     2.15	Percentage:    5.49
+Size:     1408	Gflop/s:     1.18	Percentage:    3.02
+Size:     1500	Gflop/s:     2.15	Percentage:    5.48
+Size:     1535	Gflop/s:     2.14	Percentage:    5.45
+Size:     1536	Gflop/s:     0.27	Percentage:    0.69
+Size:     1537	Gflop/s:     2.13	Percentage:    5.44
+Size:     1600	Gflop/s:     1.19	Percentage:    3.03
+Size:     1663	Gflop/s:     2.14	Percentage:    5.46
+Size:     1664	Gflop/s:     1.12	Percentage:    2.86
+Size:     1700	Gflop/s:     2.14	Percentage:    5.46
+Size:     1791	Gflop/s:     2.13	Percentage:    5.44
+Size:     1792	Gflop/s:     0.66	Percentage:    1.68
+Size:     1793	Gflop/s:     2.14	Percentage:    5.45
+Size:     1900	Gflop/s:     2.12	Percentage:    5.40
+Size:     1919	Gflop/s:     2.12	Percentage:    5.41
+Size:     1920	Gflop/s:     1.06	Percentage:    2.71
+Size:     2000	Gflop/s:     2.07	Percentage:    5.28
+Size:     2047	Gflop/s:     2.01	Percentage:    5.14
+Size:     2048	Gflop/s:     0.12	Percentage:    0.30
+Size:     2049	Gflop/s:     2.00	Percentage:    5.10
+Size:     2100	Gflop/s:     2.10	Percentage:    5.36
+Size:     2175	Gflop/s:     2.10	Percentage:    5.36
+Size:     2176	Gflop/s:     0.99	Percentage:    2.52
+Size:     2200	Gflop/s:     2.09	Percentage:    5.32
+Size:     2300	Gflop/s:     2.09	Percentage:    5.33
+Size:     2303	Gflop/s:     2.09	Percentage:    5.34
+Size:     2304	Gflop/s:     0.63	Percentage:    1.59
+Size:     2305	Gflop/s:     2.09	Percentage:    5.34
+Size:     2400	Gflop/s:     1.87	Percentage:    4.76
+Size:     2431	Gflop/s:     2.09	Percentage:    5.34
+Size:     2432	Gflop/s:     0.97	Percentage:    2.46
+Size:     2500	Gflop/s:     2.08	Percentage:    5.31
+# Average percentage of peak performance = 4.71431
+
+==== benchmark-jki ========================
+# Description:	Stride-one, three-loop dgemm.
+
+Size:       31	Gflop/s:     9.70	Percentage:   24.75
+Size:       32	Gflop/s:     9.68	Percentage:   24.69
+Size:       96	Gflop/s:    12.41	Percentage:   31.66
+Size:       97	Gflop/s:    13.03	Percentage:   33.24
+Size:      127	Gflop/s:    13.28	Percentage:   33.88
+Size:      128	Gflop/s:    12.87	Percentage:   32.84
+Size:      129	Gflop/s:    13.81	Percentage:   35.23
+Size:      191	Gflop/s:    14.50	Percentage:   36.98
+Size:      192	Gflop/s:    14.35	Percentage:   36.61
+Size:      229	Gflop/s:    14.77	Percentage:   37.69
+Size:      255	Gflop/s:    14.61	Percentage:   37.28
+Size:      256	Gflop/s:    13.78	Percentage:   35.16
+Size:      257	Gflop/s:    14.45	Percentage:   36.86
+Size:      319	Gflop/s:    13.97	Percentage:   35.64
+Size:      320	Gflop/s:    14.08	Percentage:   35.92
+Size:      321	Gflop/s:    13.87	Percentage:   35.39
+Size:      417	Gflop/s:    13.92	Percentage:   35.51
+Size:      479	Gflop/s:    14.61	Percentage:   37.28
+Size:      480	Gflop/s:    13.82	Percentage:   35.26
+Size:      511	Gflop/s:    14.18	Percentage:   36.17
+Size:      512	Gflop/s:    13.13	Percentage:   33.49
+Size:      639	Gflop/s:    14.12	Percentage:   36.01
+Size:      640	Gflop/s:    13.75	Percentage:   35.08
+Size:      767	Gflop/s:    14.29	Percentage:   36.46
+Size:      768	Gflop/s:    13.52	Percentage:   34.50
+Size:      769	Gflop/s:    14.36	Percentage:   36.62
+Size:      800	Gflop/s:    14.00	Percentage:   35.71
+Size:      895	Gflop/s:    14.42	Percentage:   36.80
+Size:      896	Gflop/s:    13.88	Percentage:   35.40
+Size:      900	Gflop/s:    13.95	Percentage:   35.59
+Size:     1000	Gflop/s:    13.99	Percentage:   35.68
+Size:     1023	Gflop/s:    14.42	Percentage:   36.79
+Size:     1024	Gflop/s:    12.81	Percentage:   32.67
+Size:     1025	Gflop/s:    14.37	Percentage:   36.66
+Size:     1100	Gflop/s:    13.94	Percentage:   35.56
+Size:     1151	Gflop/s:    14.35	Percentage:   36.61
+Size:     1152	Gflop/s:    13.76	Percentage:   35.11
+Size:     1200	Gflop/s:    13.77	Percentage:   35.14
+Size:     1279	Gflop/s:    14.03	Percentage:   35.79
+Size:     1280	Gflop/s:    13.18	Percentage:   33.61
+Size:     1281	Gflop/s:    13.94	Percentage:   35.56
+Size:     1400	Gflop/s:    13.37	Percentage:   34.10
+Size:     1407	Gflop/s:    13.86	Percentage:   35.35
+Size:     1408	Gflop/s:    13.35	Percentage:   34.05
+Size:     1500	Gflop/s:    13.25	Percentage:   33.80
+Size:     1535	Gflop/s:    13.41	Percentage:   34.21
+Size:     1536	Gflop/s:    11.97	Percentage:   30.53
+Size:     1537	Gflop/s:    13.37	Percentage:   34.10
+Size:     1600	Gflop/s:    12.64	Percentage:   32.25
+Size:     1663	Gflop/s:    12.34	Percentage:   31.47
+Size:     1664	Gflop/s:    11.55	Percentage:   29.46
+Size:     1700	Gflop/s:    10.26	Percentage:   26.18
+Size:     1791	Gflop/s:    10.37	Percentage:   26.46
+Size:     1792	Gflop/s:     9.24	Percentage:   23.58
+Size:     1793	Gflop/s:     9.94	Percentage:   25.35
+Size:     1900	Gflop/s:     8.24	Percentage:   21.01
+Size:     1919	Gflop/s:     8.64	Percentage:   22.03
+Size:     1920	Gflop/s:     8.48	Percentage:   21.64
+Size:     2000	Gflop/s:     7.73	Percentage:   19.72
+Size:     2047	Gflop/s:     7.59	Percentage:   19.36
+Size:     2048	Gflop/s:     7.32	Percentage:   18.67
+Size:     2049	Gflop/s:     7.57	Percentage:   19.31
+Size:     2100	Gflop/s:     7.11	Percentage:   18.13
+Size:     2175	Gflop/s:     6.88	Percentage:   17.56
+Size:     2176	Gflop/s:     6.78	Percentage:   17.30
+Size:     2200	Gflop/s:     6.70	Percentage:   17.10
+Size:     2300	Gflop/s:     6.44	Percentage:   16.42
+Size:     2303	Gflop/s:     6.41	Percentage:   16.35
+Size:     2304	Gflop/s:     6.42	Percentage:   16.37
+Size:     2305	Gflop/s:     6.56	Percentage:   16.73
+Size:     2400	Gflop/s:     6.04	Percentage:   15.41
+Size:     2431	Gflop/s:     6.47	Percentage:   16.51
+Size:     2432	Gflop/s:     6.32	Percentage:   16.11
+Size:     2500	Gflop/s:     6.31	Percentage:   16.10
+# Average percentage of peak performance = 29.805
+
+==== benchmark-blas =======================
+# Description:	Reference dgemm.
+
+Size:       31	Gflop/s:    23.99	Percentage:   61.19
+Size:       32	Gflop/s:    33.52	Percentage:   85.51
+Size:       96	Gflop/s:    43.52	Percentage:  111.03
+Size:       97	Gflop/s:    41.83	Percentage:  106.71
+Size:      127	Gflop/s:    39.55	Percentage:  100.89
+Size:      128	Gflop/s:    43.34	Percentage:  110.57
+Size:      129	Gflop/s:    42.86	Percentage:  109.34
+Size:      191	Gflop/s:    41.81	Percentage:  106.66
+Size:      192	Gflop/s:    45.21	Percentage:  115.32
+Size:      229	Gflop/s:    44.73	Percentage:  114.10
+Size:      255	Gflop/s:    43.66	Percentage:  111.39
+Size:      256	Gflop/s:    45.55	Percentage:  116.21
+Size:      257	Gflop/s:    44.49	Percentage:  113.50
+Size:      319	Gflop/s:    43.95	Percentage:  112.12
+Size:      320	Gflop/s:    46.00	Percentage:  117.35
+Size:      321	Gflop/s:    45.44	Percentage:  115.93
+Size:      417	Gflop/s:    46.27	Percentage:  118.04
+Size:      479	Gflop/s:    45.54	Percentage:  116.16
+Size:      480	Gflop/s:    47.09	Percentage:  120.13
+Size:      511	Gflop/s:    44.99	Percentage:  114.77
+Size:      512	Gflop/s:    45.35	Percentage:  115.70
+Size:      639	Gflop/s:    45.74	Percentage:  116.69
+Size:      640	Gflop/s:    46.63	Percentage:  118.96
+Size:      767	Gflop/s:    46.22	Percentage:  117.91
+Size:      768	Gflop/s:    46.95	Percentage:  119.77
+Size:      769	Gflop/s:    46.64	Percentage:  118.98
+Size:      800	Gflop/s:    47.15	Percentage:  120.29
+Size:      895	Gflop/s:    46.66	Percentage:  119.04
+Size:      896	Gflop/s:    47.32	Percentage:  120.71
+Size:      900	Gflop/s:    47.44	Percentage:  121.03
+Size:     1000	Gflop/s:    47.58	Percentage:  121.38
+Size:     1023	Gflop/s:    46.27	Percentage:  118.02
+Size:     1024	Gflop/s:    44.94	Percentage:  114.65
+Size:     1025	Gflop/s:    46.08	Percentage:  117.56
+Size:     1100	Gflop/s:    47.34	Percentage:  120.76
+Size:     1151	Gflop/s:    46.81	Percentage:  119.40
+Size:     1152	Gflop/s:    47.52	Percentage:  121.23
+Size:     1200	Gflop/s:    47.80	Percentage:  121.93
+Size:     1279	Gflop/s:    47.19	Percentage:  120.38
+Size:     1280	Gflop/s:    47.48	Percentage:  121.12
+Size:     1281	Gflop/s:    47.09	Percentage:  120.13
+Size:     1400	Gflop/s:    47.71	Percentage:  121.70
+Size:     1407	Gflop/s:    47.34	Percentage:  120.77
+Size:     1408	Gflop/s:    47.63	Percentage:  121.52
+Size:     1500	Gflop/s:    47.92	Percentage:  122.25
+Size:     1535	Gflop/s:    46.71	Percentage:  119.16
+Size:     1536	Gflop/s:    46.20	Percentage:  117.85
+Size:     1537	Gflop/s:    46.46	Percentage:  118.53
+Size:     1600	Gflop/s:    47.85	Percentage:  122.07
+Size:     1663	Gflop/s:    47.32	Percentage:  120.71
+Size:     1664	Gflop/s:    47.85	Percentage:  122.06
+Size:     1700	Gflop/s:    47.85	Percentage:  122.07
+Size:     1791	Gflop/s:    47.42	Percentage:  120.96
+Size:     1792	Gflop/s:    47.54	Percentage:  121.28
+Size:     1793	Gflop/s:    47.44	Percentage:  121.03
+Size:     1900	Gflop/s:    47.97	Percentage:  122.38
+Size:     1919	Gflop/s:    47.64	Percentage:  121.54
+Size:     1920	Gflop/s:    47.77	Percentage:  121.87
+Size:     2000	Gflop/s:    48.13	Percentage:  122.79
+Size:     2047	Gflop/s:    47.01	Percentage:  119.93
+Size:     2048	Gflop/s:    43.78	Percentage:  111.68
+Size:     2049	Gflop/s:    46.70	Percentage:  119.14
+Size:     2100	Gflop/s:    47.83	Percentage:  122.02
+Size:     2175	Gflop/s:    47.70	Percentage:  121.67
+Size:     2176	Gflop/s:    47.86	Percentage:  122.08
+Size:     2200	Gflop/s:    47.50	Percentage:  121.18
+Size:     2300	Gflop/s:    48.04	Percentage:  122.55
+Size:     2303	Gflop/s:    47.66	Percentage:  121.59
+Size:     2304	Gflop/s:    47.78	Percentage:  121.89
+Size:     2305	Gflop/s:    47.62	Percentage:  121.49
+Size:     2400	Gflop/s:    48.02	Percentage:  122.49
+Size:     2431	Gflop/s:    47.74	Percentage:  121.79
+Size:     2432	Gflop/s:    47.92	Percentage:  122.25
+Size:     2500	Gflop/s:    48.07	Percentage:  122.64
+# Average percentage of peak performance = 117.263
+
+==== benchmark-blocked ====================
+# Description:	Blocked dgemm.
+
+Size:       31	Gflop/s:     8.64	Percentage:   22.05
+Size:       32	Gflop/s:     9.16	Percentage:   23.37
+Size:       96	Gflop/s:     9.83	Percentage:   25.08
+Size:       97	Gflop/s:     9.58	Percentage:   24.44
+Size:      127	Gflop/s:    10.03	Percentage:   25.59
+Size:      128	Gflop/s:    10.04	Percentage:   25.62
+Size:      129	Gflop/s:     9.28	Percentage:   23.68
+Size:      191	Gflop/s:    10.23	Percentage:   26.10
+Size:      192	Gflop/s:    10.13	Percentage:   25.83
+Size:      229	Gflop/s:    10.09	Percentage:   25.73
+Size:      255	Gflop/s:    10.38	Percentage:   26.47
+Size:      256	Gflop/s:     9.70	Percentage:   24.73
+Size:      257	Gflop/s:     9.40	Percentage:   23.97
+Size:      319	Gflop/s:    10.26	Percentage:   26.17
+Size:      320	Gflop/s:    10.05	Percentage:   25.64
+Size:      321	Gflop/s:     9.83	Percentage:   25.08
+Size:      417	Gflop/s:    10.19	Percentage:   26.00
+Size:      479	Gflop/s:    10.16	Percentage:   25.91
+Size:      480	Gflop/s:    10.02	Percentage:   25.55
+Size:      511	Gflop/s:    10.11	Percentage:   25.80
+Size:      512	Gflop/s:     8.83	Percentage:   22.54
+Size:      639	Gflop/s:    10.32	Percentage:   26.31
+Size:      640	Gflop/s:     9.91	Percentage:   25.28
+Size:      767	Gflop/s:    10.27	Percentage:   26.20
+Size:      768	Gflop/s:     9.71	Percentage:   24.77
+Size:      769	Gflop/s:     9.99	Percentage:   25.48
+Size:      800	Gflop/s:    10.05	Percentage:   25.63
+Size:      895	Gflop/s:    10.34	Percentage:   26.37
+Size:      896	Gflop/s:     9.90	Percentage:   25.25
+Size:      900	Gflop/s:     9.81	Percentage:   25.03
+Size:     1000	Gflop/s:    10.00	Percentage:   25.50
+Size:     1023	Gflop/s:     9.72	Percentage:   24.80
+Size:     1024	Gflop/s:     8.71	Percentage:   22.22
+Size:     1025	Gflop/s:     9.57	Percentage:   24.40
+Size:     1100	Gflop/s:     9.94	Percentage:   25.35
+Size:     1151	Gflop/s:    10.35	Percentage:   26.41
+Size:     1152	Gflop/s:     9.90	Percentage:   25.25
+Size:     1200	Gflop/s:    10.01	Percentage:   25.53
+Size:     1279	Gflop/s:    10.27	Percentage:   26.20
+Size:     1280	Gflop/s:     9.70	Percentage:   24.75
+Size:     1281	Gflop/s:    10.13	Percentage:   25.83
+Size:     1400	Gflop/s:     9.99	Percentage:   25.48
+Size:     1407	Gflop/s:    10.33	Percentage:   26.35
+Size:     1408	Gflop/s:     9.87	Percentage:   25.17
+Size:     1500	Gflop/s:    10.02	Percentage:   25.57
+Size:     1535	Gflop/s:    10.10	Percentage:   25.76
+Size:     1536	Gflop/s:     9.13	Percentage:   23.30
+Size:     1537	Gflop/s:     9.94	Percentage:   25.36
+Size:     1600	Gflop/s:     9.92	Percentage:   25.31
+Size:     1663	Gflop/s:    10.31	Percentage:   26.29
+Size:     1664	Gflop/s:     9.81	Percentage:   25.04
+Size:     1700	Gflop/s:     9.99	Percentage:   25.47
+Size:     1791	Gflop/s:    10.18	Percentage:   25.98
+Size:     1792	Gflop/s:     9.58	Percentage:   24.43
+Size:     1793	Gflop/s:    10.08	Percentage:   25.70
+Size:     1900	Gflop/s:     9.93	Percentage:   25.33
+Size:     1919	Gflop/s:    10.31	Percentage:   26.30
+Size:     1920	Gflop/s:     9.77	Percentage:   24.92
+Size:     2000	Gflop/s:     9.92	Percentage:   25.30
+Size:     2047	Gflop/s:     7.33	Percentage:   18.69
+Size:     2048	Gflop/s:     6.57	Percentage:   16.77
+Size:     2049	Gflop/s:     7.31	Percentage:   18.64
+Size:     2100	Gflop/s:     9.80	Percentage:   25.00
+Size:     2175	Gflop/s:    10.23	Percentage:   26.09
+Size:     2176	Gflop/s:     9.63	Percentage:   24.57
+Size:     2200	Gflop/s:     9.87	Percentage:   25.17
+Size:     2300	Gflop/s:     9.91	Percentage:   25.27
+Size:     2303	Gflop/s:    10.11	Percentage:   25.78
+Size:     2304	Gflop/s:     9.50	Percentage:   24.24
+Size:     2305	Gflop/s:    10.03	Percentage:   25.59
+Size:     2400	Gflop/s:     9.88	Percentage:   25.20
+Size:     2431	Gflop/s:    10.21	Percentage:   26.04
+Size:     2432	Gflop/s:     9.64	Percentage:   24.60
+Size:     2500	Gflop/s:     9.86	Percentage:   25.16
+# Average percentage of peak performance = 24.9434
+
+==== plot results =========================

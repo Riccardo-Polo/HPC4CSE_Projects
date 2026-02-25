@@ -5,7 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --constraint=EPYC_7763
-#SBATCH --time=01:30:00
+#SBATCH --time=02:30:00
 
 # load some modules & list loaded modules
 # GCC
@@ -22,8 +22,8 @@ export MKL_NUM_THREADS=1
 make clean
 make
 
-#echo "==== benchmark-naive ======================"
-#stdbuf -oL ./benchmark-naive | tee timing_naive_dgemm.data
+echo "==== benchmark-naive ======================"
+stdbuf -oL ./benchmark-naive | tee timing_naive_dgemm.data
 echo
 echo "==== benchmark-jki ========================"
 stdbuf -oL ./benchmark-jki | tee timing_jki_dgemm.data

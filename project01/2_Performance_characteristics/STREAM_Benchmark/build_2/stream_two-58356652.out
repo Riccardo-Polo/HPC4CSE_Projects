@@ -1,0 +1,38 @@
+
+Currently Loaded Modules:
+  1) stack/2025-06   2) gcc/12.2.0
+
+ 
+
+Model name:                              AMD EPYC 7763 64-Core Processor
+eu-a2p-509
+-------------------------------------------------------------
+STREAM version $Revision: 5.10 $
+-------------------------------------------------------------
+This system uses 8 bytes per array element.
+-------------------------------------------------------------
+Array size = 268435456 (elements), Offset = 0 (elements)
+Memory per array = 2048.0 MiB (= 2.0 GiB).
+Total memory required = 6144.0 MiB (= 6.0 GiB).
+Each kernel will be executed 20 times.
+ The *best* time for each kernel (excluding the first iteration)
+ will be used to compute the reported bandwidth.
+-------------------------------------------------------------
+Your clock granularity/precision appears to be 1 microseconds.
+Each test below will take on the order of 206516 microseconds.
+   (= 206516 clock ticks)
+Increase the size of the arrays if this shows that
+you are not getting at least 20 clock ticks per test.
+-------------------------------------------------------------
+WARNING -- The above is only a rough guideline.
+For best results, please be sure you know the
+precision of your system timer.
+-------------------------------------------------------------
+Function    Best Rate MB/s  Avg time     Min time     Max time
+Copy:           15183.6     0.291832     0.282868     0.298069
+Scale:          13359.4     0.326391     0.321494     0.331896
+Add:            12655.6     0.515276     0.509060     0.519799
+Triad:          14198.6     0.468732     0.453738     0.498993
+-------------------------------------------------------------
+Solution Validates: avg error less than 1.000000e-13 on all three arrays
+-------------------------------------------------------------

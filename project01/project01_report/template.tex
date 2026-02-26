@@ -25,7 +25,7 @@
 
 \serieheader{High-Performance Computing Lab for CSE}{2026}
             {Student: Riccardo Polo}
-            {Discussed with: FULL NAME}
+            {Discussed with: Giovanni Guidarini , Simone Licciardi}
             {Report for Project 1}{}
 \newline
 
@@ -301,7 +301,6 @@ For Euler VII (phase 2), we run the file stream.c with the parameters specified 
 \begin{lstlisting}[style=grayverbatim]
 gcc -O3 -march=native -mcmodel=medium -DSTREAM_TYPE=double -DSTREAM_ARRAY_SIZE=268435456 -DNTIMES=20 stream.c -o build_2/stream_two_c.exe
 \end{lstlisting}
-Here instead we used as array size the value of $2^{28}$, which corresponds to 160 MB per array, and we set the number of iterations to 20. 
 The corresponding output of the batch script is reported here for completeness:
 
 % (*@colorbox{}{})
@@ -419,14 +418,18 @@ $I_{\text{ridge}} = P_{\text{peak}}/B$ [Flops/Byte] & 2.12 & 2.76 \\
   \label{fig:roofline}
 \end{figure}
 
+A kernel is memory-bound for 
+$I < I_{\text{ridge}}$ and compute-bound for $I > I_{\text{ridge}}$; thus the transition occurs at ≈2.12 Flop/Byte (phase 1) and ≈2.76 Flop/Byte (phase 2).
 
+\subsection{Use of LLMs}
+For this exercise, we used CHAT GPT 5.2 to help us understand and interpret properly the infos available on the website uops.info. In particular, it was used to determine the superscalarity factor for the AMD Zen2 and AMD Zen3 architectures.\\
 
 
 \newpage
 \section{Auto-vectorization [10 points]}
 
 \textbf{Question 1: what is data alignment and is it important for data structures to be aligned?}\\
-Data alignment refers to placing an object in memory at an address that is a multiple of some power-of-two boundary (for example, 16 bytes). In the document, alignment is discussed as a key performance property for SIMD loads/stores: Intel SSE (and similarly other SIMD ISAs) prefers aligned memory references, and data movement instructions can be significantly more efficient when the data is aligned. The text also warns that using aligned data-movement instructions with incorrectly aligned addresses can even raise an exception (so alignment assertions must be correct).\\
+Data alignment refers to placing an object in memory at an address that is a multiple of some power-of-two boundary (for example, 16 bytes). In the document (Intel oneAPI DPC++/C++ Compiler Developer Guide and Reference), alignment is discussed as a key performance property for SIMD loads/stores: Intel SSE (and similarly other SIMD ISAs) prefers aligned memory references, and data movement instructions can be significantly more efficient when the data is aligned. The text also warns that using aligned data-movement instructions with incorrectly aligned addresses can even raise an exception (so alignment assertions must be correct).\\
 Because of this, it is generally important that frequently accessed arrays/structures used in vectorized loops are aligned (e.g., 16-byte boundaries for SSE), especially when you want the compiler to generate efficient aligned vector loads/stores and avoid extra fix-up code.\\
 
 \textbf{Question 2: what are some obstacles that can prevent automatic vectorization by the compiler?}\\
@@ -445,7 +448,8 @@ Another important transformation is \textbf{loop peeling for alignment}. By exec
 \textbf{Question 5: what can be done if automatic vectorization by the compiler fails or is sub-optimal?}\\
 A robust approach is to start from diagnosis, then remove the cause through code restructuring, and only afterwards apply stronger directives or explicit SIMD methods. Practically, the first step is to consult \textbf{vectorization reports and diagnostics} to identify whether the loop was rejected due to dependencies, aliasing, control flow, memory access patterns, or because the compiler predicted low benefit. Based on that feedback, one can often \textbf{rewrite the loop into a more vectorizable shape}: make the trip count well-defined, keep a single entry/exit, avoid unsupported control flow, remove or move function calls out of the loop, eliminate loop-carried dependencies, and prefer unit-stride array accesses over indirect indexing or complex pointer arithmetic.\\
 When correctness allows it, \textbf{adding accurate annotations} can resolve conservative assumptions: \texttt{restrict} can remove aliasing ambiguity, alignment declarations or assumptions can reduce misalignment penalties, and pragmas such as \texttt{\#pragma ivdep} or \texttt{\#pragma vector always} can steer the compiler past overly cautious dependence or profitability decisions. These mechanisms must be used carefully, since forcing aligned loads on misaligned addresses or providing incorrect dependence information can change semantics or even lead to crashes. If hints remain insufficient, \textbf{user-mandated SIMD directives} such as \texttt{\#pragma omp simd} can be used to impose vectorization semantics and typically trigger warnings if the compiler cannot generate a vector loop, while also allowing clauses to specify the intended SIMD behavior. Finally, enabling broader optimization context---for instance with \textbf{high optimization levels and interprocedural optimization}---can improve vectorization by exposing more information (e.g.\ enabling inlining and better dependence reasoning) and by applying additional transformations. If performance is still unsatisfactory, the last step is to move to \textbf{more explicit SIMD programming} (e.g.\ SIMD extensions or intrinsics), which provides tighter control and reduces reliance on compiler heuristics.
-
+\subsection{Use of LLMs}
+For this exercise, we used CHAT GPT 5.2 to help us write in a more clear and english-correct way the answers to the questions.\\
 \newpage
 \section{Matrix multiplication optimization [30 points]}
 

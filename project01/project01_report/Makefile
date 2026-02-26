@@ -1,4 +1,4 @@
-filename=template
+filename=project_1_polo_riccardo
 
 pdf:
 	pdflatex ${filename}

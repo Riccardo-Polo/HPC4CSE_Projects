@@ -92,10 +92,8 @@ For both Euler VII phases, which are based on AMD Zen2 and AMD Zen3 respectively
 
 The FMA factor is determined by observing that all instructions marked as FMA in the table have a corresponding number of micro-operations equal to one. This indicates that the fused multiply-add is executed as a single micro-operation by dedicated hardware. Since an FMA instruction performs the operation $a \cdot b + c$, it consists of one floating-point multiplication and one floating-point addition. Therefore, each FMA instruction corresponds to two floating-point operations, and thus $n_{\text{FMA}} = 2$.
 
-The superscalability is defined as the number of floating-point operations that the FPU of a core can execute in parallel within a single clock cycle. To determine this value, we analyze the instruction \texttt{VFMADD132PD (YMM, YMM, YMM)} reported in the uops.info table. The table specifies the throughput $0.50$ cycles/instruction implies 2 vector FMA instructions can be issued per cycle. Since the table indicates execution on FP0/1, we conclude the core can sustain two FMA pipelines, hence $n_{\text{super}} = 2$. The factor $n_{\text{FMA}}=2$ then accounts for mul+add inside FMA a throughput of $0.50$ cycles per instruction, one micro-operation, and execution on ports FP0/1.
-
-Hence, for both AMD Zen~2 and AMD Zen~3, the superscalability is
-2 \text{ floating-point operations per cycle per core}.\\
+The superscalability is defined as the number of floating-point operations that the FPU of a core can execute in parallel within a single clock cycle. To determine this value, we analyze the instruction \texttt{VFMADD132PD (YMM, YMM, YMM)} reported in the uops.info table. The table specifies the throughput $0.50$ cycles/instruction implies 2 vector FMA instructions can be issued per cycle. Since the table indicates execution on FP0/1, we conclude the core can sustain two FMA pipelines, hence $n_{\text{super}} = 2$. The factor $n_{\text{FMA}}=2$ then accounts for mul+add inside FMA a throughput of $0.50$ cycles per instruction, one micro-operation, and execution on ports FP0/1.\\
+Therefore, for both AMD Zen2 and AMD Zen3, the superscalar throughput is 2 vector FP instructions per cycle per core.\\
 
 To determine $n_{\text{SIMD}}$, we inspect the floating-point instructions reported in the uops.info table, where instructions such as \texttt{VFMADD132PD (YMM, YMM, YMM)} appear. The presence of YMM operands indicates the use of 256-bit AVX registers, since YMM registers are defined as 256-bit wide in the AVX/AVX2 instruction set. As both AMD Zen~2 and Zen~3 execute these YMM-based instructions, they necessarily support AVX2 with 256-bit SIMD registers. A double-precision floating-point number occupies 64 bits; therefore, the number of doubles that can be processed concurrently by one SIMD instruction is
 
@@ -382,7 +380,7 @@ roofline constructions.
 From our STREAM outputs, we have the following sustainable memory bandwidths:
 \begin{align*}
 B_{1} &= 19668.1~\text{MB/s} = 19.6681~\text{GB/s},\\
-B_{2} &= 149198.6~\text{MB/s} = 14.2~\text{GB/s},
+B_{2} &= 14198.6~\text{MB/s} = 14.2~\text{GB/s},
 \end{align*}
 where we convert MB/s to GB/s by dividing by $1000$.\\
 Using Eq.\ref{eq:ridge}:

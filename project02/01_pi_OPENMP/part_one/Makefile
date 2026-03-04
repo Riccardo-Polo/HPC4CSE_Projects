@@ -1,7 +1,7 @@
 CC     ?= gcc
 CFLAGS  = -O2 -fopenmp
 
-all: pi_serial pi_omp_critical_naive pi_omp_critical_opmtized pi_omp_reduction
+all: pi_serial pi_omp_critical_naive pi_omp_critical_optimized pi_omp_reduction
 
 pi_serial: pi_serial.o walltime.o
 	$(CC) $(CFLAGS) $^ -o $@
@@ -12,13 +12,13 @@ pi_serial.o: pi_serial.c walltime.h
 pi_omp_critical_naive: pi_omp_critical_naive.o walltime.o
 	$(CC) $(CFLAGS) $^ -o $@
 
-pi_omp_critical_opmtized: pi_omp_critical_opmtized.o walltime.o
+pi_omp_critical_optimized: pi_omp_critical_optimized.o walltime.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 pi_omp_critical_naive.o: pi_omp_critical_naive.c walltime.h
 	$(CC) -c $(CFLAGS) $<
 
-pi_omp_critical_opmtized.o: pi_omp_critical_opmtized.c walltime.h
+pi_omp_critical_optimized.o: pi_omp_critical_optimized.c walltime.h
 	$(CC) -c $(CFLAGS) $<
 
 pi_omp_reduction: pi_omp_reduction.o walltime.o
@@ -32,7 +32,7 @@ walltime.o: walltime.c walltime.h
 
 .PHONY: clean
 clean:
-	$(RM) *.o pi_serial pi_omp_critical_naive pi_omp_critical_opmtized pi_omp_reduction
+	$(RM) *.o pi_serial pi_omp_critical_naive pi_omp_critical_optimized pi_omp_reduction
 
 .PHONY: cleanall
 cleanall: clean

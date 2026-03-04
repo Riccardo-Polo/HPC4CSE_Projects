@@ -1,0 +1,8 @@
+naive_strong
+naive_weak
+optimized_strong
+optimized_weak
+reduction_strong
+reduction_weak
+.o
+.data

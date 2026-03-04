@@ -1,1 +1,5 @@
 *.o
+pi_serial
+pi_omp_critical_optimized
+pi_omp_reduction
+pi_omp_critical_naive

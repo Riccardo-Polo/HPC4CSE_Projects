@@ -1,7 +1,7 @@
 CC     ?= gcc
 CFLAGS  = -O2
 
-all: mandel_seq mandel_omp
+all: mandel_seq #mandel_omp
 
 mandel_seq: mandel_seq.o ppmwriter.o walltime.o
 	$(CC) $(CFLAGS) $^ -o $@

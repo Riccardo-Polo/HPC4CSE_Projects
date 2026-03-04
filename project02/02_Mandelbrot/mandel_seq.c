@@ -34,7 +34,14 @@ int main(int argc, char **argv) {
       int n = 0;
       // TODO
       // >>>>>>>> CODE IS MISSING
-
+       while (x2 + y2 <= 4.0 && n < MAX_ITERS) {
+         y = 2.0 * x * y + cy;
+         x = x2 - y2 + cx;
+         x2 = x * x;
+         y2 = y * y;
+         n++;
+       }
+       nTotalIterationsCount += n;
       // <<<<<<<< CODE IS MISSING
       // n indicates if the point belongs to the mandelbrot set
       // plot the number of iterations at point (i, j)

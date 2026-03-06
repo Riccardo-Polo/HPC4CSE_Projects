@@ -9,46 +9,39 @@ int main(int argc, char **argv) {
   ppm_data_t pPpm;
   ppm_create(&pPpm, IMAGE_WIDTH, IMAGE_HEIGHT);
 
-  double x, y, x2, y2, cx, cy;
-
   double fDeltaX = (MAX_X - MIN_X) / (double)IMAGE_WIDTH;
   double fDeltaY = (MAX_Y - MIN_Y) / (double)IMAGE_HEIGHT;
 
   long nTotalIterationsCount = 0;
 
-  long i, j;
-
   double time_start = walltime();
   // do the calculation
-  cy = MIN_Y;
-  #pragma omp parallel for private(i, j, x, y, x2, y2, cx, cy) reduction(+:nTotalIterationsCount) schedule(dynamic)
-  for (j = 0; j < IMAGE_HEIGHT; j++) {
-    cx = MIN_X;
-    #pragma omp parallel for private(i, x, y, x2, y2, cx) reduction(+:nTotalIterationsCount) schedule(dynamic)
-    for (i = 0; i < IMAGE_WIDTH; i++) {
-      x = cx;
-      y = cy;
-      x2 = x * x;
-      y2 = y * y;
-      // compute the orbit z, f(z), f^2(z), f^3(z), ...
-      // count the iterations until the orbit leaves the circle |z|=2.
-      // stop if the number of iterations exceeds the bound MAX_ITERS.
+  #pragma omp parallel for reduction(+:nTotalIterationsCount) schedule(dynamic)
+  for (long j = 0; j < IMAGE_HEIGHT; j++) {
+    double cy = MIN_Y + j * fDeltaY;
+
+    for (long i = 0; i < IMAGE_WIDTH; i++) {
+      double cx = MIN_X + i * fDeltaX;
+
+      double x = cx;
+      double y = cy;
+      double x2 = x * x;
+      double y2 = y * y;
+
       int n = 0;
-       while (x2 + y2 <= 4.0 && n < MAX_ITERS) {
-         y = 2.0 * x * y + cy;
-         x = x2 - y2 + cx;
-         x2 = x * x;
-         y2 = y * y;
-         n++;
-       }
-       nTotalIterationsCount += n;
-      // n indicates if the point belongs to the mandelbrot set
-      // plot the number of iterations at point (i, j)
+      while (x2 + y2 <= 4.0 && n < MAX_ITERS) {
+        y = 2.0 * x * y + cy;
+        x = x2 - y2 + cx;
+        x2 = x * x;
+        y2 = y * y;
+        n++;
+      }
+
+      nTotalIterationsCount += n;
+
       int c = ((long)n * 255) / MAX_ITERS;
       ppm_plot(&pPpm, i, j, c, c, c);
-      cx += fDeltaX;
     }
-    cy += fDeltaY;
   }
   double time_end = walltime();
 

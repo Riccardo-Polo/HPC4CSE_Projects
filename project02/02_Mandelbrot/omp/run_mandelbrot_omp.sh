@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=slurm_mandelbrot # Job name    (default: sbatch)
+#SBATCH --job-name=slurm_mandelbrot_omp # Job name    (default: sbatch)
 #SBATCH --output=%x-%j.out       # Output file (default: slurm-%j.out)
 #SBATCH --error=%x-%j.err        # Error file  (default: slurm-%j.out)
 #SBATCH --ntasks=1               # Number of tasks
@@ -21,6 +21,6 @@ srun hostname
 make clean
 make cleanall
 make
-echo "Running Mandelbrot serial set computation..."
-srun ./mandel_seq
+echo "Running Mandelbrot omp set computation..."
+srun ./mandel_omp
 srun magick mandel.ppm mandel.png

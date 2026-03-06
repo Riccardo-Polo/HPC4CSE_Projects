@@ -21,8 +21,10 @@ int main(int argc, char **argv) {
   double time_start = walltime();
   // do the calculation
   cy = MIN_Y;
+  #pragma omp parallel for private(i, j, x, y, x2, y2, cx, cy) reduction(+:nTotalIterationsCount) schedule(dynamic)
   for (j = 0; j < IMAGE_HEIGHT; j++) {
     cx = MIN_X;
+    #pragma omp parallel for private(i, x, y, x2, y2, cx) reduction(+:nTotalIterationsCount) schedule(dynamic)
     for (i = 0; i < IMAGE_WIDTH; i++) {
       x = cx;
       y = cy;
@@ -32,9 +34,6 @@ int main(int argc, char **argv) {
       // count the iterations until the orbit leaves the circle |z|=2.
       // stop if the number of iterations exceeds the bound MAX_ITERS.
       int n = 0;
-      // TODO
-      // parallelize
-      #pragma omp parallel while reduction(+:nTotalIterationsCount) private(x, y, x2, y2)
        while (x2 + y2 <= 4.0 && n < MAX_ITERS) {
          y = 2.0 * x * y + cy;
          x = x2 - y2 + cx;
@@ -43,7 +42,6 @@ int main(int argc, char **argv) {
          n++;
        }
        nTotalIterationsCount += n;
-      // <<<<<<<< CODE IS MISSING
       // n indicates if the point belongs to the mandelbrot set
       // plot the number of iterations at point (i, j)
       int c = ((long)n * 255) / MAX_ITERS;

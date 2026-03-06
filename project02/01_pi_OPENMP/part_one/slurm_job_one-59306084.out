@@ -1,0 +1,25 @@
+
+Currently Loaded Modules:
+  1) stack/2025-06   2) gcc/12.2.0
+
+ 
+
+eu-a2p-400
+rm -f *.o pi_serial pi_omp_critical_naive pi_omp_critical_optimized pi_omp_reduction
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -c -O2 -fopenmp pi_serial.c
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -c -O2 -fopenmp walltime.c
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O2 -fopenmp pi_serial.o walltime.o -o pi_serial
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -c -O2 -fopenmp pi_omp_critical_naive.c
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O2 -fopenmp pi_omp_critical_naive.o walltime.o -o pi_omp_critical_naive
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -c -O2 -fopenmp pi_omp_critical_optimized.c
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O2 -fopenmp pi_omp_critical_optimized.o walltime.o -o pi_omp_critical_optimized
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -c -O2 -fopenmp pi_omp_reduction.c
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O2 -fopenmp pi_omp_reduction.o walltime.o -o pi_omp_reduction
+# pi N num_threads time [secs]
+3.141592653589971           1000000000   1 1.88825762
+# pi N num_threads time [secs]
+3.141592653590757           1000000000  64 640.70646905
+# pi N num_threads time [secs]
+3.141592653589771           1000000000  64 0.19858712
+# pi N num_threads time [secs]
+3.141592653589771           1000000000  64 0.11437800

@@ -1,10 +1,3 @@
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=64
-#SBATCH --constraint=EPYC_7763
-
-complete bash file with all useful stuff for running the OpenMP code on the cluster:
-
-module load stack gcc
 #!/bin/bash
 #SBATCH --job-name=slurm_job_one # Job name    (default: sbatch)
 #SBATCH --output=build_job_one/%x-%j.out       # Output file (default: slurm-%j.out)

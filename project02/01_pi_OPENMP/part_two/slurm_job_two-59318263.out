@@ -20,3 +20,11 @@ rm -f *.o pi_ naive_strong optimized_strong naive_weak optimized_weak reduction_
 /cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O2 -fopenmp   -c -o reduction_weak.o reduction_weak.c
 /cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O2 -fopenmp reduction_weak.o walltime.o -o reduction_weak
 ==== benchmark-naive ======================
+# pi N num_threads time [secs]
+3.141592653589634           1000000000   1 6.93277019
+3.141592653589634           1000000000   2 76.46882527
+3.141592653589634           1000000000   4 197.49973289
+3.141592653589634           1000000000   8 283.80093214
+3.141592653589634           1000000000  16 403.18691688
+3.141592653589634           1000000000  32 501.40493621
+3.141592653589634           1000000000  64 678.71737772

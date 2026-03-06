@@ -1,8 +1,7 @@
 CC     ?= gcc
 CFLAGS  = -O2 -fopenmp
 
-#all: naive_strong naive_weak optimized_strong optimized_weak reduction_strong reduction_weakall: naive_weak optimized_strong optimized_weak reduction_strong reduction_weak
-
+#all: naive_strong naive_weak optimized_strong optimized_weak reduction_strong reduction_weak
 all: naive_weak optimized_strong optimized_weak reduction_strong reduction_weak
 
 naive_strong: naive_strong.o walltime.o

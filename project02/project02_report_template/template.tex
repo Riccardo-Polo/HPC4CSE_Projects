@@ -196,9 +196,15 @@ Avg. time per iteration:    2.91104e-09 seconds
 Iterations/second:          3.4352e+08
 MFlop/s:                    2748.16
 \end{lstlisting}
-\newpage
-\section{Bug hunt [10 points]}
-
+Comment the above results
+The results show that the total time taken to compute the Mandelbrot set for an image size of 4096 x 4096 pixels is approximately 330.726 seconds. The total number of iterations required to compute the Mandelbrot set for all the pixels in the image is 113610974266. This indicates that the computation is quite intensive, as it requires a large number of iterations to determine whether each point belongs to the Mandelbrot set or not.\\
+And one can see the image in figure \ref{fig:mandelbrot_serial}.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../02_Mandelbrot/mandel.png}
+\caption{Serial Mandelbrot Set}
+\label{fig:mandelbrot_serial}
+\end{figure}
 
 \newpage
 \section{Parallel histogram calculation using \texttt{OpenMP} [15 points]}

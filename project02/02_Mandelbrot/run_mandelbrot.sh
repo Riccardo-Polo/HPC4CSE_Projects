@@ -21,9 +21,6 @@ srun hostname
 make clean
 make cleanall
 make
-<<<<<<< HEAD
-srun ./mandelbrot
-=======
+echo "Running Mandelbrot serial set computation..."
 srun ./mandel_seq
->>>>>>> 80e9f242c623c92a790d5ae3279e769c5877fe15
 srun magick mandel.ppm mandel.png

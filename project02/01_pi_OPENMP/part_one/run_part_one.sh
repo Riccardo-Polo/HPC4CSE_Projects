@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=slurm_job_one # Job name    (default: sbatch)
-#SBATCH --output=build_job_one/%x-%j.out       # Output file (default: slurm-%j.out)
-#SBATCH --error=build_job_one/%x-%j.err        # Error file  (default: slurm-%j.out)
+#SBATCH --output=%x-%j.out       # Output file (default: slurm-%j.out)
+#SBATCH --error=%x-%j.err        # Error file  (default: slurm-%j.out)
 #SBATCH --ntasks=1               # Number of tasks
 #SBATCH --cpus-per-task=64        # Number of CPUs per task
 #SBATCH --mem-per-cpu=1G         # Memory per CPU
-#SBATCH --time=00:01:00          # Wall clock time limit (H:M:S)
+#SBATCH --time=01:00:00          # Wall clock time limit (H:M:S)
 #SBATCH --constraint=EPYC_7763   # Constraint to run on EPYC 7763 CPUs
 
 # exit immediately if any command exits with a non-zero status

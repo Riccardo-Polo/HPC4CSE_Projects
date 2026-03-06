@@ -18,16 +18,12 @@ module list
 
 # run (srun: run job on cluster with provided resources/allocation)
 srun hostname
-<<<<<<< HEAD
-
-=======
->>>>>>> 80e9f242c623c92a790d5ae3279e769c5877fe15
 # compile
 make clean
 make
 
 echo "==== benchmark-naive ======================"
-stdbuf -oL ./naive_strong | tee timing_naive_strong.data
+# stdbuf -oL ./naive_strong | tee timing_naive_strong.data
 stdbuf -oL ./naive_weak | tee timing_naive_weak.data
 echo
 echo "==== benchmark-optimized ========================"

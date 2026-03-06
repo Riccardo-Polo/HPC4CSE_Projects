@@ -6,10 +6,10 @@
 #include <omp.h>
 
 int main(int argc, char *argv[]) {
-  uint64_t N = 1000000000;
+  uint64_t N = 100000;
   double time_start, h, sum, pi;
 
-  uint64_t N_list = 1000000000;
+  uint64_t N_list = 100000;
 
   int n_threads_list[7] = {1 , 2, 4, 8, 16, 32, 64};
   double time_list[7];

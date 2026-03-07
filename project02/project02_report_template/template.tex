@@ -134,13 +134,80 @@ Reduction & 3.141592653589771 & 64 & 0.11437800 \\
 In the second part of the exercise we are asked to perform a weak and strong scaling study.\\
 \subsubsection{Strong scaling study}
 In this context a strong scaling study is performed by keeping the problem size fixed and increasing the number of threads. The goal is to see how the performance of the code improves as we increase the number of threads. In our case, we can keep the value of $N$ fixed and measure the execution time for different numbers of threads. We can then plot the speedup and efficiency as a function of the number of threads to analyze the strong scaling behavior of our code.\\
+Here are outputs.\\
+\textbf{Strong naive}
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
+  # pi N num_threads time [secs]
+3.141592653589634           1000000000   1 6.93277019
+3.141592653589634           1000000000   2 76.46882527
+3.141592653589634           1000000000   4 197.49973289
+3.141592653589634           1000000000   8 283.80093214
+3.141592653589634           1000000000  16 403.18691688
+3.141592653589634           1000000000  32 501.40493621
+3.141592653589634           1000000000  64 678.71737772
+\end{lstlisting}
+\textbf{Strong optimized}
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*})]
+# pi N num_threads time [secs]
+3.141592653589771           1000000000   1 2.26213344
+3.141592653589771           1000000000   2 1.26299218
+3.141592653589771           1000000000   4 0.67451669
+3.141592653589771           1000000000   8 0.33567476
+3.141592653589771           1000000000  16 0.17712136
+3.141592653589771           1000000000  32 0.10922673
+3.141592653589771           1000000000  64 0.10740197
+\end{lstlisting}
+\textbf{Strong reduction}
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*})]
+  # pi N num_threads time [secs]
+3.141592653589772           1000000000   1 2.19981237
+3.141592653589772           1000000000   2 1.26300334
+3.141592653589772           1000000000   4 0.67434969
+3.141592653589772           1000000000   8 0.33552001
+3.141592653589772           1000000000  16 0.17785895
+3.141592653589772           1000000000  32 0.12054630
+3.141592653589772           1000000000  64 0.07776448
+\end{lstlisting}
+
+\textbf{Weak naive}
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*})]
+  3.141592653589632               100000   1 0.00118749
+3.141592653589632               200000   2 0.02662989
+3.141592653589632               400000   4 0.13208618
+3.141592653589632               800000   8 0.22754601
+3.141592653589632              1600000  16 0.62820553
+3.141592653589632              3200000  32 2.44359762
+3.141592653589632              6400000  64 5.08367890
+\end{lstlisting}
+\textbf{Weak optimized}
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*})]
+  # pi N num_threads time [secs]
+3.141592653589791               100000   1 0.00026265
+3.141592653589791               200000   2 0.00038406
+3.141592653589791               400000   4 0.00040525
+3.141592653589791               800000   8 0.00053178
+3.141592653589791              1600000  16 0.00072227
+3.141592653589791              3200000  32 0.01441353
+3.141592653589791              6400000  64 0.02746264
+\end{lstlisting}
+\textbf{Weak reduction}
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*})]
+  # pi N num_threads time [secs]
+3.141592653589791               100000   1 0.00025960
+3.141592653589791               200000   2 0.00037925
+3.141592653589791               400000   4 0.00044645
+3.141592653589791               800000   8 0.00058488
+3.141592653589791              1600000  16 0.00804680
+3.141592653589791              3200000  32 0.01407022
+3.141592653589791              6400000  64 0.02701498
+\end{lstlisting}
 
 \newpage
 \section{The Mandelbrot set  using \texttt{OpenMP} [20 points]}
 \subsection{Exercise 1 and 2}
 Here we are asked to complete the serial version of the Mandelbrot set code in the missing code part and to count the total number of iterations in order to correctly compute the benchmark statistics.\\
 In the following code snippet we show the completed version of the serial code for computing the Mandelbrot set:
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*})]
 double time_start = walltime();
   // do the calculation
   cy = MIN_Y;

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.28)  6 MAR 2026 13:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.28)  7 MAR 2026 13:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -706,35 +706,30 @@ Underfull \hbox (badness 10000) in paragraph at lines 134--135
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 136--137
-
- []
-
-[3]
-<../02_Mandelbrot/serial/mandel.png, id=99, 4111.36pt x 4111.36pt>
+[3] [4]
+<../02_Mandelbrot/serial/mandel.png, id=156, 4111.36pt x 4111.36pt>
 File: ../02_Mandelbrot/serial/mandel.png Graphic file (type png)
 <use ../02_Mandelbrot/serial/mandel.png>
-Package pdftex.def Info: ../02_Mandelbrot/serial/mandel.png  used on input line 191.
+Package pdftex.def Info: ../02_Mandelbrot/serial/mandel.png  used on input line 258.
 (pdftex.def)             Requested size: 234.73523pt x 234.68872pt.
- [4] [5 <../02_Mandelbrot/serial/mandel.png>] [6] [7] [8] [9] (template.aux)
+ [5] [6 <../02_Mandelbrot/serial/mandel.png>] [7] [8] [9] [10] (template.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-06>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 27019 strings out of 467871
- 537244 string characters out of 5418375
- 1293860 words of memory out of 5000000
+ 27073 strings out of 467871
+ 538088 string characters out of 5418375
+ 1326860 words of memory out of 5000000
  55387 multiletter control sequences out of 15000+600000
  633491 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  108i,10n,121p,11294b,2015s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\ricca\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on template.pdf (9 pages, 345451 bytes).
+Output written on template.pdf (10 pages, 356093 bytes).
 PDF statistics:
- 340 PDF objects out of 1000 (max. 8388607)
- 158 named destinations out of 1000 (max. 500000)
+ 407 PDF objects out of 1000 (max. 8388607)
+ 212 named destinations out of 1000 (max. 500000)
  111 words of extra memory for PDF output out of 10000 (max. 10000000)
 

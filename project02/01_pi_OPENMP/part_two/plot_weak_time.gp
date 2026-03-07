@@ -1,11 +1,15 @@
-set title "Weak scaling for pi evaluation"
-set xlabel "Problem size"
-set ylabel "Time"
-set grid
-
-set terminal pdf
+set terminal pdfcairo enhanced color
 set output "timing_weak.pdf"
 
-plot "timing_naive_weak.data" using 2:4 title "Naive critical" with linespoints, \
-     "timing_optimized_weak.data" using 2:4 title "Optimized critical" with linespoints, \
-     "timing_reduction_weak.data" using 2:4 title "Reduction" with linespoints
+set title "Weak scaling of OpenMP implementations"
+set xlabel "Number of threads"
+set ylabel "Average time [s]"
+set grid
+set key top left
+set logscale x 2
+set xtics ("1" 1, "2" 2, "4" 4, "8" 8, "16" 16, "32" 32, "64" 64)
+
+plot \
+    "timing_naive_weak.data" using 3:4    with linespoints title "Naive critical", \
+    "timing_optimized_weak.data" using 3:4 with linespoints title "Optimized critical", \
+    "timing_reduction_weak.data" using 3:4 with linespoints title "Reduction"

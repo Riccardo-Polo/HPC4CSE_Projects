@@ -1,34 +1,26 @@
-CC     ?= gcc
-CFLAGS  = -O2 -fopenmp
+CC      ?= gcc
+CFLAGS  := -O3 -fopenmp -march=native -std=c11 -Wall -Wextra
 
-#all: naive_strong naive_weak optimized_strong optimized_weak reduction_strong reduction_weak
-all: naive_weak optimized_strong optimized_weak reduction_strong reduction_weak
+all: naive_strong naive_weak optimized_strong optimized_weak reduction_strong reduction_weak
 
-naive_strong: naive_strong.o walltime.o
-	$(CC) $(CFLAGS) $^ -o $@
-
-optimized_strong: optimized_strong.o walltime.o
-	$(CC) $(CFLAGS) $^ -o $@
-
-naive_weak: naive_weak.o walltime.o
-	$(CC) $(CFLAGS) $^ -o $@
-
-optimized_weak: optimized_weak.o walltime.o
-	$(CC) $(CFLAGS) $^ -o $@
-
-reduction_strong: reduction_strong.o walltime.o
-	$(CC) $(CFLAGS) $^ -o $@
-
-reduction_weak: reduction_weak.o walltime.o
+%: %.o walltime.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 walltime.o: walltime.c walltime.h
-	$(CC) -c $(CFLAGS) $<
+	$(CC) $(CFLAGS) -c $< -o $@
 
-.PHONY: clean
+naive_strong.o: naive_strong.c walltime.h
+naive_weak.o: naive_weak.c walltime.h
+optimized_strong.o: optimized_strong.c walltime.h
+optimized_weak.o: optimized_weak.c walltime.h
+reduction_strong.o: reduction_strong.c walltime.h
+reduction_weak.o: reduction_weak.c walltime.h
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
-	$(RM) *.o pi_ naive_strong optimized_strong naive_weak optimized_weak reduction_strong reduction_weak
+	rm -f *.o naive_strong naive_weak optimized_strong optimized_weak reduction_strong reduction_weak
 
-.PHONY: cleanall
 cleanall: clean
-	$(RM) *.data *.pdf
+	rm -f *.data *.pdf *.out *.err

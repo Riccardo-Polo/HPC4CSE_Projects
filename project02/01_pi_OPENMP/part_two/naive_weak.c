@@ -1,51 +1,78 @@
-#include <stdio.h> /* printf */
-#include <stdlib.h> /* strtoull */
-#include <stdint.h> /* uint64_t */
-#include <inttypes.h> /* PRIu64 */
-#include "walltime.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <inttypes.h>
 #include <omp.h>
+#include "walltime.h"
+
+#define NTHREADS 7
+#define NREPEAT  5
 
 int main(int argc, char *argv[]) {
-  uint64_t N = 100000;
-  double time_start, h, sum, pi;
+    const int threads_list[NTHREADS] = {1, 2, 4, 8, 16, 32, 64};
 
-  uint64_t N_list = 100000;
-
-  int n_threads_list[7] = {1 , 2, 4, 8, 16, 32, 64};
-  double time_list[7];
-  double x;
-
-
-  if ( argc > 1 ) N = strtoull(argv[1], NULL, 10);;
-
-
-  // WEAK SCALING TEST
-  for(int i = 0; i < 7; i++) 
-  {
-    N = N_list * n_threads_list[i];
-    omp_set_num_threads(n_threads_list[i]);
-    time_start = walltime();
-    h = 1./N;
-    sum = 0.;
-    pi = 0.;
-    #pragma omp parallel for
-    for (uint64_t i = 0; i < N; ++i) 
-    {
-      double x = (i + 0.5) * h;
-      double term = 4.0 / (1.0 + x*x);
-
-      #pragma omp critical
-      pi += term;
+    /* Constant work per thread for weak scaling */
+    uint64_t work_per_thread = 50000000ULL;   /* 5e7 */
+    if (argc > 1) {
+        work_per_thread = strtoull(argv[1], NULL, 10);
     }
-    pi *= h;
-    double time = walltime() - time_start;
-    time_list[i] = time;
-  }
 
-  printf("# pi N num_threads time [secs]\n");
-  for(int i = 0; i < 7; i++) {
-    printf("%.15f %20"PRIu64" %3d %.8f\n", pi, N_list * n_threads_list[i], n_threads_list[i], time_list[i]);
-  }
+    printf("# naive weak scaling with critical at every update\n");
+    printf("# work_per_thread = %" PRIu64 "\n", work_per_thread);
+    printf("# N = work_per_thread * num_threads\n");
+    printf("# columns: pi N num_threads avg_time min_time max_time\n");
 
-  return 0;
+    for (int t = 0; t < NTHREADS; ++t) {
+        int nth = threads_list[t];
+        uint64_t N = work_per_thread * (uint64_t) nth;
+
+        omp_set_num_threads(nth);
+
+        double h = 1.0 / (double) N;
+        double avg_time = 0.0;
+        double min_time = 1e100;
+        double max_time = 0.0;
+        double pi = 0.0;
+
+        /* warm-up run */
+        {
+            double tmp_pi = 0.0;
+            #pragma omp parallel for
+            for (uint64_t i = 0; i < N; ++i) {
+                double x = (i + 0.5) * h;
+                double term = 4.0 / (1.0 + x * x);
+                #pragma omp critical
+                tmp_pi += term;
+            }
+            pi = tmp_pi * h;
+        }
+
+        for (int r = 0; r < NREPEAT; ++r) {
+            double time_start = walltime();
+            double sum = 0.0;
+
+            #pragma omp parallel for
+            for (uint64_t i = 0; i < N; ++i) {
+                double x = (i + 0.5) * h;
+                double term = 4.0 / (1.0 + x * x);
+
+                #pragma omp critical
+                sum += term;
+            }
+
+            pi = sum * h;
+            double elapsed = walltime() - time_start;
+
+            avg_time += elapsed;
+            if (elapsed < min_time) min_time = elapsed;
+            if (elapsed > max_time) max_time = elapsed;
+        }
+
+        avg_time /= (double) NREPEAT;
+
+        printf("%.15f %20" PRIu64 " %3d %.8f %.8f %.8f\n",
+               pi, N, nth, avg_time, min_time, max_time);
+    }
+
+    return 0;
 }

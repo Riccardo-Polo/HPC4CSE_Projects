@@ -1,0 +1,32 @@
+===== Loaded modules =====
+
+Currently Loaded Modules:
+  1) stack/2025-06   2) gcc/12.2.0   3) gnuplot/6.0.0
+
+ 
+
+===== Cleaning and compiling =====
+rm -f mandelbrot *.o timing_strong.data strong_scaling.pdf strong_speedup.pdf
+gcc -O3 -fopenmp -march=native mandel_omp_scaling.c ppmwriter.c walltime.c -o mandelbrot -fopenmp
+===== Running strong scaling benchmark =====
+Running with 1 threads...
+Running with 2 threads...
+Running with 4 threads...
+Running with 8 threads...
+Running with 16 threads...
+Running with 32 threads...
+Running with 64 threads...
+===== Timing data =====
+# threads width height time
+1 4096 4096 345.18153952
+2 4096 4096 172.58632651
+4 4096 4096 86.41880511
+8 4096 4096 43.32508586
+16 4096 4096 21.79008199
+32 4096 4096 11.06227597
+64 4096 4096 5.83116639
+===== Creating plots =====
+===== Generated files =====
+-rw-r--r-- 1 ripolo ripolo-group 11K Mar  7 15:31 strong_scaling.pdf
+-rw-r--r-- 1 ripolo ripolo-group 11K Mar  7 15:31 strong_speedup.pdf
+-rw-r--r-- 1 ripolo ripolo-group 200 Mar  7 15:31 timing_strong.data

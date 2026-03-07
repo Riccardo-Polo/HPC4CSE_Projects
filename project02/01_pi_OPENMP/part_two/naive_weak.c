@@ -5,11 +5,20 @@
 #include <omp.h>
 #include "walltime.h"
 
-#define NTHREADS 7
+/* ORIGINAL */
+// #define NTHREADS 7
+// #define NREPEAT  5
+
+/* TEMPORARY RECOVERY VERSION: run only the missing 64-thread point once */
+#define NTHREADS 1
 #define NREPEAT  5
 
 int main(int argc, char *argv[]) {
-    const int threads_list[NTHREADS] = {1, 2, 4, 8, 16, 32, 64};
+    /* ORIGINAL */
+    // const int threads_list[NTHREADS] = {1, 2, 4, 8, 16, 32, 64};
+
+    /* TEMPORARY RECOVERY VERSION: only missing point */
+    const int threads_list[NTHREADS] = {64};
 
     /* Constant work per thread for weak scaling */
     uint64_t work_per_thread = 50000000ULL;   /* 5e7 */

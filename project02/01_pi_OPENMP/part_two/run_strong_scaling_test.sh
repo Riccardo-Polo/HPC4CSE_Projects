@@ -5,7 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=64
 #SBATCH --mem-per-cpu=1G
-#SBATCH --time=02:00:00
+#SBATCH --time=03:00:00
 #SBATCH --constraint=EPYC_7763
 
 set -e
@@ -26,7 +26,10 @@ make
 N_TOTAL=1000000000
 
 echo "==== STRONG SCALING: naive critical ==================="
-stdbuf -oL ./naive_strong      ${N_TOTAL} | tee timing_naive_strong.data
+#ORIGINAL
+#stdbuf -oL ./naive_strong      ${N_TOTAL} | tee timing_naive_strong.data
+#APPEND ONLY THE MISSING 64-THREAD POINT
+stdbuf -oL ./naive_strong      ${N_TOTAL} | tee -a timing_naive_strong.data
 echo
 
 echo "==== STRONG SCALING: optimized critical =============="

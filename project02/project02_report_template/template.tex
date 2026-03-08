@@ -207,7 +207,7 @@ Here are outputs.\\
 \subsection{Exercise 1 and 2}
 Here we are asked to complete the serial version of the Mandelbrot set code in the missing code part and to count the total number of iterations in order to correctly compute the benchmark statistics.\\
 In the following code snippet we show the completed version of the serial code for computing the Mandelbrot set:
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*})]
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
 double time_start = walltime();
   // do the calculation
   cy = MIN_Y;
@@ -222,23 +222,20 @@ double time_start = walltime();
       // count the iterations until the orbit leaves the circle |z|=2.
       // stop if the number of iterations exceeds the bound MAX_ITERS.
       int n = 0;
-      // TODO
-      // >>>>>>>> CODE IS MISSING
-       while (x2 + y2 <= 4.0 && n < MAX_ITERS) {
-         y = 2.0 * x * y + cy;
-         x = x2 - y2 + cx;
-         x2 = x * x;
-         y2 = y * y;
-         n++;
-       }
-       nTotalIterationsCount += n;
-      // <<<<<<<< CODE IS MISSING
-      // n indicates if the point belongs to the mandelbrot set
+      
+      while (x2 + y2 <= 4.0 \&\& n < MAX\_ITERS) { 
+        y = 2.0 * x * y + cy; 
+        x = x2 - y2 + cx; 
+        x2 = x * x; 
+        y2 = y * y; 
+        n++; 
+      }
+       nTotalIterationsCount += n; 
       // plot the number of iterations at point (i, j)
       int c = ((long)n * 255) / MAX_ITERS;
       ppm_plot(&pPpm, i, j, c, c, c);
       cx += fDeltaX;
-    }
+  }
     cy += fDeltaY;
   }
   double time_end = walltime();
@@ -322,6 +319,32 @@ MFlop/s & 2748.16 & 135543 \\
 \end{table}
 The results (see table \ref{tab:mandelbrot_results}) show a significant performance improvement achieved by parallelizing the code using \texttt{OpenMP}. The total time taken to compute the Mandelbrot set is reduced from 330.726 seconds in the serial version to 6.70717 seconds in the parallel version, which is a substantial decrease in execution time. The total number of iterations is slightly higher in the parallel version, which could be due to differences in the order of execution and how the iterations are distributed among the threads. The average time per pixel and average time per iteration are also significantly reduced in the parallel version, indicating that the computation is much faster when utilizing multiple threads. The iterations per second and MFlop/s metrics show a dramatic increase in performance, with the parallel version achieving 1.69429e+10 iterations per second and 135543 MFlop/s compared to 3.4352e+08 iterations per second and 2748.16 MFlop/s in the serial version. This performance improvement can be attributed to the ability of \texttt{OpenMP} to effectively utilize the available CPU cores, allowing for concurrent execution of the computations required to determine whether each point belongs to the Mandelbrot set. By distributing the workload across multiple threads, the parallel version can significantly reduce the time required to compute the Mandelbrot set, especially for larger image sizes and higher iteration counts.
 \subsubsection{Strong scaling analysis}
+To analyze the strong scaling of the parallelized Mandelbrot set code, we can measure the execution time for different numbers of threads while keeping the problem size fixed. This allows us to see how well the code scales with increasing thread count.\\
+We also calculate the speedup as the ratio of the execution time of the serial version to the execution time of the parallel version for each thread count.
+In figure \ref{fig:strong_scaling} we show the plots of the strong scalying analysis. As we can see the execution times halves every time we double the number of threads, which indicates that the code scales well with increasing thread count. In figure \ref{fig:strong_speedup} instead we plot the theoretical speedup with the one computed from the simulations. The ideal speedup is computed via \ref{eq:ideal_speedup}
+% put label correctly in the following equation
+\begin{equation}
+S_{ideal}(n) = n
+\label{eq:ideal_speedup}
+\end{equation}
+where n is the number of threads. The actual speedup is computed as shown in \ref{eq:actual_speedup}
+\begin{equation}
+S_{actual}(n) = \frac{T_{serial}}{T_{parallel}(n)}
+\label{eq:actual_speedup}
+\end{equation}
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf}
+\caption{Strong scaling analysis of the parallelized Mandelbrot set code}
+\label{fig:strong_scaling}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf}
+\caption{Speedup of the parallelized Mandelbrot set code compared to the ideal speedup}
+\label{fig:strong_speedup}
+\end{figure}
 \newpage
 
 \section{Bug hunt [10 points]}

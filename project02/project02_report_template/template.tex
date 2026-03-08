@@ -5,6 +5,7 @@
 \usepackage{url}
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage{multirow}
 \lstdefinestyle{grayverbatim}{
   basicstyle=\ttfamily,%
   backgroundcolor=\color{gray!10},%
@@ -135,39 +136,29 @@ In the second part of the exercise we are asked to perform a weak and strong sca
 \subsubsection{Strong scaling study}
 In this context a strong scaling study is performed by keeping the problem size fixed and increasing the number of threads. The goal is to see how the performance of the code improves as we increase the number of threads. In our case, we can keep the value of $N$ fixed and measure the execution time for different numbers of threads. We can then plot the speedup and efficiency as a function of the number of threads to analyze the strong scaling behavior of our code.\\
 Here are outputs.\\
-\textbf{Strong naive}
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
-  # pi N num_threads time [secs]
-3.141592653589634           1000000000   1 6.93277019
-3.141592653589634           1000000000   2 76.46882527
-3.141592653589634           1000000000   4 197.49973289
-3.141592653589634           1000000000   8 283.80093214
-3.141592653589634           1000000000  16 403.18691688
-3.141592653589634           1000000000  32 501.40493621
-3.141592653589634           1000000000  64 678.71737772
-\end{lstlisting}
-\textbf{Strong optimized}
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*})]
-# pi N num_threads time [secs]
-3.141592653589771           1000000000   1 2.26213344
-3.141592653589771           1000000000   2 1.26299218
-3.141592653589771           1000000000   4 0.67451669
-3.141592653589771           1000000000   8 0.33567476
-3.141592653589771           1000000000  16 0.17712136
-3.141592653589771           1000000000  32 0.10922673
-3.141592653589771           1000000000  64 0.10740197
-\end{lstlisting}
-\textbf{Strong reduction}
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*})]
-  # pi N num_threads time [secs]
-3.141592653589772           1000000000   1 2.19981237
-3.141592653589772           1000000000   2 1.26300334
-3.141592653589772           1000000000   4 0.67434969
-3.141592653589772           1000000000   8 0.33552001
-3.141592653589772           1000000000  16 0.17785895
-3.141592653589772           1000000000  32 0.12054630
-3.141592653589772           1000000000  64 0.07776448
-\end{lstlisting}
+
+\begin{table}[!h]
+\centering
+\caption{Strong scaling results for the different implementations ($N=10^9$).}
+\begin{tabular}{ccccccc}
+\hline
+\multirow{2}{*}{Threads} & 
+\multicolumn{2}{c}{Naive Critical} &
+\multicolumn{2}{c}{Optimized Critical} &
+\multicolumn{2}{c}{Reduction} \\
+\cline{2-7}
+ & Time [s] & Speedup & Time [s] & Speedup & Time [s] & Speedup \\
+\hline
+1  & 6.4987 & 1.00 & 1.4189 & 1.00 & 1.3933 & 1.00 \\
+2  & 61.7839 & 0.11 & 0.7696 & 1.84 & 0.7573 & 1.84 \\
+4  & 105.7615 & 0.06 & 0.4260 & 3.33 & 0.4268 & 3.26 \\
+8  & 131.8628 & 0.05 & 0.2179 & 6.51 & 0.2179 & 6.39 \\
+16 & 391.7679 & 0.02 & 0.1575 & 9.01 & 0.1574 & 8.86 \\
+32 & 427.1595 & 0.02 & 0.0789 & 17.98 & 0.0789 & 17.66 \\
+64 & 600.1213 & 0.01 & 0.0449 & 31.60 & 0.0448 & 31.06 \\
+\hline
+\end{tabular}
+\end{table}
 
 \textbf{Weak naive}
 \begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*})]
@@ -497,6 +488,16 @@ Another possible improvement is to avoid storing such large arrays on the stack.
 
 The segmentation fault is caused by insufficient stack memory, not by an invalid OpenMP construct. The array \texttt{e\_in} becomes private to each thread because of \texttt{default(firstprivate)}, and \texttt{eTDSE} is also duplicated because it is \texttt{threadprivate}. The resulting per-thread memory usage is too large for the available stack. The proper fix is to avoid unnecessary privatization of large arrays, and, if needed, increase the OpenMP thread stack size or move the data to heap allocation.
 
+\subsection{File 5: \texttt{omp\_bug5.c}}
+
+The main bug in this program is a \textbf{deadlock caused by inconsistent lock ordering}.  
+The two \texttt{sections} acquire the two locks in opposite order. In the first section the thread acquires \texttt{locka} and then \texttt{lockb}, while in the second section the order is reversed: the thread first acquires \texttt{lockb} and then \texttt{locka}.
+
+This can lead to a classic deadlock situation. For example, Thread~0 may acquire \texttt{locka} while Thread~1 acquires \texttt{lockb}. Afterwards, Thread~0 waits for \texttt{lockb}, which is already held by Thread~1, and Thread~1 waits for \texttt{locka}, which is held by Thread~0. Since each thread is waiting for a lock owned by the other one, neither thread can proceed and the program blocks indefinitely.
+
+There is also a second issue related to the loop variable \texttt{i}. The variable \texttt{i} is declared outside the parallel region and is therefore \textbf{shared} by default. Since both sections execute concurrently and use the same loop variable, this creates a \textbf{data race}. Each thread should instead operate on its own private copy of the loop index.
+
+To fix the program, the locking order must be made consistent. All threads should acquire multiple locks in the same global order (for instance always acquiring \texttt{locka} before \texttt{lockb}). This removes the circular wait condition and therefore prevents the deadlock. Another possible improvement is to redesign the algorithm so that nested locking is not required; for example, the arrays could be initialized first, followed by a synchronization point, and only afterwards the addition operations could be performed. Finally, the loop variable \texttt{i} should be made \textbf{private} inside the parallel region or declared locally inside each section so that each thread uses its own independent copy.
 \newpage
 \section{Parallel histogram calculation using \texttt{OpenMP} [15 points]}
 

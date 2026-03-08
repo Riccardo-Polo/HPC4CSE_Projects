@@ -7,7 +7,7 @@
 
 /* ORIGINAL */
 // #define NTHREADS 7
-// #define NREPEAT  5
+// #define NREPEAT  3
 
 /* TEMPORARY RECOVERY VERSION: run only the missing 64-thread point once */
 #define NTHREADS 1

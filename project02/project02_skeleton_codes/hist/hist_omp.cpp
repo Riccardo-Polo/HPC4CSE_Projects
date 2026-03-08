@@ -32,7 +32,7 @@ int main() {
     dist[i] = 0;
   }
 
-  // TODO Parallelize the histogram computation
+  // Compute histogram
   time_start = walltime();
   for (long i = 0; i < VEC_SIZE; ++i) {
     dist[vec[i]]++;

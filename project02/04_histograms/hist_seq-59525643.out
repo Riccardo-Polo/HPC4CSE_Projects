@@ -1,0 +1,29 @@
+
+Currently Loaded Modules:
+  1) stack/2025-06   2) gcc/12.2.0
+
+ 
+
+rm -f *.o hist_seq hist_omp *.data
+g++ -c -O3 -fopenmp hist_seq.cpp
+g++ -c -O3 -fopenmp walltime.c
+g++ -O3 -fopenmp hist_seq.o walltime.o -o hist_seq
+g++ -c -O3 -fopenmp hist_omp.cpp
+g++ -O3 -fopenmp hist_omp.o walltime.o -o hist_omp
+dist[0]=93
+dist[1]=3285
+dist[2]=85350
+dist[3]=1260714
+dist[4]=10871742
+dist[5]=54586161
+dist[6]=159818689
+dist[7]=273378693
+dist[8]=273376199
+dist[9]=159818437
+dist[10]=54574824
+dist[11]=10876078
+dist[12]=1261215
+dist[13]=85046
+dist[14]=3397
+dist[15]=77
+Time: 0.218641 sec

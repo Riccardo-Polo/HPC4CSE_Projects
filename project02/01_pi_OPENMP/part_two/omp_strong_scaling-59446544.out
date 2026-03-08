@@ -1,0 +1,50 @@
+
+Currently Loaded Modules:
+  1) stack/2025-06   2) gcc/12.2.0
+
+ 
+
+Running on:
+eu-a2p-485
+rm -f *.o naive_strong naive_weak optimized_strong optimized_weak reduction_strong reduction_weak
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c naive_strong.c -o naive_strong.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c walltime.c -o walltime.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra naive_strong.o walltime.o -o naive_strong
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c naive_weak.c -o naive_weak.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra naive_weak.o walltime.o -o naive_weak
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c optimized_strong.c -o optimized_strong.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra optimized_strong.o walltime.o -o optimized_strong
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c optimized_weak.c -o optimized_weak.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra optimized_weak.o walltime.o -o optimized_weak
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c reduction_strong.c -o reduction_strong.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra reduction_strong.o walltime.o -o reduction_strong
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c reduction_weak.c -o reduction_weak.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra reduction_weak.o walltime.o -o reduction_weak
+==== STRONG SCALING: naive critical ===================
+# naive strong scaling with critical at every update
+# columns: pi N num_threads avg_time min_time max_time
+3.141592653590202           1000000000  64 600.12132913 566.77811651 631.58561247
+
+==== STRONG SCALING: optimized critical ==============
+# optimized strong scaling with local accumulation + one critical per thread
+# columns: pi N num_threads avg_time min_time max_time
+3.141592653589971           1000000000   1 1.41895601 1.39340238 1.51908789
+3.141592653589901           1000000000   2 0.76959798 0.69629532 0.92438303
+3.141592653589821           1000000000   4 0.42603044 0.38513405 0.43778971
+3.141592653589769           1000000000   8 0.21786856 0.21781978 0.21792931
+3.141592653589833           1000000000  16 0.15753544 0.15751519 0.15757274
+3.141592653589757           1000000000  32 0.07891211 0.07888575 0.07895771
+3.141592653589770           1000000000  64 0.04489869 0.04285019 0.04661372
+
+==== STRONG SCALING: reduction =======================
+# strong scaling with OpenMP reduction
+# columns: pi N num_threads avg_time min_time max_time
+3.141592653589971           1000000000   1 1.39329075 1.39307350 1.39345598
+3.141592653589901           1000000000   2 0.75725789 0.69659225 0.87080439
+3.141592653589821           1000000000   4 0.42675506 0.39170656 0.43555325
+3.141592653589769           1000000000   8 0.21791599 0.21784296 0.21798942
+3.141592653589833           1000000000  16 0.15743193 0.15735244 0.15752660
+3.141592653589757           1000000000  32 0.07890552 0.07881353 0.07922647
+3.141592653589771           1000000000  64 0.04484346 0.04277334 0.04660210
+
+==== plotting strong scaling =========================

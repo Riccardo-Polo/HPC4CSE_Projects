@@ -11,7 +11,7 @@
 
 /* TEMPORARY RECOVERY VERSION: run only the missing 64-thread point once */
 #define NTHREADS 1
-#define NREPEAT  5
+#define NREPEAT  3
 
 int main(int argc, char *argv[]) {
     /* ORIGINAL */

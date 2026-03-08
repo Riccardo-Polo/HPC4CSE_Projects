@@ -1,5 +1,0 @@
-make: *** No rule to make target 'hist_omp_strong.cpp', needed by 'hist_omp_strong.o'.  Stop.
-/var/spool/slurm/slurmd/state/job59526024/slurm_script: line 17: ./hist_omp_strong: No such file or directory
-"plot_hist_strong.gp" line 14: warning: Cannot find or open file "timing_hist_omp_strong_summary.data"
-"plot_hist_strong.gp" line 14: No data in plot
-

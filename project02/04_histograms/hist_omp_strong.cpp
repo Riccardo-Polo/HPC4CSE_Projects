@@ -10,7 +10,7 @@
 #define BINS 16
 
 int main(int argc, char** argv) {
-  long N = 1000000000L;
+  long N = 1000000000;
   int nrepeat = 5;
 
   if (argc > 1) N = std::atol(argv[1]);

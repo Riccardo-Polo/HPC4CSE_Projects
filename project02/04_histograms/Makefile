@@ -26,4 +26,4 @@ walltime.o: walltime.c walltime.h
 
 .PHONY: clean
 clean:
-	$(RM) *.o hist_seq hist_omp hist_omp_strong *.data
+	$(RM) *.o hist_seq hist_omp hist_omp_strong *.data *.png

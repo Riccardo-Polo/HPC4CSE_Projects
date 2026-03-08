@@ -1,0 +1,33 @@
+
+Currently Loaded Modules:
+  1) stack/2025-06   2) gcc/12.2.0
+
+ 
+
+Running on:
+eu-a2p-443
+rm -f *.o naive_strong naive_weak optimized_strong optimized_weak reduction_strong reduction_weak
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c naive_strong.c -o naive_strong.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c walltime.c -o walltime.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra naive_strong.o walltime.o -o naive_strong
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c naive_weak.c -o naive_weak.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra naive_weak.o walltime.o -o naive_weak
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c optimized_strong.c -o optimized_strong.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra optimized_strong.o walltime.o -o optimized_strong
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c optimized_weak.c -o optimized_weak.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra optimized_weak.o walltime.o -o optimized_weak
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c reduction_strong.c -o reduction_strong.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra reduction_strong.o walltime.o -o reduction_strong
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra -c reduction_weak.c -o reduction_weak.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp -march=native -std=c11 -Wall -Wextra reduction_weak.o walltime.o -o reduction_weak
+==== WEAK SCALING: naive critical ======================
+# naive weak scaling with critical at every update
+# work_per_thread = 50000000
+# N = work_per_thread * num_threads
+# columns: pi N num_threads avg_time min_time max_time
+3.141592653589562             50000000   1 0.40238123 0.38465850 0.40713190
+3.141592653590042            100000000   2 5.42016705 5.37788225 5.44185106
+3.141592653589769            200000000   4 23.10298803 22.80880818 23.32094410
+3.141592653589691            400000000   8 88.44410907 88.37009736 88.50937896
+3.141592653589564            800000000  16 225.65655575 225.28088154 226.35794103
+3.141592653589796           1600000000  32 616.55326358 616.23784782 617.39446249

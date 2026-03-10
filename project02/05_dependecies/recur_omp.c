@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "walltime.h"
 #include <omp.h>
+#include <math.h>
 
 /*
   This example is taken from Hager & Wellein (2010), who trace it back to the
@@ -25,11 +26,12 @@ int main(int argc, char *argv[]) {
 
   double time_start = walltime();
   // TODO: YOU NEED TO PARALLELIZE THIS LOOP
-  #pragma omp parallel firstprivate(Sn)
+  #pragma omp parallel firstprivate(up) lastprivate(Sn)
   {
     #pragma omp for
     for (n = 0; n <= N; ++n) {
       opt[n] = pow(up, n);
+      Sn = opt[n];
     }
 }
   printf("Parallel RunTime  :  %f seconds\n", walltime() - time_start);

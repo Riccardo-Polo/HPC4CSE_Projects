@@ -49,12 +49,6 @@ In the first part of the exercise it was asked to first parallelize the given co
     pi += term;
   }
   pi *= h;
-
-  double time = walltime() - time_start;
-
-  int nt = omp_get_max_threads(); 
-  printf("# pi N num_threads time [secs]\n");
-  printf("%.15f %20"PRIu64" %3d %.8f\n", pi, N, nt, time);
   \end{lstlisting}
 The output of the naive version is as follows:
 \begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
@@ -63,51 +57,37 @@ The output of the naive version is as follows:
 \end{lstlisting}
 We can see that the naive version is very slow. This is because every update to the shared variable \texttt{pi} is protected by a critical section, which causes a lot of contention and serialization among the threads. Each thread has to wait for the others to finish updating \texttt{pi}, which leads to a significant slowdown in performance.\\
 
-In the second part in was asked to create an optimized version that accumulates locally and enters critical only
-once per thread. Here is the code snippet of the optimized version that we implemented:
+In the second part it was asked to create an optimized version that accumulates locally and enters critical only once per thread. Here is the code snippet of the optimized version that we implemented:
 \begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
   (*@\colorbox{lightbluehighlight}{\#pragma omp parallel}@*)
   {
     double sum = 0.0;
-
     (*@\colorbox{lightbluehighlight}{\#pragma omp for}@*)
     for (uint64_t i = 0; i < N; ++i) {
       double x = (i + 0.5) * h;
       sum += 4.0 / (1.0 + x*x);
     }
-
     (*@\colorbox{lightbluehighlight}{\#pragma omp critical}@*)
     pi += sum;     // once per thread
   }
   pi *= h;
-
-  double time = walltime() - time_start;
-
-  int nt = omp_get_max_threads(); 
-  printf("# pi N num_threads time [secs]\n");
-  printf("%.15f %20"PRIu64" %3d %.8f\n", pi, N, nt, time);
 \end{lstlisting}
 In this version we have a local variable \texttt{sum} that is private to each thread, and we only enter the critical section once per thread to update the shared variable \texttt{pi}. This reduces the contention on the critical section and allows for better performance. The output of the optimized version is as follows:
 \begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
 # pi N num_threads time [secs]
 3.141592653589771           1000000000  64 0.19858712
 \end{lstlisting}
-We can see that the optimized version is significantly faster than the naive version. The optimized version allows for better utilization of the available threads and reduces the overhead caused by the critical section.\\
+We can see that the optimized version is significantly faster than the naive version.\newpage
 
 We are then asked to implement a version that uses the reduction clause. Here is the code snippet of the version that uses the reduction clause:
 \begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
-  (*@\colorbox{lightbluehighlight}{\#pragma omp parallel for reduction(+:pi)}@*)
+(*@\colorbox{lightbluehighlight}{\#pragma omp parallel for reduction(+:pi)}@*)
 #pragma omp parallel for reduction(+:sum)
   for (uint64_t i = 0; i < N; ++i) {
     double x = (i + 0.5)*h;
     sum += 4.0 / (1.0 + x*x);
   }
   pi = sum*h;
-  double time = walltime() - time_start;
-
-  int nt = omp_get_max_threads(); 
-  printf("# pi N num_threads time [secs]\n");
-  printf("%.15f %20"PRIu64" %3d %.8f\n", pi, N, nt, time);
 \end{lstlisting}
 In this version we use the \texttt{reduction} clause to automatically handle the accumulation of the variable \texttt{pi} across threads. The reduction clause takes care of creating a private copy of the variable for each thread and then combining the results at the end of the parallel region. This allows for a more concise and efficient implementation. The output of the version that uses the reduction clause is as follows:
 \begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
@@ -146,10 +126,10 @@ S_p = \frac{T_1}{T_p}
 where $T_1$ is the execution time with one thread.\\
 The ideal speedup is given by equation \ref{eq:ideal_speedup}
 \begin{equation}
-S_{ideal} = \frac{nm}{n+m-1} \approx n,
+S_{ideal} = \frac{n\,p}{n+p-1} \approx n,
 \label{eq:ideal_speedup}
 \end{equation}
-where $n=N$ is the number of loop iterations, and $m$ is the number of threads. In practice, we expect to see a speedup that is less than ideal due to overheads such as thread management and synchronization.
+where $n=N$ is the number of loop iterations, and $p$ is the number of threads. In practice, we expect to see a speedup that is less than ideal due to overheads such as thread management and synchronization.
 The results of the strong scaling experiment are reported in Table \ref{tab:strong_scaling}.
 
 \begin{table}[!h]
@@ -618,6 +598,34 @@ To analyze the strong scaling of the parallelized histogram calculation, we can 
 
 \newpage
 \section{Parallel loop dependencies with \texttt{OpenMP} [15 points]}
+In this exercise we are asked to parallelize a loop with dependencies using \texttt{OpenMP} tasks. The code snippet of the parallelized version is shown below:
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
+  #pragma omp parallel
+  {
+    double log_up = log(up);
+    #pragma omp for firstprivate(up)
+    for (n = 0; n <= N; ++n) {
+      opt[n] = exp(n * log_up);
+    }
+    Sn = opt[N];
+}
+\end{lstlisting}
+In table \ref{tab:recur_performance} is the output of the program which compares the serial and the parallel versions.
+\begin{table}[h]
+\centering
+\caption{Performance and numerical results for sequential and OpenMP implementations ($N=2\times10^9$).}
+\begin{tabular}{lccccc}
+\hline
+Implementation & Threads & Runtime [s] & Speedup & $S_N$ & $\|\text{opt}\|_2^2/N$ \\
+\hline
+Sequential & 1 & 6.153345 & 1.00 & 4.851650976\times10^{8} & 5.884629305\times10^{15} \\
+OpenMP & 8 & 2.890764 & 2.13 & 4.851650879\times10^{8} & 5.884629187\times10^{15} \\
+\hline
+\end{tabular}
+\label{tab:recur_performance}
+\end{table}
+
+Our first approach used the function \texttt{pow} to compute the values of \texttt{opt[n]}. However, this function is not optimal and can be inefficient. By using the property that $up^n = \exp(n \log(up))$, we can compute the values more efficiently. This approach allows us to compute the powers in a more efficient way, especially for large values of $n$. The performance comparison in table \ref{tab:recur_performance} shows that the OpenMP implementation achieves a significant speedup compared to the sequential version, demonstrating the effectiveness of parallelization in this case.
 
 \newpage
 \section{Quicksort using \texttt{OpenMP} tasks [20 points]}

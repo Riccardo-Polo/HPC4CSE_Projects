@@ -3,7 +3,7 @@
 #include "walltime.h"
 #include <omp.h>
 
-#define THRESHOLD 10000
+#define THRESHOLD 1000
 
 void print_list(double *data, int length) {
   for (int i = 0; i < length; i++) {
@@ -39,7 +39,7 @@ void quicksort_omp(double *data, int length)
         data[right] = pivot;
     }
 
-    // print_list(data, length);
+    print_list(data, length);
 
     /* recursion */
     #pragma omp task final(right > THRESHOLD)
@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
   quicksort_omp(data, length);
   double time = walltime() - time_start;
 
-  // print_list(data, length);
+  //print_list(data, length);
 
   printf("Size of dataset: %d, elapsed time[s] %e \n", length, time);
 

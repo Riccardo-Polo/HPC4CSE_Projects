@@ -26,13 +26,14 @@ int main(int argc, char *argv[]) {
 
   double time_start = walltime();
   // TODO: YOU NEED TO PARALLELIZE THIS LOOP
-  #pragma omp parallel 
+  #pragma omp parallel
   {
-    #pragma omp for firstprivate(up) lastprivate(Sn)
+    double log_up = log(up);
+    #pragma omp for firstprivate(up)
     for (n = 0; n <= N; ++n) {
-      opt[n] = pow(up, n);
-      Sn = opt[n];
+      opt[n] = exp(n * log_up);
     }
+    Sn = opt[N];
 }
   printf("Parallel RunTime  :  %f seconds\n", walltime() - time_start);
   printf("Final Result Sn   :  %.17g \n", Sn);

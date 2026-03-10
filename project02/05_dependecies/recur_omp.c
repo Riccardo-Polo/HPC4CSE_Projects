@@ -26,9 +26,9 @@ int main(int argc, char *argv[]) {
 
   double time_start = walltime();
   // TODO: YOU NEED TO PARALLELIZE THIS LOOP
-  #pragma omp parallel firstprivate(up) lastprivate(Sn)
+  #pragma omp parallel 
   {
-    #pragma omp for
+    #pragma omp for firstprivate(up) lastprivate(Sn)
     for (n = 0; n <= N; ++n) {
       opt[n] = pow(up, n);
       Sn = opt[n];

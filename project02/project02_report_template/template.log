@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.28)  8 MAR 2026 14:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.28)  9 MAR 2026 17:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -708,80 +708,87 @@ Underfull \hbox (badness 10000) in paragraph at lines 95--96
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--136
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 137--139
-
- []
-
+[3]
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[3] [4]
-<../02_Mandelbrot/serial/mandel.png, id=130, 4111.36pt x 4111.36pt>
+[4] [5]
+<../02_Mandelbrot/serial/mandel.png, id=118, 4111.36pt x 4111.36pt>
 File: ../02_Mandelbrot/serial/mandel.png Graphic file (type png)
 <use ../02_Mandelbrot/serial/mandel.png>
-Package pdftex.def Info: ../02_Mandelbrot/serial/mandel.png  used on input line 246.
+Package pdftex.def Info: ../02_Mandelbrot/serial/mandel.png  used on input line 293.
 (pdftex.def)             Requested size: 234.73523pt x 234.68872pt.
- [5] [6 <../02_Mandelbrot/serial/mandel.png>]
-<../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf, id=209, 361.35pt x 216.81pt>
+ [6] [7 <../02_Mandelbrot/serial/mandel.png>]
+<../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf, id=196, 361.35pt x 216.81pt>
 File: ../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf Graphic file (type pdf)
 <use ../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf>
-Package pdftex.def Info: ../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf  used on input line 328.
+Package pdftex.def Info: ../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf  used on input line 365.
 (pdftex.def)             Requested size: 375.57779pt x 225.34805pt.
-<../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf, id=210, 361.35pt x 216.81pt>
+<../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf, id=197, 361.35pt x 216.81pt>
 File: ../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf Graphic file (type pdf)
 <use ../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf>
-Package pdftex.def Info: ../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf  used on input line 335.
+Package pdftex.def Info: ../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf  used on input line 372.
 (pdftex.def)             Requested size: 375.57779pt x 225.34805pt.
- [7] [8 <../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf> <../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf
+ [8] [9 <../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf> <../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf
 
 pdfTeX warning: pdflatex (file ../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf): PDF inclusion: multiple pdfs with page group included in a single page
 >]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 342.
- [9]
-Overfull \hbox (17.22589pt too wide) in paragraph at lines 424--425
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 379.
+ [10]
+Overfull \hbox (17.22589pt too wide) in paragraph at lines 461--462
 \OT1/cmr/m/n/10 The main prob-lem in this pro-gram is the in-cor-rect use of the \OT1/cmtt/m/n/10 barrier \OT1/cmr/m/n/10 di-rec-tive in-side the func-tion \OT1/cmtt/m/n/10 print[]results\OT1/cmr/m/n/10 .
  []
 
-[10]
-Underfull \hbox (badness 10000) in paragraph at lines 469--471
+[11]
+Underfull \hbox (badness 10000) in paragraph at lines 506--508
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 472--474
+Underfull \hbox (badness 10000) in paragraph at lines 509--511
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 487--488
+Underfull \hbox (badness 10000) in paragraph at lines 524--525
 
  []
 
-[11] [12] [13] [14] (template.aux)
+[12]
+Underfull \hbox (badness 10000) in paragraph at lines 600--602
+
+ []
+
+[13]
+<../04_histograms/hist_strong_time.png, id=346, 1003.75pt x 702.625pt>
+File: ../04_histograms/hist_strong_time.png Graphic file (type png)
+<use ../04_histograms/hist_strong_time.png>
+Package pdftex.def Info: ../04_histograms/hist_strong_time.png  used on input line 607.
+(pdftex.def)             Requested size: 281.68513pt x 197.18394pt.
+<../04_histograms/hist_strong_speedup.png, id=347, 1003.75pt x 702.625pt>
+File: ../04_histograms/hist_strong_speedup.png Graphic file (type png)
+<use ../04_histograms/hist_strong_speedup.png>
+Package pdftex.def Info: ../04_histograms/hist_strong_speedup.png  used on input line 614.
+(pdftex.def)             Requested size: 281.68513pt x 197.18394pt.
+ [14 <../04_histograms/hist_strong_time.png> <../04_histograms/hist_strong_speedup.png>] [15] [16] (template.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-06>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 27189 strings out of 467871
- 540642 string characters out of 5418375
- 1269924 words of memory out of 5000000
- 55487 multiletter control sequences out of 15000+600000
+ 27244 strings out of 467871
+ 541855 string characters out of 5418375
+ 1348924 words of memory out of 5000000
+ 55507 multiletter control sequences out of 15000+600000
  635233 words of font info for 66 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,10n,121p,11294b,2015s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 108i,11n,121p,11294b,2015s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\ricca\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tctt1000.pk> <C:\Users\ricca\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on template.pdf (14 pages, 419488 bytes).
+Output written on template.pdf (16 pages, 489649 bytes).
 PDF statistics:
- 481 PDF objects out of 1000 (max. 8388607)
- 220 named destinations out of 1000 (max. 500000)
- 169 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 545 PDF objects out of 1000 (max. 8388607)
+ 255 named destinations out of 1000 (max. 500000)
+ 195 words of extra memory for PDF output out of 10000 (max. 10000000)
 

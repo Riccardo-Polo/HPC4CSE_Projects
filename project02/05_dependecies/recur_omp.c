@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include "walltime.h"
 #include <omp.h>
-#include <math.h>
 
 /*
   This example is taken from Hager & Wellein (2010), who trace it back to the

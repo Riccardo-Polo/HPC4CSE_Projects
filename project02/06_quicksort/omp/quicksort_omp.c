@@ -3,8 +3,6 @@
 #include <omp.h>
 #include "walltime.h"
 
-#define FINAL_CUTOFF 10000
-
 void print_list(double *data, int length) {
   for (int i = 0; i < length; i++) {
     printf("%e\t", data[i]);
@@ -41,8 +39,8 @@ void quicksort_seq(double *data, int length) {
   quicksort_seq(&(data[left]), length - left);
 }
 
-/* task-based quicksort */
-void quicksort_omp(double *data, int length) {
+/* task-based quicksort with final clause */
+void quicksort_omp(double *data, int length, int cutoff) {
   if (length <= 1) return;
 
   double pivot = data[0];
@@ -66,18 +64,18 @@ void quicksort_omp(double *data, int length) {
     data[right] = pivot;
   }
 
-  /* if we are already inside a final task, continue sequentially */
+  /* Once in a final task, continue recursively in sequential mode */
   if (omp_in_final()) {
     quicksort_seq(data, right);
     quicksort_seq(&(data[left]), length - left);
     return;
   }
 
-  #pragma omp task shared(data) firstprivate(right) final(right < FINAL_CUTOFF)
-  quicksort_omp(data, right);
+  #pragma omp task shared(data) firstprivate(right, cutoff) final(right <= cutoff)
+  quicksort_omp(data, right, cutoff);
 
-  #pragma omp task shared(data) firstprivate(left, length) final((length - left) < FINAL_CUTOFF)
-  quicksort_omp(&(data[left]), length - left);
+  #pragma omp task shared(data) firstprivate(left, length, cutoff) final((length - left) <= cutoff)
+  quicksort_omp(&(data[left]), length - left, cutoff);
 
   #pragma omp taskwait
 }
@@ -91,12 +89,15 @@ int check(double *data, int length) {
 
 int main(int argc, char **argv) {
   int length = 10000000;
-  if (argc > 1) length = atoi(argv[1]);
+  int cutoff = 10000;
 
-  double *data = (double*)malloc(length * sizeof(double));
+  if (argc > 1) length = atoi(argv[1]);
+  if (argc > 2) cutoff = atoi(argv[2]);
+
+  double *data = (double*)malloc((size_t)length * sizeof(double));
   if (data == NULL) {
     printf("memory allocation failed\n");
-    return 0;
+    return 1;
   }
 
   srand(0);
@@ -109,15 +110,16 @@ int main(int argc, char **argv) {
   #pragma omp parallel
   {
     #pragma omp single
-    quicksort_omp(data, length);
+    quicksort_omp(data, length, cutoff);
   }
 
   double time = walltime() - time_start;
 
-  printf("Size of dataset: %d, elapsed time[s] %e\n", length, time);
+  int wrong = check(data, length);
 
-  if (check(data, length) != 0)
-    printf("Quicksort incorrect.\n");
+  /* machine-readable output */
+  printf("%d %d %d %.8f %d\n",
+         length, cutoff, omp_get_max_threads(), time, wrong);
 
   free(data);
   return 0;

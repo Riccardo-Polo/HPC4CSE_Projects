@@ -1,17 +1,22 @@
-CC     = gcc
-CFLAGS = -O3 -fopenmp
+CC      = gcc
+CFLAGS  = -O3 -fopenmp -march=native -Wall -Wextra -std=c11
+LDFLAGS = -fopenmp
+TARGET  = quicksort_omp
 
-all: quicksort_omp
+OBJS = quicksort.o walltime.o
 
-quicksort_omp: quicksort_omp.o walltime.o
-	$(CC) $(CFLAGS) $^ -o $@
+all: $(TARGET)
 
-quicksort_omp.o: quicksort_omp.c walltime.h
-	$(CC) -c $(CFLAGS) $<
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDFLAGS)
+
+quicksort.o: quicksort.c walltime.h
+	$(CC) $(CFLAGS) -c quicksort.c
 
 walltime.o: walltime.c walltime.h
-	$(CC) -c $(CFLAGS) $<
+	$(CC) $(CFLAGS) -c walltime.c
 
-.PHONY: clean
 clean:
-	$(RM) *.o quicksort_omp
+	rm -f $(TARGET) *.o *.data *.csv *.gp *.pdf *.png *.out *.err
+
+.PHONY: all clean

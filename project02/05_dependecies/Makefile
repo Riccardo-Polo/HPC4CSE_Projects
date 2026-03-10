@@ -1,5 +1,5 @@
 CC      ?= gcc
-LDFLAGS  =
+LDFLAGS  = -lm
 
 all: recur_seq recur_omp
 

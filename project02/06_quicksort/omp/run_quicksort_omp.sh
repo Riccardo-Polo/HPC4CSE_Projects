@@ -3,7 +3,7 @@
 #SBATCH --output=%x-%j.out
 #SBATCH --error=%x-%j.err
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=128
+#SBATCH --cpus-per-task=64
 #SBATCH --time=03:00:00
 #SBATCH --constraint=EPYC_7763
 
@@ -34,7 +34,7 @@ CUTOFFS=(100 500 1000 5000 10000 20000 50000 100000)
 TUNE_N=10000000
 
 # Strong scaling study
-THREADS=(1 2 4 8 16 32 64 128)
+THREADS=(1 2 4 8 16 32 64)
 SIZES=(1000000 5000000 10000000 20000000)
 
 # -------------------------------

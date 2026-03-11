@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=matrixmult
-#SBATCH --output=%x-%j.out
-#SBATCH --error=%x-%j.err
+#SBATCH --output=build/%x-%j.out
+#SBATCH --error=build/%x-%j.err
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --constraint=EPYC_7763
@@ -19,20 +19,22 @@ export OMP_NUM_THREADS=1
 export MKL_NUM_THREADS=1
 
 # compile
+mkdir -p build
+
 make clean
 make
 
 echo "==== benchmark-naive ======================"
-stdbuf -oL ./benchmark-naive | tee timing_naive_dgemm.data
+stdbuf -oL ./benchmark-naive | tee build/timing_naive_dgemm.data
 echo
 echo "==== benchmark-jki ========================"
-stdbuf -oL ./benchmark-jki | tee timing_jki_dgemm.data
+stdbuf -oL ./benchmark-jki | tee build/timing_jki_dgemm.data
 echo
 echo "==== benchmark-blas ======================="
-stdbuf -oL ./benchmark-blas | tee timing_blas_dgemm.data
+stdbuf -oL ./benchmark-blas | tee build/timing_blas_dgemm.data
 echo
 echo "==== benchmark-blocked ===================="
-stdbuf -oL ./benchmark-blocked | tee timing_blocked_dgemm.data
+stdbuf -oL ./benchmark-blocked | tee build/timing_blocked_dgemm.data
 
 echo
 echo "==== plot results ========================="

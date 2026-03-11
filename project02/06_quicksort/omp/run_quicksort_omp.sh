@@ -71,7 +71,7 @@ echo "# N cutoff threads avg_time wrong" > cutoff_tuning.data
 
 echo "===== CUTOFF TUNING ====="
 for cutoff in "${CUTOFFS[@]}"; do
-  result=$(run_avg $TUNE_N $cutoff 128)
+  result=$(run_avg $TUNE_N $cutoff 64)
   avg=$(echo "$result" | awk '{print $1}')
   wrong=$(echo "$result" | awk '{print $2}')
   echo "$TUNE_N $cutoff 128 $avg $wrong" | tee -a cutoff_tuning.data
@@ -101,7 +101,7 @@ for N in "${SIZES[@]}"; do
   E=1.0
   echo "$N 1 $T1 $S $E $BEST_CUTOFF $wrong" | tee -a strong_scaling.data
 
-  for t in 2 4 8 16 32 64 128; do
+  for t in 2 4 8 16 32 64; do
     result=$(run_avg $N $BEST_CUTOFF $t)
     Tt=$(echo "$result" | awk '{print $1}')
     wrong=$(echo "$result" | awk '{print $2}')

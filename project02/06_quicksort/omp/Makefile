@@ -17,6 +17,6 @@ walltime.o: walltime.c walltime.h
 	$(CC) $(CFLAGS) -c walltime.c
 
 clean:
-	rm -f $(TARGET) *.o *.data *.csv *.gp *.pdf *.png *.out *.err
+	rm -f $(TARGET) *.o *.data *.csv *.gp *.pdf *.png
 
 .PHONY: all clean

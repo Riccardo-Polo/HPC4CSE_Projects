@@ -3,7 +3,7 @@
 #SBATCH --output=%x-%j.out
 #SBATCH --error=%x-%j.err
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=128
+#SBATCH --cpus-per-task=64
 #SBATCH --time=03:00:00
 #SBATCH --constraint=EPYC_7763
 
@@ -34,7 +34,7 @@ CUTOFFS=(100 500 1000 5000 10000 20000 50000 100000)
 TUNE_N=10000000
 
 # Strong scaling study
-THREADS=(1 2 4 8 16 32 64 128)
+THREADS=(1 2 4 8 16 32 64)
 SIZES=(1000000 5000000 10000000 20000000)
 
 # -------------------------------
@@ -71,7 +71,7 @@ echo "# N cutoff threads avg_time wrong" > cutoff_tuning.data
 
 echo "===== CUTOFF TUNING ====="
 for cutoff in "${CUTOFFS[@]}"; do
-  result=$(run_avg $TUNE_N $cutoff 128)
+  result=$(run_avg $TUNE_N $cutoff 64)
   avg=$(echo "$result" | awk '{print $1}')
   wrong=$(echo "$result" | awk '{print $2}')
   echo "$TUNE_N $cutoff 128 $avg $wrong" | tee -a cutoff_tuning.data
@@ -101,7 +101,7 @@ for N in "${SIZES[@]}"; do
   E=1.0
   echo "$N 1 $T1 $S $E $BEST_CUTOFF $wrong" | tee -a strong_scaling.data
 
-  for t in 2 4 8 16 32 64 128; do
+  for t in 2 4 8 16 32 64; do
     result=$(run_avg $N $BEST_CUTOFF $t)
     Tt=$(echo "$result" | awk '{print $1}')
     wrong=$(echo "$result" | awk '{print $2}')

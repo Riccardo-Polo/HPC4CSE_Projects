@@ -74,7 +74,7 @@ for cutoff in "${CUTOFFS[@]}"; do
   result=$(run_avg $TUNE_N $cutoff 64)
   avg=$(echo "$result" | awk '{print $1}')
   wrong=$(echo "$result" | awk '{print $2}')
-  echo "$TUNE_N $cutoff 128 $avg $wrong" | tee -a cutoff_tuning.data
+  echo "$TUNE_N $cutoff 64 $avg $wrong" | tee -a cutoff_tuning.data
 done
 
 BEST_CUTOFF=$(awk '

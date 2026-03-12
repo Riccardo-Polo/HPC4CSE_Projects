@@ -26,10 +26,7 @@ make
 N_TOTAL=1000000000
 
 echo "==== STRONG SCALING: naive critical ==================="
-#ORIGINAL
-#stdbuf -oL ./naive_strong      ${N_TOTAL} | tee timing_naive_strong.data
-#APPEND ONLY THE MISSING 64-THREAD POINT
-stdbuf -oL ./naive_strong      ${N_TOTAL} | tee -a timing_naive_strong.data
+stdbuf -oL ./naive_strong      ${N_TOTAL} | tee timing_naive_strong.data
 echo
 
 echo "==== STRONG SCALING: optimized critical =============="

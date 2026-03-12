@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include "walltime.h"
 #include <omp.h>
-#include <math.h>
 
 /*
   This example is taken from Hager & Wellein (2010), who trace it back to the
@@ -33,8 +32,8 @@ int main(int argc, char *argv[]) {
     for (n = 0; n <= N; ++n) {
       opt[n] = exp(n * log_up);
     }
-    Sn = opt[N];
-}
+  }
+  Sn = opt[N]*up;
   printf("Parallel RunTime  :  %f seconds\n", walltime() - time_start);
   printf("Final Result Sn   :  %.17g \n", Sn);
 

@@ -33,6 +33,7 @@ int main(int argc, char *argv[]) {
       opt[n] = exp(n * log_up);
     }
   }
+
   Sn = opt[N]*up;
   printf("Parallel RunTime  :  %f seconds\n", walltime() - time_start);
   printf("Final Result Sn   :  %.17g \n", Sn);

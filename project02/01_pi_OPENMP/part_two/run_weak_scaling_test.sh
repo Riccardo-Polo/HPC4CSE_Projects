@@ -26,10 +26,7 @@ make
 WORK_PER_THREAD=50000000
 
 echo "==== WEAK SCALING: naive critical ======================"
-# ORIGINAL
-# stdbuf -oL ./naive_weak      ${WORK_PER_THREAD} | tee timing_naive_weak.data
-# APPEND ONLY THE MISSING 64-THREAD POINT
-stdbuf -oL ./naive_weak      ${WORK_PER_THREAD} | tee -a timing_naive_weak.data
+stdbuf -oL ./naive_weak      ${WORK_PER_THREAD} | tee timing_naive_weak.data
 echo
 
 

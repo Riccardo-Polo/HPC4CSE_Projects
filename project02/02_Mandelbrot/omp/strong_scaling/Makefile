@@ -11,4 +11,4 @@ $(TARGET): $(SRC)
 	$(CC) $(CFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS)
 
 clean:
-	rm -f $(TARGET) *.o timing_strong.data timing_strong_raw.data timing_strong_avg.data strong_scaling.pdf strong_speedup.pdf
+	rm -f $(TARGET) *.o strong_scaling.pdf strong_speedup.pdf

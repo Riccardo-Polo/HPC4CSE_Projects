@@ -8,12 +8,4 @@
 3.141592653589691            400000000   8 88.44410907 88.37009736 88.50937896
 3.141592653589564            800000000  16 225.65655575 225.28088154 226.35794103
 3.141592653589796           1600000000  32 616.55326358 616.23784782 617.39446249
-# naive weak scaling with critical at every update
-# work_per_thread = 50000000
-# N = work_per_thread * num_threads
-# columns: pi N num_threads avg_time min_time max_time
-# naive weak scaling with critical at every update
-# work_per_thread = 50000000
-# N = work_per_thread * num_threads
-# columns: pi N num_threads avg_time min_time max_time
 3.141592653586101           3200000000  64 2015.68427715 1979.27264947 2086.23340580

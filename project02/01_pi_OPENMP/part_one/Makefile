@@ -1,7 +1,10 @@
 CC     ?= gcc
 CFLAGS  = -O2 -fopenmp
 
-all: pi_serial pi_omp_critical_naive pi_omp_critical_optimized pi_omp_reduction
+all: directory pi_serial pi_omp_critical_naive pi_omp_critical_optimized pi_omp_reduction
+
+directory: 
+	mkdir -p outputs
 
 pi_serial: pi_serial.o walltime.o
 	$(CC) $(CFLAGS) $^ -o $@

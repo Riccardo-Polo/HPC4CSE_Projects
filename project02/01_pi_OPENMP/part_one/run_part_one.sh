@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=slurm_job_one # Job name    (default: sbatch)
-#SBATCH --output=%x-%j.out       # Output file (default: slurm-%j.out)
-#SBATCH --error=%x-%j.err        # Error file  (default: slurm-%j.out)
+#SBATCH --job-name=outputs/slurm_job_one # Job name    (default: sbatch)
+#SBATCH --output=outputs/%x-%j.out       # Output file (default: slurm-%j.out)
+#SBATCH --error=outputs/%x-%j.err        # Error file  (default: slurm-%j.out)
 #SBATCH --ntasks=1               # Number of tasks
 #SBATCH --cpus-per-task=64        # Number of CPUs per task
 #SBATCH --mem-per-cpu=1G         # Memory per CPU

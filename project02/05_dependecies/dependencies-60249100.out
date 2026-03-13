@@ -1,0 +1,109 @@
+
+Currently Loaded Modules:
+  1) stack/2025-06   2) gcc/12.2.0
+
+ 
+
+rm -f *.o recur_seq recur_omp
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -c -O3 recur_seq.c
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -c walltime.c
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 recur_seq.o walltime.o -o recur_seq
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O3 -fopenmp recur_omp.c walltime.o -lm -o recur_omp -lm
+Running 10 sequential measurements...
+==== Sequential run 1/10 ====
+Sequential RunTime:  3.666580 seconds
+Final Result Sn   :  485165097.62511122 
+Result ||opt||^2_2 :  5884629305179574.000000
+==== OpenMP (64 threads) run 1/10 ====
+Parallel RunTime  :  0.402374 seconds
+Final Result Sn   :  485165092.77338684 
+Result ||opt||^2_2 :  5884629187486871.000000
+==== Sequential run 2/10 ====
+Sequential RunTime:  4.031835 seconds
+Final Result Sn   :  485165097.62511122 
+Result ||opt||^2_2 :  5884629305179574.000000
+==== OpenMP (64 threads) run 2/10 ====
+Parallel RunTime  :  0.446001 seconds
+Final Result Sn   :  485165092.77338684 
+Result ||opt||^2_2 :  5884629187486871.000000
+==== Sequential run 3/10 ====
+Sequential RunTime:  4.009595 seconds
+Final Result Sn   :  485165097.62511122 
+Result ||opt||^2_2 :  5884629305179574.000000
+==== OpenMP (64 threads) run 3/10 ====
+Parallel RunTime  :  0.411398 seconds
+Final Result Sn   :  485165092.77338684 
+Result ||opt||^2_2 :  5884629187486871.000000
+==== Sequential run 4/10 ====
+Sequential RunTime:  4.029743 seconds
+Final Result Sn   :  485165097.62511122 
+Result ||opt||^2_2 :  5884629305179574.000000
+==== OpenMP (64 threads) run 4/10 ====
+Parallel RunTime  :  0.442632 seconds
+Final Result Sn   :  485165092.77338684 
+Result ||opt||^2_2 :  5884629187486871.000000
+==== Sequential run 5/10 ====
+Sequential RunTime:  4.770305 seconds
+Final Result Sn   :  485165097.62511122 
+Result ||opt||^2_2 :  5884629305179574.000000
+==== OpenMP (64 threads) run 5/10 ====
+Parallel RunTime  :  0.452333 seconds
+Final Result Sn   :  485165092.77338684 
+Result ||opt||^2_2 :  5884629187486871.000000
+==== Sequential run 6/10 ====
+Sequential RunTime:  3.985809 seconds
+Final Result Sn   :  485165097.62511122 
+Result ||opt||^2_2 :  5884629305179574.000000
+==== OpenMP (64 threads) run 6/10 ====
+Parallel RunTime  :  0.455009 seconds
+Final Result Sn   :  485165092.77338684 
+Result ||opt||^2_2 :  5884629187486871.000000
+==== Sequential run 7/10 ====
+Sequential RunTime:  4.445133 seconds
+Final Result Sn   :  485165097.62511122 
+Result ||opt||^2_2 :  5884629305179574.000000
+==== OpenMP (64 threads) run 7/10 ====
+Parallel RunTime  :  0.417543 seconds
+Final Result Sn   :  485165092.77338684 
+Result ||opt||^2_2 :  5884629187486871.000000
+==== Sequential run 8/10 ====
+Sequential RunTime:  3.976877 seconds
+Final Result Sn   :  485165097.62511122 
+Result ||opt||^2_2 :  5884629305179574.000000
+==== OpenMP (64 threads) run 8/10 ====
+Parallel RunTime  :  0.457206 seconds
+Final Result Sn   :  485165092.77338684 
+Result ||opt||^2_2 :  5884629187486871.000000
+==== Sequential run 9/10 ====
+Sequential RunTime:  3.987241 seconds
+Final Result Sn   :  485165097.62511122 
+Result ||opt||^2_2 :  5884629305179574.000000
+==== OpenMP (64 threads) run 9/10 ====
+Parallel RunTime  :  0.452384 seconds
+Final Result Sn   :  485165092.77338684 
+Result ||opt||^2_2 :  5884629187486871.000000
+==== Sequential run 10/10 ====
+Sequential RunTime:  3.992908 seconds
+Final Result Sn   :  485165097.62511122 
+Result ||opt||^2_2 :  5884629305179574.000000
+==== OpenMP (64 threads) run 10/10 ====
+Parallel RunTime  :  0.453438 seconds
+Final Result Sn   :  485165092.77338684 
+Result ||opt||^2_2 :  5884629187486871.000000
+
+==== Per-run results saved to dependencies_results.dat ====
+# run seq_time par_time speedup seq_Sn par_Sn seq_norm2 par_norm2
+1 3.666580 0.402374 9.1123680954 485165097.62511122 485165092.77338684 5884629305179574.000000 5884629187486871.000000
+2 4.031835 0.446001 9.0399685202 485165097.62511122 485165092.77338684 5884629305179574.000000 5884629187486871.000000
+3 4.009595 0.411398 9.7462676046 485165097.62511122 485165092.77338684 5884629305179574.000000 5884629187486871.000000
+4 4.029743 0.442632 9.1040480580 485165097.62511122 485165092.77338684 5884629305179574.000000 5884629187486871.000000
+5 4.770305 0.452333 10.5460026131 485165097.62511122 485165092.77338684 5884629305179574.000000 5884629187486871.000000
+6 3.985809 0.455009 8.7598465085 485165097.62511122 485165092.77338684 5884629305179574.000000 5884629187486871.000000
+7 4.445133 0.417543 10.6459286828 485165097.62511122 485165092.77338684 5884629305179574.000000 5884629187486871.000000
+8 3.976877 0.457206 8.6982169963 485165097.62511122 485165092.77338684 5884629305179574.000000 5884629187486871.000000
+9 3.987241 0.452384 8.8138417804 485165097.62511122 485165092.77338684 5884629305179574.000000 5884629187486871.000000
+10 3.992908 0.453438 8.8058521782 485165097.62511122 485165092.77338684 5884629305179574.000000 5884629187486871.000000
+
+==== Summary saved to dependencies_summary.dat ====
+# repeats avg_seq_time avg_par_time avg_speedup seq_Sn_avg par_Sn_avg seq_norm2_avg par_norm2_avg
+10 4.0896026000 0.4390318000 9.3272341038 485165097.62511122 485165092.77338684 5884629305179575.0000000000 5884629187486871.0000000000

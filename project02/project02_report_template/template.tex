@@ -235,16 +235,16 @@ double time_start = walltime();
   }
   double time_end = walltime();
 \end{lstlisting}
-In the while loop, we are iterating through the orbit of the point c under the function $f(z) = z^2 + c$. The variables x and y represent the real and imaginary parts of the complex number z, respectively. The equations used in the while loop are derived from the definition of complex multiplication and addition. Specifically, the function $f(z)$ can be expressed in terms of its real and imaginary components as follows:ù
-% use latex math mode to write the equations
+In the while loop, we are iterating through the orbit of the point c under the function $f(z) = z^2 + c$. The variables $x$ and $y$ represent the real and imaginary parts of the complex number $z$, respectively. The function $f(z)$ can be expressed in terms of its real and imaginary components as follows:
+
 \begin{align*}
 f(z) &= z^2 + c \\
 &= (x + yi)^2 + (c_x + c_yi) \\
 &= (x^2 - y^2 + c_x) + (2xy + c_y)i
 \end{align*}
-Since the function $f(z)$ is defined recursively, and each iteration of the function applies the same transformation to the complex number z. Therefore, when we compute $f^2(z)$, we are applying the function $f$ to the result of $f(z)$, which means that we are applying the same equations for the real and imaginary parts at each iteration. This recursive nature of the function allows us to use the same equations for each iteration in the while loop, regardless of how many times we apply the function.\\
-From this, we can see that the real part of $f(z)$ is given by $x^2 - y^2 + c_x$, and the imaginary part is given by $2xy + c_y$. Therefore, in the while loop, we update the values of $x$ and $y$ according to these equations to compute the next point in the orbit. The loop continues until the magnitude of z (which is $\sqrt{x^2 + y^2}$) exceeds 2, indicating that the orbit is unbounded, or until we reach the maximum number of iterations, which indicates that the point c is likely to belong to the Mandelbrot set.\\
-Finally, we are asked to count the total number of iterations in order to correctly compute the benchmark statistics. This is done by introducing a variable \texttt{nTotalIterationsCount} that accumulates the number of iterations for each point in the complex plane. This variable is incremented by n, which represents the number of iterations for the current point $(i, j)$. By keeping track of the total number of iterations, we can compute the benchmark statistics more accurately, as it gives us a measure of the computational effort required to compute the Mandelbrot set for the given parameters.\\
+Since the function $f(z)$ is defined recursively, and each iteration of the function applies the same transformation to the complex number z. Therefore, when we compute $f^2(z)$, we are applying the function $f$ to the result of $f(z)$, which means that we are applying the same equations for the real and imaginary parts at each iteration.\\
+From this, we can see that the real part of $f(z)$ is given by $x^2 - y^2 + c_x$, and the imaginary part is given by $2xy + c_y$. The loop continues until the magnitude of z (which is $\sqrt{x^2 + y^2}$) exceeds 2, indicating that the orbit is unbounded, or until we reach the maximum number of iterations, which indicates that the point c is likely to belong to the Mandelbrot set.\\
+Finally, we are asked to count the total number of iterations in order to correctly compute the benchmark statistics. This is done by introducing a variable \texttt{nTotalIterationsCount} that accumulates the number of iterations for each point in the complex plane. This variable is incremented by n, which represents the number of iterations for the current point $(i, j)$.\\
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.35\textwidth]{../02_Mandelbrot/serial/mandel.png}
@@ -256,12 +256,12 @@ Finally, we are asked to count the total number of iterations in order to correc
 In the third part of the exercise we are asked to parallelize the Mandelbrot set code using \texttt{OpenMP}. The goal is to improve the performance of the code by utilizing multiple threads to compute the Mandelbrot set in parallel. Here is the code snippet of the parallelized version of the Mandelbrot set code using \texttt{OpenMP}:
 \begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
   double time_start = walltime();
-(*@ \colorbox{lightbluehighlight}{#pragma omp parallel for reduction(+:nTotalIterationsCount) schedule(dynamic)} @*)
+(*@ \colorbox{lightbluehighlight}{\#pragma omp parallel for reduction(+:nTotalIterationsCount) schedule(dynamic)} @*)
   for (long j = 0; j < IMAGE_HEIGHT; j++) {
-    double cy = MIN_Y + j * fDeltaY;
+    (*@ \colorbox{lightbluehighlight}{double cy = MIN\_Y + j * fDeltaY;} @*)
 
     for (long i = 0; i < IMAGE_WIDTH; i++) {
-      double cx = MIN_X + i * fDeltaX;
+      (*@ \colorbox{lightbluehighlight}{double cx = MIN\_X + i * fDeltaX;} @*)
 
       double x = cx;
       double y = cy;
@@ -327,19 +327,15 @@ In figure \ref{fig:strong_scaling} we show the plots of the strong scalying anal
 \end{figure}
 
 As we did for the first exercise, the data shown in picture are obtained by taking the average of 5 different runs. 
+
+\subsection{Use of LLMs}
 \newpage
 
 \section{Bug hunt [10 points]}
 \subsection{File 1:   \texttt{omp\_bug1.c}}
 
-The program attempts to parallelize the loop that computes
-\[
-c[i] = a[i] + b[i]
-\]
-using the OpenMP \texttt{parallel for} construct. However, the code contains a
-syntax error that prevents compilation and also reflects a conceptual misuse
-of the directive.
-
+The program attempts to parallelize the loop that computes $c[i] = a[i] + b[i] $
+using the OpenMP \texttt{parallel for} construct.\\
 The first problem is related to the use of the OpenMP directive
 \texttt{\#pragma omp parallel for}. This combined directive creates a parallel
 region and distributes the iterations of the following loop among the threads.
@@ -352,24 +348,14 @@ compound block:
             schedule(static, chunk)
 {
   tid = omp_get_thread_num();
-  for (i = 0; i < N; i++) {
-    ...
-  }
-}
+  for (i = 0; i < N; i++)
 \end{lstlisting}
 
 This structure is invalid because the \texttt{parallel for} directive must be
 attached directly to the loop it parallelizes.
 
 The second issue concerns the variable \texttt{tid}. The programmer wants to
-print which thread executes each iteration, but the statement
-
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*}]
-tid = omp_get_thread_num();
-\end{lstlisting}
-
-is placed outside the loop that the directive is supposed to parallelize.
-Because the directive requires the loop to appear immediately after it, this
+print which thread executes each iteration, but the statement \texttt{tid = omp\_get\_thread\_num()} is placed outside the loop that the directive is supposed to parallelize. Because the directive requires the loop to appear immediately after it, this
 statement breaks the required structure of the construct.
 
 To fix the problem, the loop must appear directly after the OpenMP directive.
@@ -383,33 +369,17 @@ The program contains errors related to the incorrect handling of \texttt{shared}
 
 The variables \texttt{tid}, \texttt{i}, and \texttt{total} are declared outside the \texttt{\#pragma omp parallel} region and therefore are \emph{shared} by default among all threads. This leads to race conditions and incorrect program behaviour.
 
-First, the variable \texttt{tid} is shared, although each thread assigns its own thread ID through
-\begin{lstlisting}[style = grayverbatim,escapeinside={(*@}{@*}]
-tid = omp_get_thread_num();
-\end{lstlisting}
-
-
+First, the variable \texttt{tid} is shared, although each thread assigns its own thread ID through \\\texttt{tid = omp\_get\_thread\_num()}.
 Since all threads write to the same memory location, the value of \texttt{tid} can be overwritten by other threads. As a result, the value stored in \texttt{tid} is not guaranteed to correspond to the correct thread.
 
-A more serious problem concerns the variable \texttt{total}. Inside the parallel region the code initializes
-\begin{lstlisting}[style=grayverbatim]
-total = 0.0;
-\end{lstlisting}
-and then performs a parallel loop
+A more serious problem concerns the variable \texttt{total}. Inside the parallel region the code initializes \texttt{total = 0.0;} and then performs a parallel loop
 \begin{lstlisting}[style=grayverbatim]
 #pragma omp for schedule(dynamic, 10)
 for (i = 0; i < 1000000; i++)
     total = total + i * 1.0;
 \end{lstlisting}
-Because \texttt{total} is shared, all threads update the same variable concurrently. This produces a race condition and the resulting sum is incorrect and non-deterministic. Moreover, each thread resets the shared variable to zero before the loop, which introduces additional data races.
-
-Finally, the statement
-\begin{lstlisting}[style=grayverbatim]
-printf("Thread %d is done! Total= %e\n", tid, total);
-\end{lstlisting}
-is located outside the parallel region. Consequently, it is executed only once by the main thread, even though the programmer likely intended each thread to report completion.
-
-The problem can be fixed by ensuring correct data scoping. The variable \texttt{tid} should be declared \emph{private} so that each thread keeps its own thread identifier. The summation should be implemented using an OpenMP \texttt{reduction} on \texttt{total}, which safely combines the partial sums computed by different threads. If each thread should report completion, the corresponding \texttt{printf} statement should be placed inside the parallel region.
+Because \texttt{total} is shared, all threads update the same variable concurrently. This produces a race condition and the resulting sum is incorrect and non-deterministic. Moreover, each thread resets the shared variable to zero before the loop, which introduces additional data races.\\
+ The variable \texttt{tid} should be declared \emph{private} so that each thread keeps its own thread identifier. The summation should be implemented using an OpenMP \texttt{reduction} on \texttt{total}, which safely combines the partial sums computed by different threads.
 
 \subsection{File 3: \texttt{omp\_bug3.c}}
 The main problem in this program is the incorrect use of the \texttt{barrier} directive inside the function \texttt{print\_results}. In OpenMP, a barrier must be encountered by \emph{all} threads of the team, or by none of them. Here, however, \texttt{print\_results} is called only by the threads that actually execute one of the two \texttt{sections}. Since there are only two sections, at most two threads will enter the function, while the other threads in the parallel region will skip it entirely. As a consequence, only a subset of threads reaches the barrier placed at the end of \texttt{print\_results}, which leads to an illegal synchronization pattern and can cause the program to hang at run time.
@@ -433,58 +403,28 @@ The problem is caused by \emph{stack overflow} in the OpenMP region. The key iss
 \texttt{real(8) :: e\_in(nmax)}
 \]
 is declared inside the main program and the parallel region uses
-\[
 \texttt{!\$omp parallel default(firstprivate)}.
-\]
-Because of \texttt{firstprivate}, each OpenMP thread receives its own private copy of \texttt{e\_in}. Since
-\[
-n_{\max}=202000,
-\]
-this array alone occupies about
-\[
-202000 \times 8 \approx 1.6\ \text{MB}
-\]
-per thread. These private copies are typically placed on the thread stack. If the available stack size is too small, entering the parallel region causes a segmentation fault.
+Because of \texttt{firstprivate}, each OpenMP thread receives its own private copy of \texttt{e\_in}. Since $ n_{\max}=202000, $
+this array alone occupies about $202000 \times 8 \approx 1.6\ \text{MB}$
+per thread. These private copies are typically placed on the thread stack. If the available stack size is too small, entering the parallel region causes a segmentation fault.\\
 
-There is a second large object involved:
-\[
-\texttt{double complex :: eTDSE(ntmax)}
-\]
-inside the module, declared as
-\[
-\texttt{!\$omp threadprivate(eTDSE)}.
-\]
-This means that each thread also has its own copy of \texttt{eTDSE}. A \texttt{double complex} element usually requires 16 bytes, so this array takes about
-\[
-202000 \times 16 \approx 3.2\ \text{MB}
-\]
+There is a second large object involved: \texttt{double complex :: eTDSE(ntmax)} inside the module, declared as \texttt{!\$omp threadprivate(eTDSE)}.\\
+This means that each thread also has its own copy of \texttt{eTDSE}. A \texttt{double complex} element usually requires 16 bytes, so this array takes about $202000 \times 16 \approx 3.2\ \text{MB}$
 per thread. Therefore, with OpenMP enabled, the memory required per thread becomes quite large. The crash appears only when both arrays are effectively used in the parallel region, which is why removing one of the \texttt{print} statements may make the program run.\\
 
 The code is not wrong from a syntax point of view, but it is wrong from a memory-management perspective. The main mistake is using \texttt{default(firstprivate)} in a region where a large local array such as \texttt{e\_in} exists. This forces unnecessary duplication of a large array on each thread stack. In addition, \texttt{threadprivate(eTDSE)} also creates one copy per thread, which further increases memory pressure.\\
-So the real bug is the \emph{combination of large thread-local data and insufficient thread stack size}.\\
+So the real bug is the combination of large thread-local data and insufficient thread stack size.\\
 
-A first possible fix is to avoid making \texttt{e\_in} firstprivate if this is not needed. Since the array is only read in the loop, it should be shared instead of private. In practice, one should replace the overly broad
-\[
-\texttt{default(firstprivate)}
-\]
-with a more careful data-sharing specification, for example making \texttt{e\_in} shared.
+A first possible fix is to avoid making \texttt{e\_in} firstprivate if this is not needed. Since the array is only read in the loop, it should be shared instead of private. In practice, one should replace the overly broad \texttt{default(firstprivate)} with a more careful data-sharing specification, for example making \texttt{e\_in} shared.\\
 
-A second fix is to increase the stack size. On Unix-like systems this can be done for the main thread with
-\[
-\texttt{ulimit -s}
-\]
-and for OpenMP worker threads with environment variables such as \texttt{OMP\_STACKSIZE}. With Intel OpenMP, \texttt{KMP\_STACKSIZE} can also be used. This does not remove the underlying inefficiency, but it may prevent the crash.
-
-Another possible improvement is to avoid storing such large arrays on the stack. Allocatable arrays or heap-based storage are often preferable for large data structures in OpenMP programs. This reduces the risk of stack overflow and makes memory usage more controllable.\\
-
-The segmentation fault is caused by insufficient stack memory, not by an invalid OpenMP construct. The array \texttt{e\_in} becomes private to each thread because of \texttt{default(firstprivate)}, and \texttt{eTDSE} is also duplicated because it is \texttt{threadprivate}. The resulting per-thread memory usage is too large for the available stack. The proper fix is to avoid unnecessary privatization of large arrays, and, if needed, increase the OpenMP thread stack size or move the data to heap allocation.
+Another possible improvement is to avoid storing such large arrays on the stack.
 
 \subsection{File 5: \texttt{omp\_bug5.c}}
 
 The main bug in this program is a \textbf{deadlock caused by inconsistent lock ordering}.  
 The two \texttt{sections} acquire the two locks in opposite order. In the first section the thread acquires \texttt{locka} and then \texttt{lockb}, while in the second section the order is reversed: the thread first acquires \texttt{lockb} and then \texttt{locka}.
 
-This can lead to a classic deadlock situation. For example, Thread~0 may acquire \texttt{locka} while Thread~1 acquires \texttt{lockb}. Afterwards, Thread~0 waits for \texttt{lockb}, which is already held by Thread~1, and Thread~1 waits for \texttt{locka}, which is held by Thread~0. Since each thread is waiting for a lock owned by the other one, neither thread can proceed and the program blocks indefinitely.
+This can lead to a deadlock situation. For example, Thread~0 may acquire \texttt{locka} while Thread~1 acquires \texttt{lockb}. Afterwards, Thread~0 waits for \texttt{lockb}, which is already held by Thread~1, and Thread~1 waits for \texttt{locka}, which is held by Thread~0. Since each thread is waiting for a lock owned by the other one, neither thread can proceed and the program blocks indefinitely.
 
 There is also a second issue related to the loop variable \texttt{i}. The variable \texttt{i} is declared outside the parallel region and is therefore \textbf{shared} by default. Since both sections execute concurrently and use the same loop variable, this creates a \textbf{data race}. Each thread should instead operate on its own private copy of the loop index.
 

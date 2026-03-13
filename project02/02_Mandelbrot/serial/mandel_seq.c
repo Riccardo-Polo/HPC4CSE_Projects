@@ -70,6 +70,6 @@ int main(int argc, char **argv) {
   printf("MFlop/s:                    %g\n",
          nTotalIterationsCount * 8.0 / (time_end - time_start) * 1.e-6);
 
-  ppm_write(&pPpm, "mandel.ppm");
+  ppm_write(&pPpm, "outputs/mandel.ppm");
   return 0;
 }

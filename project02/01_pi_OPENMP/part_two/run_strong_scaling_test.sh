@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=omp_strong_scaling
-#SBATCH --output=%x-%j.out
-#SBATCH --error=%x-%j.err
+#SBATCH --output=outputs/%x-%j.out
+#SBATCH --error=outputs/%x-%j.err
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=64
 #SBATCH --mem-per-cpu=1G
@@ -9,6 +9,8 @@
 #SBATCH --constraint=EPYC_7763
 
 set -e
+
+mkdir -p outputs
 
 module load stack gcc
 module list
@@ -26,15 +28,15 @@ make
 N_TOTAL=1000000000
 
 echo "==== STRONG SCALING: naive critical ==================="
-stdbuf -oL ./naive_strong      ${N_TOTAL} | tee timing_naive_strong.data
+stdbuf -oL ./naive_strong      ${N_TOTAL} | tee outputs/timing_naive_strong.data
 echo
 
 echo "==== STRONG SCALING: optimized critical =============="
-stdbuf -oL ./optimized_strong  ${N_TOTAL} | tee timing_optimized_strong.data
+stdbuf -oL ./optimized_strong  ${N_TOTAL} | tee outputs/timing_optimized_strong.data
 echo
 
 echo "==== STRONG SCALING: reduction ======================="
-stdbuf -oL ./reduction_strong  ${N_TOTAL} | tee timing_reduction_strong.data
+stdbuf -oL ./reduction_strong  ${N_TOTAL} | tee outputs/timing_reduction_strong.data
 echo
 
 echo "==== plotting strong scaling ========================="

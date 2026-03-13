@@ -1,17 +1,18 @@
-CC     = gcc
+CC = gcc
 CFLAGS = -O3 -fopenmp
 
-all: quicksort
+TARGET = quicksort_omp
 
-quicksort: quicksort.o walltime.o
-	$(CC) $(CFLAGS) $^ -o $@
+all: $(TARGET)
 
-quicksort.o: quicksort.c walltime.h
-	$(CC) -c $(CFLAGS) $<
+$(TARGET): quicksort_omp.o walltime.o
+	$(CC) $(CFLAGS) $^ -o $(TARGET)
+
+quicksort_omp.o: quicksort_omp.c walltime.h
+	$(CC) $(CFLAGS) -c quicksort_omp.c
 
 walltime.o: walltime.c walltime.h
-	$(CC) -c $(CFLAGS) $<
+	$(CC) $(CFLAGS) -c walltime.c
 
-.PHONY: clean
 clean:
-	$(RM) *.o quicksort
+	rm -f *.o $(TARGET) 

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=mandel_strong
-#SBATCH --output=%x-%j.out
-#SBATCH --error=%x-%j.err
+#SBATCH --output=outputs/%x-%j.out
+#SBATCH --error=outputs/%x-%j.err
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=64
 #SBATCH --constraint=EPYC_7763
@@ -15,14 +15,16 @@ make clean
 make
 
 EXE=./mandelbrot
-RAW=timing_strong_raw.data
-AVG=timing_strong_avg.data
+RAW=outputs/timing_strong_raw.data
+AVG=outputs/timing_strong_avg.data
 
 REPEATS=${REPEATS:-5}
 THREADS="${THREADS_LIST:-1 2 4 8 16 32 64}"
 
 export OMP_PROC_BIND=close
 export OMP_PLACES=cores
+
+mkdir -p outputs
 
 rm -f "$RAW" "$AVG"
 echo "# threads width height run time" > "$RAW"

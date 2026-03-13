@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=hist_strong_scaling
-#SBATCH --output=%x-%j.out
-#SBATCH --error=%x-%j.err
+#SBATCH --output=outputs/%x-%j.out
+#SBATCH --error=outputs/%x-%j.err
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=64
 #SBATCH --mem-per-cpu=1G
@@ -9,6 +9,8 @@
 #SBATCH --constraint=EPYC_7763
 
 set -e
+
+mkdir -p outputs
 
 module load stack gcc
 module list
@@ -26,7 +28,7 @@ make
 N_TOTAL=1000000000
 NREPEAT=5
 
-OUTFILE=timing_hist_omp_strong.data
+OUTFILE=outputs/timing_hist_omp_strong.data
 echo "==== STRONG SCALING: histogram omp ==================="
 echo "# columns: checksum N num_threads avg_time min_time max_time" > ${OUTFILE}
 

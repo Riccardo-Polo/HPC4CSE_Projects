@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=outputs/slurm_job_one # Job name    (default: sbatch)
+#SBATCH --job-name=slurm_job_one # Job name    (default: sbatch)
 #SBATCH --output=outputs/%x-%j.out       # Output file (default: slurm-%j.out)
 #SBATCH --error=outputs/%x-%j.err        # Error file  (default: slurm-%j.out)
 #SBATCH --ntasks=1               # Number of tasks
@@ -10,6 +10,8 @@
 
 # exit immediately if any command exits with a non-zero status
 set -e
+
+mkdir -p outputs
 
 # load some modules & list loaded modules
 module load stack gcc

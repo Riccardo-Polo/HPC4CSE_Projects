@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=slurm_mandelbrot_omp # Job name    (default: sbatch)
-#SBATCH --output=%x-%j.out       # Output file (default: slurm-%j.out)
-#SBATCH --error=%x-%j.err        # Error file  (default: slurm-%j.out)
+#SBATCH --output=outputs/%x-%j.out
+#SBATCH --error=outputs/%x-%j.err
 #SBATCH --ntasks=1               # Number of tasks
 #SBATCH --cpus-per-task=64        # Number of CPUs per task
 #SBATCH --mem-per-cpu=1G         # Memory per CPU
@@ -10,6 +10,8 @@
 
 # exit immediately if any command exits with a non-zero status
 set -e
+
+mkdir -p outputs
 
 # load some modules & list loaded modules
 module load stack ghostscript imagemagick

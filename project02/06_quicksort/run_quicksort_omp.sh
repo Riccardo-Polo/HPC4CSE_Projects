@@ -1,13 +1,15 @@
 #!/bin/bash
 #SBATCH --job-name=qs_task_scaling
-#SBATCH --output=%x-%j.out
-#SBATCH --error=%x-%j.err
+#SBATCH --output=outputs/%x-%j.out
+#SBATCH --error=outputs/%x-%j.err
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=64
 #SBATCH --time=03:00:00
 #SBATCH --constraint=EPYC_7763
 
 set -e
+
+mkdir -p outputs
 
 module load stack/2024-06 gcc/12.2.0
 module list
@@ -67,28 +69,28 @@ run_avg() {
 # -------------------------------
 # 1) Tune cutoff scientifically
 # -------------------------------
-echo "# N cutoff threads avg_time wrong" > cutoff_tuning.data
+echo "# N cutoff threads avg_time wrong" > outputs/cutoff_tuning.data
 
 echo "===== CUTOFF TUNING ====="
 for cutoff in "${CUTOFFS[@]}"; do
   result=$(run_avg $TUNE_N $cutoff 64)
   avg=$(echo "$result" | awk '{print $1}')
   wrong=$(echo "$result" | awk '{print $2}')
-  echo "$TUNE_N $cutoff 64 $avg $wrong" | tee -a cutoff_tuning.data
+  echo "$TUNE_N $cutoff 64 $avg $wrong" | tee -a outputs/cutoff_tuning.data
 done
 
 BEST_CUTOFF=$(awk '
 BEGIN {best_t = 1e99; best_c = -1}
 $5 == 0 && $4 < best_t {best_t = $4; best_c = $2}
 END {print best_c}
-' cutoff_tuning.data)
+' outputs/cutoff_tuning.data)
 
 echo "Best cutoff found: $BEST_CUTOFF"
 
 # -------------------------------
 # 2) Strong scaling study
 # -------------------------------
-echo "# N threads avg_time speedup efficiency cutoff wrong" > strong_scaling.data
+echo "# N threads avg_time speedup efficiency cutoff wrong" > outputs/strong_scaling.data
 
 echo "===== STRONG SCALING ====="
 for N in "${SIZES[@]}"; do
@@ -99,7 +101,7 @@ for N in "${SIZES[@]}"; do
 
   S=1.0
   E=1.0
-  echo "$N 1 $T1 $S $E $BEST_CUTOFF $wrong" | tee -a strong_scaling.data
+  echo "$N 1 $T1 $S $E $BEST_CUTOFF $wrong" | tee -a outputs/strong_scaling.data
 
   for t in 2 4 8 16 32 64; do
     result=$(run_avg $N $BEST_CUTOFF $t)
@@ -109,11 +111,11 @@ for N in "${SIZES[@]}"; do
     S=$(awk -v t1="$T1" -v tt="$Tt" 'BEGIN{printf "%.8f", t1/tt}')
     E=$(awk -v s="$S" -v p="$t" 'BEGIN{printf "%.8f", s/p}')
 
-    echo "$N $t $Tt $S $E $BEST_CUTOFF $wrong" | tee -a strong_scaling.data
+    echo "$N $t $Tt $S $E $BEST_CUTOFF $wrong" | tee -a outputs/strong_scaling.data
   done
 done
 
 echo "All experiments completed."
 echo "Results written to:"
-echo "  cutoff_tuning.data"
-echo "  strong_scaling.data"
+echo "  outputs/cutoff_tuning.data"
+echo "  outputs/strong_scaling.data"

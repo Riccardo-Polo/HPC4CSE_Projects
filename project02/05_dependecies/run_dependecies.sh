@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=dependencies
-#SBATCH --output=%x-%j.out
-#SBATCH --error=%x-%j.err
+#SBATCH --output=outputs/%x-%j.out
+#SBATCH --error=outputs/%x-%j.err
 #SBATCH --ntasks=1
 #SBATCH --constraint=EPYC_7763
 #SBATCH --cpus-per-task=64
@@ -10,9 +10,11 @@
 
 set -euo pipefail
 
+mkdir -p outputs
+
 REPEATS=${REPEATS:-10}
-RESULTS_FILE=${RESULTS_FILE:-dependencies_results.dat}
-SUMMARY_FILE=${SUMMARY_FILE:-dependencies_summary.dat}
+RESULTS_FILE=${RESULTS_FILE:-outputs/dependencies_results.dat}
+SUMMARY_FILE=${SUMMARY_FILE:-outputs/dependencies_summary.dat}
 
 module load stack gcc
 module list

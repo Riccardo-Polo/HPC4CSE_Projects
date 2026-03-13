@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 
   /* Write image only if explicitly requested */
   if (argc > 1) {
-    ppm_write(&pPpm, "mandel.ppm");
+    ppm_write(&pPpm, "outputs/mandel.ppm");
   }
 
   return 0;

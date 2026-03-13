@@ -1,5 +1,6 @@
 CC      ?= gcc
 CFLAGS  := -O3 -fopenmp -march=native -std=c11 -Wall -Wextra
+OUTPUT_DIR := outputs
 
 all: naive_strong naive_weak optimized_strong optimized_weak reduction_strong reduction_weak
 
@@ -24,3 +25,4 @@ clean:
 
 cleanall: clean
 	rm -f *.data *.pdf *.out *.err
+	rm -f $(OUTPUT_DIR)/*.data $(OUTPUT_DIR)/*.pdf $(OUTPUT_DIR)/*.out $(OUTPUT_DIR)/*.err

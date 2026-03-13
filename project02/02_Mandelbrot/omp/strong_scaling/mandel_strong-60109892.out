@@ -1,2 +1,0 @@
-rm -f mandelbrot *.o strong_scaling.pdf strong_speedup.pdf
-gcc -O3 -fopenmp -march=native mandel_omp_scaling.c ppmwriter.c walltime.c -o mandelbrot -fopenmp

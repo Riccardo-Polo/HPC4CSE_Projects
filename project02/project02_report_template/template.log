@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.28)  12 MAR 2026 16:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.28)  13 MAR 2026 13:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -786,82 +786,119 @@ Underfull \hbox (badness 10000) in paragraph at lines 195--196
 <../02_Mandelbrot/serial/mandel.png, id=88, 4111.36pt x 4111.36pt>
 File: ../02_Mandelbrot/serial/mandel.png Graphic file (type png)
 <use ../02_Mandelbrot/serial/mandel.png>
-Package pdftex.def Info: ../02_Mandelbrot/serial/mandel.png  used on input line 250.
+Package pdftex.def Info: ../02_Mandelbrot/serial/mandel.png  used on input line 248.
 (pdftex.def)             Requested size: 164.31752pt x 164.30092pt.
- [5]
-Underfull \hbox (badness 10000) in paragraph at lines 289--291
-
- []
-
-[6 <../02_Mandelbrot/serial/mandel.png>]
-<../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf, id=169, 361.35pt x 216.81pt>
-File: ../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf Graphic file (type pdf)
-<use ../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf>
-Package pdftex.def Info: ../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf  used on input line 317.
-(pdftex.def)             Requested size: 375.57779pt x 225.34805pt.
-<../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf, id=170, 361.35pt x 216.81pt>
-File: ../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf Graphic file (type pdf)
-<use ../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf>
-Package pdftex.def Info: ../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf  used on input line 324.
-(pdftex.def)             Requested size: 375.57779pt x 225.34805pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 287--289
+
+ []
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[6 <../02_Mandelbrot/serial/mandel.png>]
+<../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf, id=167, 505.89pt x 346.29375pt>
+File: ../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf Graphic file (type pdf)
+<use ../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf>
+Package pdftex.def Info: ../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf  used on input line 315.
+(pdftex.def)             Requested size: 234.73523pt x 160.68146pt.
+<../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf, id=168, 505.89pt x 346.29375pt>
+File: ../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf Graphic file (type pdf)
+<use ../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf>
+Package pdftex.def Info: ../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf  used on input line 322.
+(pdftex.def)             Requested size: 234.73523pt x 160.68146pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 326--327
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 330--331
+
+ []
+
 [7 <../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf>] [8 <../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf>]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 335.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 340.
 
-Overfull \hbox (17.22589pt too wide) in paragraph at lines 385--386
+Overfull \hbox (17.22589pt too wide) in paragraph at lines 390--391
 \OT1/cmr/m/n/10 The main prob-lem in this pro-gram is the in-cor-rect use of the \OT1/cmtt/m/n/10 barrier \OT1/cmr/m/n/10 di-rec-tive in-side the func-tion \OT1/cmtt/m/n/10 print[]results\OT1/cmr/m/n/10 .
  []
 
 [9]
-Underfull \hbox (badness 10000) in paragraph at lines 404--410
+Overfull \hbox (47.02885pt too wide) in paragraph at lines 406--412
+\OT1/cmtt/m/n/10 e[]in(nmax) \OT1/cmr/m/n/10 is de-clared in-side the main pro-gram and the par-al-lel re-gion uses \OT1/cmtt/m/n/10 !\TS1/cmtt/m/n/10 $\OT1/cmtt/m/n/10 omp parallel default(firstprivate)\OT1/cmr/m/n/10 .
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 406--412
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 411--414
+Underfull \hbox (badness 10000) in paragraph at lines 413--416
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 415--417
+Underfull \hbox (badness 10000) in paragraph at lines 417--419
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 418--419
+Underfull \hbox (badness 10000) in paragraph at lines 420--421
 
  []
 
 [10] [11]
-Underfull \hbox (badness 10000) in paragraph at lines 467--468
+Underfull \hbox (badness 10000) in paragraph at lines 469--470
 
  []
 
-<../04_histograms/hist_strong_time.png, id=237, 1003.75pt x 702.625pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 471--473
+
+ []
+
+<../04_histograms/hist_strong_time.png, id=238, 1003.75pt x 702.625pt>
 File: ../04_histograms/hist_strong_time.png Graphic file (type png)
 <use ../04_histograms/hist_strong_time.png>
-Package pdftex.def Info: ../04_histograms/hist_strong_time.png  used on input line 474.
+Package pdftex.def Info: ../04_histograms/hist_strong_time.png  used on input line 476.
 (pdftex.def)             Requested size: 281.68513pt x 197.18394pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<../04_histograms/hist_strong_speedup.png, id=238, 1003.75pt x 702.625pt>
+<../04_histograms/hist_strong_speedup.png, id=239, 1003.75pt x 702.625pt>
 File: ../04_histograms/hist_strong_speedup.png Graphic file (type png)
 <use ../04_histograms/hist_strong_speedup.png>
-Package pdftex.def Info: ../04_histograms/hist_strong_speedup.png  used on input line 481.
+Package pdftex.def Info: ../04_histograms/hist_strong_speedup.png  used on input line 483.
 (pdftex.def)             Requested size: 281.68513pt x 197.18394pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[12] [13 <../04_histograms/hist_strong_time.png> <../04_histograms/hist_strong_speedup.png>]
+
+Underfull \hbox (badness 10000) in paragraph at lines 488--489
+
+ []
+
+[12]
+Underfull \hbox (badness 10000) in paragraph at lines 490--491
+
+ []
+
+[13 <../04_histograms/hist_strong_time.png> <../04_histograms/hist_strong_speedup.png>]
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.509 ...& 1 & 6.153345 & 1.00 & 4.851650976\times
+l.517 ...& 1 & 6.153345 & 1.00 & 4.851650976\times
                                                   10^{8} & 5.884629305\times...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -869,7 +906,7 @@ you left one out. Proceed, with fingers crossed.
 ! Extra }, or forgotten $.
 <template> \unskip \hfil }
                           \hskip \tabcolsep \endtemplate 
-l.509 ...153345 & 1.00 & 4.851650976\times10^{8} &
+l.517 ...153345 & 1.00 & 4.851650976\times10^{8} &
                                                    5.884629305\times10^{15} \\
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -880,7 +917,7 @@ deleted material, e.g., by typing `I$}'.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.509 ...153345 & 1.00 & 4.851650976\times10^{8} &
+l.517 ...153345 & 1.00 & 4.851650976\times10^{8} &
                                                    5.884629305\times10^{15} \\
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -888,7 +925,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.509 ...153345 & 1.00 & 4.851650976\times10^{8} &
+l.517 ...153345 & 1.00 & 4.851650976\times10^{8} &
                                                    5.884629305\times10^{15} \\
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -899,7 +936,7 @@ my insertion and my current dilemma will both disappear.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.509 ...851650976\times10^{8} & 5.884629305\times
+l.517 ...851650976\times10^{8} & 5.884629305\times
                                                   10^{15} \\
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -907,7 +944,7 @@ you left one out. Proceed, with fingers crossed.
 ! Extra }, or forgotten $.
 <template> \unskip \hfil }
                           \hskip \tabcolsep \endtemplate 
-l.510 O
+l.518 O
        penMP & 8 & 2.890764 & 2.13 & 4.851650879\times10^{8} & 5.884629187\t...
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -918,7 +955,7 @@ deleted material, e.g., by typing `I$}'.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.510 O
+l.518 O
        penMP & 8 & 2.890764 & 2.13 & 4.851650879\times10^{8} & 5.884629187\t...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -926,7 +963,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.510 O
+l.518 O
        penMP & 8 & 2.890764 & 2.13 & 4.851650879\times10^{8} & 5.884629187\t...
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -937,7 +974,7 @@ my insertion and my current dilemma will both disappear.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.510 ...& 8 & 2.890764 & 2.13 & 4.851650879\times
+l.518 ...& 8 & 2.890764 & 2.13 & 4.851650879\times
                                                   10^{8} & 5.884629187\times...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -945,7 +982,7 @@ you left one out. Proceed, with fingers crossed.
 ! Extra }, or forgotten $.
 <template> \unskip \hfil }
                           \hskip \tabcolsep \endtemplate 
-l.510 ...890764 & 2.13 & 4.851650879\times10^{8} &
+l.518 ...890764 & 2.13 & 4.851650879\times10^{8} &
                                                    5.884629187\times10^{15} \\
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -956,7 +993,7 @@ deleted material, e.g., by typing `I$}'.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.510 ...890764 & 2.13 & 4.851650879\times10^{8} &
+l.518 ...890764 & 2.13 & 4.851650879\times10^{8} &
                                                    5.884629187\times10^{15} \\
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -964,7 +1001,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.510 ...890764 & 2.13 & 4.851650879\times10^{8} &
+l.518 ...890764 & 2.13 & 4.851650879\times10^{8} &
                                                    5.884629187\times10^{15} \\
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -975,7 +1012,7 @@ my insertion and my current dilemma will both disappear.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.510 ...851650879\times10^{8} & 5.884629187\times
+l.518 ...851650879\times10^{8} & 5.884629187\times
                                                   10^{15} \\
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -983,7 +1020,7 @@ you left one out. Proceed, with fingers crossed.
 ! Extra }, or forgotten $.
 <template> \unskip \hfil }
                           \hskip \tabcolsep \endtemplate 
-l.511 \hline
+l.519 \hline
             
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -994,7 +1031,7 @@ deleted material, e.g., by typing `I$}'.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.511 \hline
+l.519 \hline
             
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1002,7 +1039,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.511 \hline
+l.519 \hline
             
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1015,12 +1052,12 @@ my insertion and my current dilemma will both disappear.
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 587--588
+Underfull \hbox (badness 10000) in paragraph at lines 595--596
 
  []
 
 [15]
-Package pgfplots info on input line 605: Using 'lua backend=false' for axis: xmode=log unsupported (yet).
+Package pgfplots info on input line 613: Using 'lua backend=false' for axis: xmode=log unsupported (yet).
  [16] (template.aux)
  ***********
 LaTeX2e <2025-11-01>
@@ -1028,17 +1065,17 @@ L3 programming layer <2025-11-06>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 39307 strings out of 467871
- 947425 string characters out of 5418375
- 1899641 words of memory out of 5000000
- 67446 multiletter control sequences out of 15000+600000
- 634639 words of font info for 64 fonts, out of 8000000 for 9000
+ 39297 strings out of 467871
+ 947252 string characters out of 5418375
+ 1899647 words of memory out of 5000000
+ 67440 multiletter control sequences out of 15000+600000
+ 634303 words of font info for 62 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  110i,20n,107p,11294b,2324s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\ricca\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tctt1000.pk> <C:\Users\ricca\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on template.pdf (16 pages, 496925 bytes).
+Output written on template.pdf (16 pages, 500816 bytes).
 PDF statistics:
- 544 PDF objects out of 1000 (max. 8388607)
- 237 named destinations out of 1000 (max. 500000)
+ 546 PDF objects out of 1000 (max. 8388607)
+ 234 named destinations out of 1000 (max. 500000)
  235 words of extra memory for PDF output out of 10000 (max. 10000000)
 

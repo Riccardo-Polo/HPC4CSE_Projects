@@ -196,7 +196,8 @@ The \textbf{reduction implementation} also exhibits good weak scaling, although 
 
 The data reported are obtained by taking the average of 5 different runs. In this way we can mitigate the effects of variability in execution time and obtain more reliable measurements. By looking at the outputs in the \texttt{.out} files one can also see the minimum and maximum times recorded across the runs, which gives an indication of the variability in performance.
 \subsection{Use of LLMs}
-Chat gpt was used to create the tables in Latex from the data collected from the experiments and to confirm the correcteness of the equations used for speedrun and efficiency calculations.
+Chat gpt was used to create the tables in Latex from the data collected from the experiments and to confirm the correcteness of the equations used for speedrun and efficiency calculations.\\
+It was also used to properly modify the \text{.c} files to modify correctly the original codes in order to perform a strong scaling and a weak scaling study.
 \newpage
 \section{The Mandelbrot set  using \texttt{OpenMP} [20 points]}
 \subsection{Exercise 1 and 2}
@@ -213,9 +214,6 @@ double time_start = walltime();
       y = cy;
       x2 = x * x;
       y2 = y * y;
-      // compute the orbit z, f(z), f^2(z), f^3(z), ...
-      // count the iterations until the orbit leaves the circle |z|=2.
-      // stop if the number of iterations exceeds the bound MAX_ITERS.
       int n = 0;
       
       while (x2 + y2 <= 4.0 \&\& n < MAX\_ITERS) { 
@@ -253,7 +251,7 @@ Finally, we are asked to count the total number of iterations in order to correc
 \end{figure}
 
 \subsection{Exercise 3}
-In the third part of the exercise we are asked to parallelize the Mandelbrot set code using \texttt{OpenMP}. The goal is to improve the performance of the code by utilizing multiple threads to compute the Mandelbrot set in parallel. Here is the code snippet of the parallelized version of the Mandelbrot set code using \texttt{OpenMP}:
+In the third part of the exercise we are asked to parallelize the Mandelbrot set code using \texttt{OpenMP}.. Here is the code snippet of the parallelized version of the Mandelbrot set code using \texttt{OpenMP}:
 \begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
   double time_start = walltime();
 (*@ \colorbox{lightbluehighlight}{\#pragma omp parallel for reduction(+:nTotalIterationsCount) schedule(dynamic)} @*)
@@ -314,21 +312,28 @@ We also calculate the speedup as the ratio of the execution time of the serial v
 In figure \ref{fig:strong_scaling} we show the plots of the strong scalying analysis. As we can see the execution times halves every time we double the number of threads, which indicates that the code scales well with increasing thread count. In figure \ref{fig:strong_speedup} instead we plot the theoretical speedup with the one computed from the simulations. The ideal speedup is computed via \ref{eq:ideal_speedup}. The actual speedup is computed as shown in equation \ref{eq:actual_speedup}.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.8\textwidth]{../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf}
+\includegraphics[width=0.5\textwidth]{../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf}
 \caption{Strong scaling analysis of the parallelized Mandelbrot set code}
 \label{fig:strong_scaling}
 \end{figure}
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.8\textwidth]{../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf}
+\includegraphics[width=0.5\textwidth]{../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf}
 \caption{Speedup of the parallelized Mandelbrot set code compared to the ideal speedup}
 \label{fig:strong_speedup}
 \end{figure}
+Figure \ref{fig:strong_scaling} shows the execution time of the Mandelbrot OpenMP implementation as a function of the number of threads. As expected in a strong scaling study, the problem size is fixed while the number of threads increases. The execution time always halves when moving from 1 to 64 threads, demonstrating that the parallelization is effective in exploiting multiple cores. However, beyond 16 threads the improvement becomes less pronounced and the curve starts to flatten.\\
 
-As we did for the first exercise, the data shown in picture are obtained by taking the average of 5 different runs. 
+The error bars representing the standard deviation are relatively small across all thread counts, indicating that the measurements are stable and reproducible. Indeed by looking at the .data file one can see that the minimum and maximum execution times remain close to the average values.
+
+Figure \ref{fig:strong_speedup} reports the corresponding speedup with respect to the single-thread execution. The speedup stays consistently close to the the ideal speedup curve as the number of threads increases.\\
+
+Overall, the results show that the OpenMP parallelization of the Mandelbrot computation scales well.
+As we did for the first exercise, the data shown in figures \ref{fig:strong_scaling} and \ref{fig:strong_speedup} are obtained by taking the average of 5 different runs. 
 
 \subsection{Use of LLMs}
+Chat GPT was used to create the gnuplot files and the bash file to generate the strong scaling plots.
 \newpage
 
 \section{Bug hunt [10 points]}
@@ -399,10 +404,7 @@ In summary, the critical bug is the illegal barrier inside \texttt{print\_result
 \subsection{File 4: \texttt{omp\_bug4.c}}
 
 The problem is caused by \emph{stack overflow} in the OpenMP region. The key issue is that the array
-\[
-\texttt{real(8) :: e\_in(nmax)}
-\]
-is declared inside the main program and the parallel region uses
+\texttt{real(8) :: e\_in(nmax)} is declared inside the main program and the parallel region uses
 \texttt{!\$omp parallel default(firstprivate)}.
 Because of \texttt{firstprivate}, each OpenMP thread receives its own private copy of \texttt{e\_in}. Since $ n_{\max}=202000, $
 this array alone occupies about $202000 \times 8 \approx 1.6\ \text{MB}$
@@ -467,7 +469,7 @@ We place the code snippet of the parallelized version of the histogram calculati
 In this code, we first generate a large vector of random integers that fall within the range of the histogram bins. We then initialize a histogram array to count the occurrences of each bin. To parallelize the histogram computation, we create a local histogram for each thread using a 2D vector \texttt{local\_hist}, where each row corresponds to a thread and each column corresponds to a bin. We use an OpenMP parallel region to allow multiple threads to execute concurrently. Inside the parallel region, we retrieve the thread ID using \texttt{omp\_get\_thread\_num()} and then use a parallel for loop to iterate over the input vector. Each thread updates its own local histogram based on the values in the input vector. After the parallel region, we combine the local histograms into the final histogram \texttt{dist} by summing the counts from each thread for each bin. Finally, we record the end time to measure the execution time of the histogram computation. This approach avoids contention on shared histogram bins by allowing each thread to maintain its own local counts, which are then combined at the end, resulting in improved performance and scalability.\\
 \subsection{Strong scaling analysis}
 To analyze the strong scaling of the parallelized histogram calculation, we can measure the execution time for different numbers of threads while keeping the problem size fixed. This allows us to see how well the code scales with increasing thread count. We can also calculate the speedup as the ratio of the execution time of the serial version to the execution time of the parallel version for each thread count. The ideal speedup is as usual given by eq. \ref{eq:ideal_speedup} and the actual speedup is given by eq. \ref{eq:actual_speedup}. In figure \ref{fig:hist_strong_time} we show the execution time for different numbers of threads and in figure \ref{fig:hist_strong_speedup} we show the speedup compared to the ideal speedup.\\
-The data shown in the plots are obtained by taking the average of 5 different runs. This helps to mitigate the effects of variability in execution time and provides more reliable measurements. By looking at the outputs in the \texttt{timing\_hist\_omp\_strong.data} file one can also see the minimum and maximum times recorded across the runs, which gives an indication of the variability in performance.
+The data shown in the plots are obtained by taking the average of 5 different runs. This helps to mitigate the effects of variability in execution time and provides more reliable measurements. By looking at the outputs in the \texttt{timing\_hist\_omp\_strong.data} file one can also see the minimum and maximum times recorded across the runs, which gives an indication of the variability in performance.\\
 
 \begin{figure}[!h]
 \centering
@@ -482,6 +484,12 @@ The data shown in the plots are obtained by taking the average of 5 different ru
 \caption{Speedup of the parallelized histogram calculation compared to the ideal speedup}
 \label{fig:hist_strong_speedup}
 \end{figure}
+
+From figure \ref{fig:hist_strong_time} we observe that the execution time decreases rapidly when increasing the number of threads from 1 up to about 8 threads, indicating that the parallelization successfully exploits the available cores in this regime. The minimum execution time is reached around 8-16 threads. However, when increasing the number of threads beyond this point, the execution time no longer decreases and even starts to increase slightly.\\
+
+This behavior is reflected in the speedup plot shown in figure \ref{fig:hist_strong_speedup}. The speedup initially grows with the number of threads but quickly deviates from the ideal linear scaling. The maximum measured speedup is around $6\times$, after which the speedup saturates and slightly decreases for larger thread counts.\\
+
+The loss of scalability at higher thread counts is likely due to memory-system effects. The algorithm performs a very small amount of arithmetic per input element and is therefore largely memory-bound. As the number of threads increases, the available memory bandwidth is gradually saturated, so additional threads cannot provide proportional speedup.
 \subsection{Use of LLM's}
 Chat gpt was used to properly create the code for running the strong scaling analysis. In particular, the parallelization was done by ourselves, but the code for running the strong scaling analysis and plotting the results was generated with the help of the LLM.
 \newpage

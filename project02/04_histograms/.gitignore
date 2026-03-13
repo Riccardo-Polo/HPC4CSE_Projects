@@ -1,0 +1,4 @@
+hist_omp
+hist_omp_strong
+*.o
+hist_seq

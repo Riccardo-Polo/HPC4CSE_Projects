@@ -5,4 +5,3 @@ optimized_weak
 reduction_strong
 reduction_weak
 *.o
-*.data

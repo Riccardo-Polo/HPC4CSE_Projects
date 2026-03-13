@@ -1,0 +1,3 @@
+recur_omp
+recur_seq
+*.o

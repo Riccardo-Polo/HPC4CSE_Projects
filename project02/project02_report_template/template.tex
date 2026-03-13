@@ -503,26 +503,44 @@ In this exercise we are asked to parallelize a loop with dependencies using \tex
     for (n = 0; n <= N; ++n) {
       opt[n] = exp(n * log_up);
     }
-    Sn = opt[N];
 }
+Sn = opt[N];
 \end{lstlisting}
-In table \ref{tab:recur_performance} is the output of the program which compares the serial and the parallel versions.
-\begin{table}[h]
+\begin{table}[!h]
 \centering
-\caption{Performance and numerical results for sequential and OpenMP implementations ($N=2\times10^9$).}
-\begin{tabular}{lccccc}
+\caption{Average performance over 10 runs for the sequential and OpenMP implementations (64 threads).}
+\begin{tabular}{lcc}
 \hline
-Implementation & Threads & Runtime [s] & Speedup & $S_N$ & $\|\text{opt}\|_2^2/N$ \\
+Metric & Sequential & Parallel (64 threads) \\
 \hline
-Sequential & 1 & 6.153345 & 1.00 & 4.851650976\times10^{8} & 5.884629305\times10^{15} \\
-OpenMP & 8 & 2.890764 & 2.13 & 4.851650879\times10^{8} & 5.884629187\times10^{15} \\
+Average runtime [s] & 4.0896 & 0.4390 \\
+Speedup & \multicolumn{2}{c}{9.33} \\
+Final $S_n$ & $4.851650976\times10^{8}$ & $4.851650928\times10^{8}$ \\
+$\|\mathbf{opt}\|_2^2$ & $5.884629305\times10^{15}$ & $5.884629187\times10^{15}$ \\
 \hline
 \end{tabular}
-\label{tab:recur_performance}
+\label{tab:dependencies_results}
 \end{table}
 
-Our first approach used the function \texttt{pow} to compute the values of \texttt{opt[n]}. However, this function is not optimal and can be inefficient. By using the property that $up^n = \exp(n \log(up))$, we can compute the values more efficiently. This approach allows us to compute the powers in a more efficient way, especially for large values of $n$. The performance comparison in table \ref{tab:recur_performance} shows that the OpenMP implementation achieves a significant speedup compared to the sequential version, demonstrating the effectiveness of parallelization in this case.
+The original sequential loop exhibits a loop-carried dependency: the value of $S_n$ at iteration $n$ depends on the value computed in the previous iteration through the recurrence relation $S_{n+1}=S_n \cdot up$. Because of this dependency, each iteration must wait for the result of the previous one, which prevents a direct parallelization of the loop.\\
+To eliminate this dependency, the recurrence can be reformulated analytically. Observing that $S_n = up^n$, each element of the array can be computed independently as
+\[
+\texttt{opt[n]} = up^n = \exp(n \log(up)).
+\]
+This reformulation removes the sequential dependency and allows the loop iterations to be executed independently.\\
 
+The OpenMP directive \texttt{\#pragma omp for} distributes the iterations among the available threads, enabling parallel execution. The \texttt{firstprivate(up)} clause ensures that each thread receives its own copy of the parameter \texttt{up}. After the parallel region, the final value of $S_n$ is reconstructed as \texttt{Sn = opt[N] * up}. This approach preserves the correctness of the computation while allowing efficient parallelization.
+
+In an initial implementation, the function \texttt{pow} was used to compute \texttt{opt[n]}. However, this function introduces unnecessary overhead and is less efficient than computing the value using the equivalent expression based on \texttt{exp} and \texttt{log}.
+
+The results reported in Table~\ref{tab:dependencies_results} present the average performance over 10 executions of both the sequential implementation and the OpenMP parallel version using 64 threads.
+
+The parallel implementation reduces the execution time from approximately $4.09$ seconds in the sequential case to about $0.44$ seconds, corresponding to a speedup of $9.33$. Although this represents a significant performance improvement, the speedup remains far from the ideal value of $64$. This behavior is expected because the computation is largely memory-bound and each loop iteration performs only a small amount of arithmetic work. Consequently, memory bandwidth limitations and cache effects restrict the achievable scalability when a large number of threads is used.
+
+Finally, the numerical results obtained with the two implementations are almost identical. The final values of $S_n$ and of the squared norm $\|\mathbf{opt}\|_2^2$ differ only slightly due to floating-point rounding errors introduced by the different order of operations in the parallel execution. These discrepancies are negligible and confirm that the parallelization preserves the correctness of the algorithm.
+
+\subsection{Use of LLMs}
+Chat GPT was used to generate the bash file to properly run 10 times both the sequential and parallel versions of the code and to compute the average execution times.
 \newpage
 \section{Quicksort using \texttt{OpenMP} tasks [20 points]}
 \subsection{Parallelization}
@@ -642,4 +660,8 @@ We have then performed a strong scaling analysis by running the parallelized qui
 \caption{Strong scaling speedup for different problem sizes.}
 \label{fig:quicksort_speedup}
 \end{figure}
+
+From the results shown in Figure \ref{fig:quicksort_speedup}, we observe that the parallel implementation of quicksort achieves a clear performance improvement as the number of threads increases, although the scaling remains far from the ideal case. For all tested problem sizes the speedup increases steadily up to 32 threads, after which the gains become more limited. The best observed speedup is around $6\times$ when using 64 threads.
+
+The deviation from the ideal linear scaling can be explained by several factors inherent to the quicksort algorithm and its task-based parallelization. First, quicksort exhibits irregular and data-dependent workloads, since the size of the partitions generated during the recursion depends on the pivot distribution. This can lead to load imbalance among threads, where some tasks finish earlier while others remain active. Second, the creation and scheduling of OpenMP tasks introduce runtime overhead, which becomes more significant as the recursion produces many small tasks. Although the cutoff parameter mitigates this effect by switching to sequential execution for small partitions, some overhead remains unavoidable.
 \end{document}

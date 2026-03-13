@@ -1,0 +1,23 @@
+
+Currently Loaded Modules:
+  1) gcc/12.2.0      3) ghostscript/10.03.1
+  2) stack/2025-06   4) imagemagick/7.1.1-39
+
+ 
+
+eu-a2p-427
+rm -f *.o mandel_omp
+rm -f *.o mandel_omp
+rm -f mandel.ppm
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -c -O2 -fopenmp mandel_omp.c
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -c -O2 -fopenmp ppmwriter.c
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -c -O2 -fopenmp walltime.c
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-14.2.0/gcc-12.2.0-pwuyoj2m4x3smcwkmfbyeotknkmui2jd/bin/gcc -O2 -fopenmp mandel_omp.o ppmwriter.o walltime.o -o mandel_omp
+Running Mandelbrot omp set computation...
+Total time:                 6.70717 seconds
+Image size:                 4096 x 4096 = 16777216 Pixels
+Total number of iterations: 113638786651
+Avg. time per pixel:        3.99779e-07 seconds
+Avg. time per iteration:    5.90219e-11 seconds
+Iterations/second:          1.69429e+10
+MFlop/s:                    135543

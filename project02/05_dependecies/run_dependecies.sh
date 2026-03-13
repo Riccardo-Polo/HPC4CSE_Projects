@@ -5,7 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --constraint=EPYC_7763
 #SBATCH --cpus-per-task=64
-#SBATCH --mem-per-cpu=4096
+#SBATCH --mem-per-cpu=512M
 #SBATCH --time=02:00:00
 
 set -euo pipefail

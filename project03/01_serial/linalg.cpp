@@ -52,7 +52,7 @@ double hpc_dot(Field const& x, Field const& y) {
     // TODO
     for(int i = 0; i < N ; ++i)
     {
-        result += x(i)*y(i);
+        result += x[i]*y[i];
     }
 
     return result;
@@ -67,7 +67,7 @@ double hpc_norm2(Field const& x) {
     // TODO
     for(int i = 0; i < N ; ++i)
     {
-        result += x(i)*x(i);
+        result += x[i]*x[i];
     }
 
     return sqrt(result);
@@ -82,7 +82,7 @@ void hpc_fill(Field& x, const double value) {
     // TODO
     for(int i = 0; i < N ; ++i)
     {
-        x(i) = value;
+        x[i] = value;
     }
 
 }
@@ -100,7 +100,7 @@ void hpc_axpy(Field& y, const double alpha, Field const& x) {
     // TODO
     for(int i = 0; i < N ; ++i)
     {
-        y(i) += alpha*x(i);
+        y[i] += alpha*x[i];
     }
 
 }
@@ -115,7 +115,7 @@ void hpc_add_scaled_diff(Field& y, Field const& x, const double alpha,
     // TODO
     for(int i = 0; i < N ; ++i)
     {
-        y(i) = x(i) + alpha*(l(i) - r(i));
+        y[i] = x[i] + alpha*(l[i] - r[i]);
     }
 }
 
@@ -129,7 +129,7 @@ void hpc_scaled_diff(Field& y, const double alpha,
     // TODO
     for(int i = 0; i < N ; ++i)
     {
-        y(i) = alpha*(l(i) - r(i));
+        y[i] = alpha*(l[i] - r[i]);
     }
 
 }
@@ -143,7 +143,7 @@ void hpc_scale(Field& y, const double alpha, Field const& x) {
     // TODO
     for(int i = 0; i < N ; ++i)
     {
-        y(i) = alpha*x(i);
+        y[i] = alpha*x[i];
     }
 
 }
@@ -158,7 +158,7 @@ void hpc_lcomb(Field& y, const double alpha, Field const& x, const double beta,
     // TODO
     for(int i = 0; i < N ; ++i)
     {
-        y(i) = alpha*x(i) + beta*z(i);
+        y[i] = alpha*x[i] + beta*z[i];
     }
 }
 
@@ -170,7 +170,7 @@ void hpc_copy(Field& y, Field const& x) {
     // TODO
     for(int i = 0; i < N ; ++i)
     {
-        y(i) = x(i);
+        y[i] = x[i];
     }
 
 }

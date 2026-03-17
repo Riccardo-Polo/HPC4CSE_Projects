@@ -44,27 +44,27 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
     // TODO
     for(int j = 1 ; j < jend ; j++)
     {
-        s(iend,j) = 0.1;
+        f(iend,j) = 0.1;
     }
     // west boundary
     // TODO
     for(int j = 1 ; j < jend ; j++)
     {
-        s(1,j) = 0.1;
+        f(1,j) = 0.1;
     }
 
     // north boundary (plus NE and NW corners)
     // TODO
     for(int i = 0 ; i <= iend ; i++)
     {
-        s(i,jend) = 0.1;
+        f(i,jend) = 0.1;
     }
 
     // south boundary (plus SW and SE corners)
     // TODO
     for(int i = 0 ; i <= iend ; i++)
     {
-        s(i,0) = 0.1;
+        f(i,0) = 0.1;
     }
 
     // Accumulate the flop counts

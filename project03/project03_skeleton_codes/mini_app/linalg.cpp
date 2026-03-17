@@ -50,12 +50,7 @@ double hpc_dot(Field const& x, Field const& y) {
     double result = 0;
 
     // TODO
-    for(int i = 0 ; i < N ; i++)
-    {
-        result += x.data(i)*y.data(i);
-    }
 
-    return result;
 }
 
 // computes the 2-norm of x
@@ -65,13 +60,7 @@ double hpc_norm2(Field const& x) {
     double result = 0;
 
     // TODO
-    for(int i = 0 ; i < N ; i++)
-    {
-        result += x.data(i)*x.data(i);
-    }
 
-
-    return sqrt(result);
 }
 
 // sets entries in a vector to value
@@ -81,10 +70,6 @@ void hpc_fill(Field& x, const double value) {
     int N = x.length();
 
     // TODO
-    for(int i = 0 ; i < N ; i++)
-    {
-        x.data(i) = value;
-    }
 
 }
 
@@ -99,10 +84,6 @@ void hpc_axpy(Field& y, const double alpha, Field const& x) {
     int N = y.length();
 
     // TODO
-    for(int i = 0; i < N ; i++)
-    {
-        y.data(i) += alpha*x.data(i);
-    }
 
 }
 
@@ -114,10 +95,6 @@ void hpc_add_scaled_diff(Field& y, Field const& x, const double alpha,
     int N = y.length();
 
     // TODO
-    for(int i = 0; i < N ; i++)
-    {
-        y.data(i) = x.data(i) + alpha*(l.data(i) - r.data(i));
-    }
 
 }
 
@@ -129,10 +106,7 @@ void hpc_scaled_diff(Field& y, const double alpha,
     int N = y.length();
 
     // TODO
-    for(int i = 0; i < N ; i++)
-    {
-        y.data(i) = alpha*(l.data(i) - r.data(i));
-    }
+
 }
 
 // computes y := alpha*x
@@ -142,10 +116,6 @@ void hpc_scale(Field& y, const double alpha, Field const& x) {
     int N = y.length();
 
     // TODO
-    for(int i = 0; i < N ; i++)
-    {
-        y.data(i) = alpha*x.data(i);
-    }
 
 }
 
@@ -157,10 +127,7 @@ void hpc_lcomb(Field& y, const double alpha, Field const& x, const double beta,
     int N = y.length();
 
     // TODO
-    for(int i = 0; i < N ; i++)
-    {
-        y.data(i) = alpha*x.data(i) + beta*z.data(i);
-    }
+
 }
 
 // copy one vector into another y := x
@@ -169,10 +136,6 @@ void hpc_copy(Field& y, Field const& x) {
     int N = y.length();
 
     // TODO
-    for(int i = 0; i < N ; i++)
-    {
-        y.data(i) = x.data(i);
-    }
 
 }
 

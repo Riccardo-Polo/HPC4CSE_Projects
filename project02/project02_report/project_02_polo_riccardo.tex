@@ -1,7 +1,8 @@
 \documentclass[unicode,10pt,a4paper,oneside,numbers=endperiod,openany]{scrartcl}
 
 
-
+\usepackage[backend=biber,style=numeric]{biblatex}
+\addbibresource{references.bib}
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usepgfplotslibrary{colorbrewer} % better colors
@@ -44,8 +45,8 @@
 \subsection{Exercise 1}
 In this exercise we are given a code that computes an approximation of $\pi$ using numerical integration. The code uses a simple loop to compute the sum of terms that approximate the value of $\pi$. The goal of this exercise is to parallelize the code using \texttt{OpenMP} and to optimize it for better performance.\\
 
-In the first part of the exercise it was asked to first parallelize the given code using a naive version that protects every loop update with \texttt{critical}. Here is the code snippet of the naive version that we implemented:
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
+In the first part of the exercise it was asked to first parallelize the given code using a naive version that protects every loop update with \texttt{critical}. In listing \ref{lst:pi_naive} we show the code snippet of the naive version that we implemented.
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)},label={lst:pi_naive},caption={Naive parallel version of the $\pi$ computation using OpenMP}]
   (*@\colorbox{lightbluehighlight}{\#pragma omp parallel for}@*)
   for (uint64_t i = 0; i < N; ++i) {
     double x = (i + 0.5) * h;
@@ -58,8 +59,8 @@ In the first part of the exercise it was asked to first parallelize the given co
   \end{lstlisting}
 The naive version is very slow. This is because every update to the shared variable \texttt{pi} is protected by a critical section, which causes a lot of contention and serialization among the threads. Each thread has to wait for the others to finish updating \texttt{pi}, which leads to a significant slowdown in performance.\\
 
-In the second part it was asked to create an optimized version that accumulates locally and enters critical only once per thread. Here is the code snippet of the optimized version that we implemented:
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
+In the second part it was asked to create an optimized version that accumulates locally and enters critical only once per thread. In listing \ref{lst:pi_optimized} we show the optimized version of the $\pi$ computation using OpenMP:
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)},label={lst:pi_optimized},caption={Optimized parallel version of the $\pi$ computation using OpenMP}]
   (*@\colorbox{lightbluehighlight}{\#pragma omp parallel}@*)
   {
     double sum = 0.0;
@@ -75,8 +76,8 @@ In the second part it was asked to create an optimized version that accumulates 
 \end{lstlisting}
 In this version we have a local variable \texttt{sum} that is private to each thread, and we only enter the critical section once per thread to update the shared variable \texttt{pi}. This reduces the contention on the critical section and allows for better performance.\\
 
-We are then asked to implement a version that uses the reduction clause. Here is the code snippet of the version that uses the reduction clause:
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
+We are then asked to implement a version that uses the reduction clause. In listing \ref{lst:pi_reduction} we show the code snippet of the version that uses the reduction clause:
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)},label={lst:pi_reduction},caption={Reduction parallel version of the $\pi$ computation using OpenMP}]
 (*@\colorbox{lightbluehighlight}{\#pragma omp parallel for reduction(+:sum)}@*)
   for (uint64_t i = 0; i < N; ++i) {
     double x = (i + 0.5)*h;
@@ -107,19 +108,18 @@ In this part of the exercise we perform a \textbf{strong} and \textbf{weak scali
 
 \subsubsection{Strong scaling study}
 In a \textbf{strong scaling study}, the total problem size is kept constant while the number of threads $p$ is increased. In our case, the number of integration steps is fixed to $N = 10^9$.\\
-For each number of threads we measure the execution time $T_p$. From these measurements we compute the \textbf{speedup}, defined as in equation \ref{eq:actual_speedup}
-
+In \cite[p.~123]{hager2010hpc} it is shown that the parallel performance is defined as \ref{eq:par_performance}
 \begin{equation}
-S_p = \frac{T_1}{T_p}
-\label{eq:actual_speedup}
+  P(N) = \frac{W}{T(N)}
+  \label{eq:par_performance}
 \end{equation}
-where $T_1$ is the execution time with one thread.\\
-The ideal speedup is given by equation \ref{eq:ideal_speedup}
+where $W$ is some fixed amount of work (in our case, the number of iterations $N$) and $T(N)$ is the execution time for that amount of work. In \cite[p.~124]{hager2010hpc} they define the speedup as the ratio of the execution time of the serial version to the execution time of the parallel version:
 \begin{equation}
-S_{ideal} = \frac{n\,p}{n+p-1} \approx n,
-\label{eq:ideal_speedup}
+  S_p(p) = \frac{P(p)}{P(1)} = \frac{T(1)}{T(p)}
+  \label{eq:actual_speedup}
 \end{equation}
-where $n=N$ is the number of loop iterations, and $p$ is the number of threads. In practice, we expect to see a speedup that is less than ideal due to overheads such as thread management and synchronization.
+For each number of threads we measure the execution time $T_p$ and from these measurements we compute the \textbf{speedup}, defined as in equation \ref{eq:actual_speedup}.
+In \cite[p.~124]{hager2010hpc} they state that the ideal speedup is  $P_{ideal} = p$ (where $p$ is the number of threads). In practice, we expect to see a speedup that is less than ideal due to overheads such as thread management and synchronization.\\
 The results of the strong scaling experiment are reported in Table \ref{tab:strong_scaling}.
 
 \begin{table}[!h]
@@ -157,12 +157,12 @@ The \textbf{reduction implementation} shows a very similar behavior to the optim
 \subsubsection{Weak scaling study}
 
 In a \textbf{weak scaling study}, the amount of work per thread is kept constant while the total problem size grows proportionally with the number of threads. If $p$ is the number of threads, the total problem size becomes $ N = N_0 \times p $ where $N_0$ is the number of iterations assigned to each thread. In our experiments we use $ N_0 = 5 \times 10^7 $.\\
-The main metric used to evaluate weak scaling is the \textbf{parallel efficiency}, defined as in eq. \ref{eq:def_efficiency}.
+The main metric used to evaluate weak scaling is the \textbf{parallel efficiency}. In \cite[p.~125]{hager2010hpc} it is defined as in eq. \ref{eq:def_efficiency}.
 \begin{equation}
-E_p = \frac{T_1}{T_p}
+E_p = \frac{\text{speedup}}{p} = \frac{T(1)}{T(p)} \cdot \frac{1}{p} = \frac{T_1}{T_p}
 \label{eq:def_efficiency}
 \end{equation}
-where $T_p$ is the execution time with $p$ threads and problem size $N = N_0 p$. Ideally, the execution time should remain constant as the number of threads increases, resulting in $E_p \approx 1$. The results of the weak scaling experiment are shown in Table~\ref{tab:weak_scaling}.
+where $T_p$ is the execution time with $p$ threads and problem size $N = N_0\cdot p$. Ideally, the execution time should remain constant as the number of threads increases, resulting in $E_p \approx 1$. The results of the weak scaling experiment are shown in Table~\ref{tab:weak_scaling}.
 
 \begin{table}[!h]
 \centering
@@ -201,9 +201,9 @@ It was also used to properly modify the \text{.c} files to modify correctly the 
 \newpage
 \section{The Mandelbrot set  using \texttt{OpenMP} [20 points]}
 \subsection{Exercise 1 and 2}
-Here we are asked to complete the serial version of the Mandelbrot set code in the missing code part and to count the total number of iterations in order to correctly compute the benchmark statistics.\\
-In the following code snippet we show the completed version of the serial code for computing the Mandelbrot set:
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
+Here we are asked to complete the serial version of the Mandelbrot set code in the missing code part and to count the total number of iterations in order to correctly compute the benchmark statistics. In figure \ref{fig:mandelbrot_serial} one can see the results of the serial implementation.\\
+In listing \ref{lst:mandelbrot_serial} we show the code snippet of the serial version of the Mandelbrot set code with the missing part filled in and with the counting of the total number of iterations.
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)},label={lst:mandelbrot_serial},caption={Serial version of the Mandelbrot set code}]
 double time_start = walltime();
   // do the calculation
   cy = MIN_Y;
@@ -240,19 +240,18 @@ f(z) &= z^2 + c \\
 &= (x + yi)^2 + (c_x + c_yi) \\
 &= (x^2 - y^2 + c_x) + (2xy + c_y)i
 \end{align*}
-Since the function $f(z)$ is defined recursively, and each iteration of the function applies the same transformation to the complex number z. Therefore, when we compute $f^2(z)$, we are applying the function $f$ to the result of $f(z)$, which means that we are applying the same equations for the real and imaginary parts at each iteration.\\
 From this, we can see that the real part of $f(z)$ is given by $x^2 - y^2 + c_x$, and the imaginary part is given by $2xy + c_y$. The loop continues until the magnitude of z (which is $\sqrt{x^2 + y^2}$) exceeds 2, indicating that the orbit is unbounded, or until we reach the maximum number of iterations, which indicates that the point c is likely to belong to the Mandelbrot set.\\
 Finally, we are asked to count the total number of iterations in order to correctly compute the benchmark statistics. This is done by introducing a variable \texttt{nTotalIterationsCount} that accumulates the number of iterations for each point in the complex plane. This variable is incremented by n, which represents the number of iterations for the current point $(i, j)$.\\
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.35\textwidth]{../02_Mandelbrot/serial/mandel.png}
+\includegraphics[width=0.35\textwidth]{../02_Mandelbrot/serial/outputs/mandel.png}
 \caption{Serial Mandelbrot Set}
 \label{fig:mandelbrot_serial}
 \end{figure}
 
 \subsection{Exercise 3}
-In the third part of the exercise we are asked to parallelize the Mandelbrot set code using \texttt{OpenMP}.. Here is the code snippet of the parallelized version of the Mandelbrot set code using \texttt{OpenMP}:
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
+In the third part of the exercise we are asked to parallelize the Mandelbrot set code using \texttt{OpenMP}. In listing \ref{lst:mandelbrot_parallel} we show the code snippet of the parallel version of the Mandelbrot set code using OpenMP.
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)},label={lst:mandelbrot_parallel},caption={Parallel version of the Mandelbrot set code using OpenMP}]
   double time_start = walltime();
 (*@ \colorbox{lightbluehighlight}{\#pragma omp parallel for reduction(+:nTotalIterationsCount) schedule(dynamic)} @*)
   for (long j = 0; j < IMAGE_HEIGHT; j++) {
@@ -309,17 +308,17 @@ The results (see table \ref{tab:mandelbrot_results}) show a significant performa
 \subsubsection{Strong scaling analysis}
 To analyze the strong scaling of the parallelized Mandelbrot set code, we can measure the execution time for different numbers of threads while keeping the problem size fixed. This allows us to see how well the code scales with increasing thread count.\\
 We also calculate the speedup as the ratio of the execution time of the serial version to the execution time of the parallel version for each thread count.
-In figure \ref{fig:strong_scaling} we show the plots of the strong scalying analysis. As we can see the execution times halves every time we double the number of threads, which indicates that the code scales well with increasing thread count. In figure \ref{fig:strong_speedup} instead we plot the theoretical speedup with the one computed from the simulations. The ideal speedup is computed via \ref{eq:ideal_speedup}. The actual speedup is computed as shown in equation \ref{eq:actual_speedup}.
+In figure \ref{fig:strong_scaling} we show the plots of the strong scalying analysis. As we can see the execution times halves every time we double the number of threads, which indicates that the code scales well with increasing thread count. In figure \ref{fig:strong_speedup} instead we plot the theoretical speedup with the one computed from the simulations. The actual speedup is computed as shown in equation \ref{eq:actual_speedup}.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.5\textwidth]{../02_Mandelbrot/omp/strong_scaling/strong_scaling.pdf}
+\includegraphics[width=0.5\textwidth]{../02_Mandelbrot/omp/strong_scaling/outputs/strong_scaling.pdf}
 \caption{Strong scaling analysis of the parallelized Mandelbrot set code}
 \label{fig:strong_scaling}
 \end{figure}
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.5\textwidth]{../02_Mandelbrot/omp/strong_scaling/strong_speedup.pdf}
+\includegraphics[width=0.5\textwidth]{../02_Mandelbrot/omp/strong_scaling/outputs/strong_speedup.pdf}
 \caption{Speedup of the parallelized Mandelbrot set code compared to the ideal speedup}
 \label{fig:strong_speedup}
 \end{figure}
@@ -346,9 +345,9 @@ The first problem is related to the use of the OpenMP directive
 region and distributes the iterations of the following loop among the threads.
 For this reason, the directive must be followed \emph{immediately} by a
 \texttt{for} loop. In the program, however, the directive is followed by a
-compound block:
+compound block (see listing \ref{lst:omp_bug1}).
 
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*}]
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*},label={lst:omp_bug1},caption={Incorrect use of the OpenMP \texttt{parallel for} directive}]
 #pragma omp parallel for shared(a, b, c, chunk) private(i, tid) \
             schedule(static, chunk)
 {
@@ -372,13 +371,11 @@ the information for the iterations it executes.
 \subsection{File 2: \texttt{omp\_bug2.c}}
 The program contains errors related to the incorrect handling of \texttt{shared} and \texttt{private} variables inside the OpenMP parallel region.
 
-The variables \texttt{tid}, \texttt{i}, and \texttt{total} are declared outside the \texttt{\#pragma omp parallel} region and therefore are \emph{shared} by default among all threads. This leads to race conditions and incorrect program behaviour.
-
 First, the variable \texttt{tid} is shared, although each thread assigns its own thread ID through \\\texttt{tid = omp\_get\_thread\_num()}.
 Since all threads write to the same memory location, the value of \texttt{tid} can be overwritten by other threads. As a result, the value stored in \texttt{tid} is not guaranteed to correspond to the correct thread.
 
-A more serious problem concerns the variable \texttt{total}. Inside the parallel region the code initializes \texttt{total = 0.0;} and then performs a parallel loop
-\begin{lstlisting}[style=grayverbatim]
+A more serious problem concerns the variable \texttt{total}. Inside the parallel region the code initializes \texttt{total = 0.0;} and then performs a parallel loop (see listing \ref{lst:omp_bug2}).
+\begin{lstlisting}[style=grayverbatim,label={lst:omp_bug2},caption={Incorrect handling of shared and private variables in an OpenMP parallel region}]
 #pragma omp for schedule(dynamic, 10)
 for (i = 0; i < 1000000; i++)
     total = total + i * 1.0;
@@ -389,17 +386,12 @@ Because \texttt{total} is shared, all threads update the same variable concurren
 \subsection{File 3: \texttt{omp\_bug3.c}}
 The main problem in this program is the incorrect use of the \texttt{barrier} directive inside the function \texttt{print\_results}. In OpenMP, a barrier must be encountered by \emph{all} threads of the team, or by none of them. Here, however, \texttt{print\_results} is called only by the threads that actually execute one of the two \texttt{sections}. Since there are only two sections, at most two threads will enter the function, while the other threads in the parallel region will skip it entirely. As a consequence, only a subset of threads reaches the barrier placed at the end of \texttt{print\_results}, which leads to an illegal synchronization pattern and can cause the program to hang at run time.
 
-A second issue is that the intent of having ``clean output'' is only partially achieved. The \texttt{critical} region correctly prevents the printed array contents from being interleaved, so the output of one thread is kept together. However, the statement
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*}]
-printf("Thread %d done and synchronized.\n", tid);
-\end{lstlisting}
+A second issue is that the intent of having ``clean output'' is only partially achieved. The \texttt{critical} region correctly prevents the printed array contents from being interleaved, so the output of one thread is kept together. However, the statement \texttt{printf("Thread \%d done and synchronized.\n", tid);}
 is placed \emph{after} the barrier and outside the critical region, so even if the barrier were legal, these messages could still appear in overlapping or non-deterministic order with respect to other threads' output.
 
 There is also a conceptual inconsistency in combining \texttt{sections nowait} with the later synchronization logic. The \texttt{nowait} clause removes the implicit barrier at the end of the \texttt{sections} construct, but then the code tries to enforce synchronization manually inside \texttt{print\_results} using a barrier, which is not valid for the reason explained above. If synchronization after the sections is desired, it should be done at a point that is reached by every thread in the parallel region.
 
 To fix the code, the barrier inside \texttt{print\_results} should be removed. Any barrier should instead be placed in the main parallel region, at a location where all threads are guaranteed to encounter it. Moreover, if the programmer wants all output messages to appear cleanly and without overlap, every printing operation that must remain grouped should be enclosed in the same \texttt{critical} region, or alternatively all printing should be reorganized so that only one thread prints at a time in a controlled way. Finally, if synchronization at the end of the \texttt{sections} construct is required, the simplest correction is to remove the \texttt{nowait} clause and rely on the implicit barrier provided by \texttt{sections}.
-
-In summary, the critical bug is the illegal barrier inside \texttt{print\_results}, because not all threads execute that function. This may cause a deadlock. The proper fix is to move synchronization points outside the function and ensure that every barrier is reached by all threads in the team.
 
 \subsection{File 4: \texttt{omp\_bug4.c}}
 
@@ -414,11 +406,7 @@ There is a second large object involved: \texttt{double complex :: eTDSE(ntmax)}
 This means that each thread also has its own copy of \texttt{eTDSE}. A \texttt{double complex} element usually requires 16 bytes, so this array takes about $202000 \times 16 \approx 3.2\ \text{MB}$
 per thread. Therefore, with OpenMP enabled, the memory required per thread becomes quite large. The crash appears only when both arrays are effectively used in the parallel region, which is why removing one of the \texttt{print} statements may make the program run.\\
 
-The code is not wrong from a syntax point of view, but it is wrong from a memory-management perspective. The main mistake is using \texttt{default(firstprivate)} in a region where a large local array such as \texttt{e\_in} exists. This forces unnecessary duplication of a large array on each thread stack. In addition, \texttt{threadprivate(eTDSE)} also creates one copy per thread, which further increases memory pressure.\\
-So the real bug is the combination of large thread-local data and insufficient thread stack size.\\
-
 A first possible fix is to avoid making \texttt{e\_in} firstprivate if this is not needed. Since the array is only read in the loop, it should be shared instead of private. In practice, one should replace the overly broad \texttt{default(firstprivate)} with a more careful data-sharing specification, for example making \texttt{e\_in} shared.\\
-
 Another possible improvement is to avoid storing such large arrays on the stack.
 
 \subsection{File 5: \texttt{omp\_bug5.c}}
@@ -437,8 +425,8 @@ To fix the program, the locking order must be made consistent. All threads shoul
 
 
 \section{Parallel histogram calculation using \texttt{OpenMP} [15 points]}
-We place the code snippet of the parallelized version of the histogram calculation using \texttt{OpenMP} in the following listing. The code is parallelized by using a private histogram for each thread and then combining the results at the end of the parallel region.
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
+We place the code snippet of the parallelized version of the histogram calculation using \texttt{OpenMP} in listing \ref{lst:histogram_parallel}. The code is parallelized by using a private histogram for each thread and then combining the results at the end of the parallel region.
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)},label={lst:histogram_parallel},caption={Parallelized version of the histogram calculation using OpenMP}]
 #define VEC_SIZE 1000000000
 #define BINS 16
 ...
@@ -466,21 +454,21 @@ We place the code snippet of the parallelized version of the histogram calculati
 
   time_end = walltime();
 \end{lstlisting}
-In this code, we first generate a large vector of random integers that fall within the range of the histogram bins. We then initialize a histogram array to count the occurrences of each bin. To parallelize the histogram computation, we create a local histogram for each thread using a 2D vector \texttt{local\_hist}, where each row corresponds to a thread and each column corresponds to a bin. We use an OpenMP parallel region to allow multiple threads to execute concurrently. Inside the parallel region, we retrieve the thread ID using \texttt{omp\_get\_thread\_num()} and then use a parallel for loop to iterate over the input vector. Each thread updates its own local histogram based on the values in the input vector. After the parallel region, we combine the local histograms into the final histogram \texttt{dist} by summing the counts from each thread for each bin. Finally, we record the end time to measure the execution time of the histogram computation. This approach avoids contention on shared histogram bins by allowing each thread to maintain its own local counts, which are then combined at the end, resulting in improved performance and scalability.\\
+To parallelize the histogram computation, we create a local histogram for each thread using a 2D vector \texttt{local\_hist}, where each row corresponds to a thread and each column corresponds to a bin. We use an OpenMP parallel region to allow multiple threads to execute concurrently. Inside the parallel region, we retrieve the thread ID using \texttt{omp\_get\_thread\_num()} and then use a parallel for loop to iterate over the input vector. Each thread updates its own local histogram based on the values in the input vector. After the parallel region, we combine the local histograms into the final histogram \texttt{dist} by summing the counts from each thread for each bin. Finally, we record the end time to measure the execution time of the histogram computation. This approach avoids contention on shared histogram bins by allowing each thread to maintain its own local counts, which are then combined at the end, resulting in improved performance and scalability.\\
 \subsection{Strong scaling analysis}
-To analyze the strong scaling of the parallelized histogram calculation, we can measure the execution time for different numbers of threads while keeping the problem size fixed. This allows us to see how well the code scales with increasing thread count. We can also calculate the speedup as the ratio of the execution time of the serial version to the execution time of the parallel version for each thread count. The ideal speedup is as usual given by eq. \ref{eq:ideal_speedup} and the actual speedup is given by eq. \ref{eq:actual_speedup}. In figure \ref{fig:hist_strong_time} we show the execution time for different numbers of threads and in figure \ref{fig:hist_strong_speedup} we show the speedup compared to the ideal speedup.\\
+To analyze the strong scaling of the parallelized histogram calculation, we can measure the execution time for different numbers of threads while keeping the problem size fixed. This allows us to see how well the code scales with increasing thread count. We can also calculate the speedup as the ratio of the execution time of the serial version to the execution time of the parallel version for each thread count. In figure \ref{fig:hist_strong_time} we show the execution time for different numbers of threads and in figure \ref{fig:hist_strong_speedup} we show the speedup compared to the ideal speedup.\\
 The data shown in the plots are obtained by taking the average of 5 different runs. This helps to mitigate the effects of variability in execution time and provides more reliable measurements. By looking at the outputs in the \texttt{timing\_hist\_omp\_strong.data} file one can also see the minimum and maximum times recorded across the runs, which gives an indication of the variability in performance.\\
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.6\textwidth]{../04_histograms/hist_strong_time.png}
+\includegraphics[width=0.6\textwidth]{../04_histograms/outputs/hist_strong_time.png}
 \caption{Strong scaling analysis of the parallelized histogram calculation}
 \label{fig:hist_strong_time}
 \end{figure}
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.6\textwidth]{../04_histograms/hist_strong_speedup.png}
+\includegraphics[width=0.6\textwidth]{../04_histograms/outputs/hist_strong_speedup.png}
 \caption{Speedup of the parallelized histogram calculation compared to the ideal speedup}
 \label{fig:hist_strong_speedup}
 \end{figure}
@@ -494,8 +482,8 @@ The loss of scalability at higher thread counts is likely due to memory-system e
 Chat gpt was used to properly create the code for running the strong scaling analysis. In particular, the parallelization was done by ourselves, but the code for running the strong scaling analysis and plotting the results was generated with the help of the LLM.
 \newpage
 \section{Parallel loop dependencies with \texttt{OpenMP} [15 points]}
-In this exercise we are asked to parallelize a loop with dependencies using \texttt{OpenMP} tasks. The code snippet of the parallelized version is shown below:
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
+The code snippet of the parallelized version is shown in listing \ref{lst:dependencies_parallel}.
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)},label={lst:dependencies_parallel},caption={Parallelized version of the loop with dependencies using OpenMP}]
   #pragma omp parallel
   {
     double log_up = log(up);
@@ -504,7 +492,7 @@ In this exercise we are asked to parallelize a loop with dependencies using \tex
       opt[n] = exp(n * log_up);
     }
 }
-Sn = opt[N];
+Sn = opt[N]*up;
 \end{lstlisting}
 \begin{table}[!h]
 \centering
@@ -544,8 +532,8 @@ Chat GPT was used to generate the bash file to properly run 10 times both the se
 \newpage
 \section{Quicksort using \texttt{OpenMP} tasks [20 points]}
 \subsection{Parallelization}
-Here we are asked to parallelize the quicksort algorithm using \texttt{OpenMP} tasks. The code snippet of the parallelized version of the quicksort algorithm is shown below:
-\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)}]
+Here we are asked to parallelize the quicksort algorithm using \texttt{OpenMP} tasks. The code snippet of the parallelized version of the quicksort algorithm is shown in listing \ref{lst:quicksort_parallel}.
+\begin{lstlisting}[style=grayverbatim,escapeinside={(*@}{@*)},label={lst:quicksort_parallel},caption={Parallelized version of the quicksort algorithm using OpenMP tasks}]
 void quicksort_omp(double *data, int length, int cutoff) {
   if (length <= 1) return;
 
@@ -610,7 +598,7 @@ N & Cutoff & Threads & Avg Time [s] & Wrong \\
 \label{tab:quicksort_cutoff}
 \end{table}
 
-The cutoff value that resulted in the best performance is highlighted in yellow in the table. Based on the results, we can see that a cutoff value of 5000 provides the best performance for our implementation of the parallelized quicksort algorithm. This means that when the size of the partition is less than or equal to 5000, it is more efficient to execute the sorting sequentially rather than creating new tasks for smaller partitions. The choice of cutoff can significantly impact the performance of the parallelized algorithm, as it balances the overhead of task creation with the benefits of parallel execution.\\
+The cutoff value that resulted in the best average runtime over $5$ runs for $N=10^7$ performance is highlighted in yellow in the table. But we notiche that nearby values perform similarly, indicating the optimum is not extremely sharp. This means that when the size of the partition is less than or equal to 5000, it is more efficient to execute the sorting sequentially rather than creating new tasks for smaller partitions. The choice of cutoff can significantly impact the performance of the parallelized algorithm, as it balances the overhead of task creation with the benefits of parallel execution.\\
 
 We have then performed a strong scaling analysis by running the parallelized quicksort algorithm with the optimal cutoff value and varying the number of threads and for different values of $N$. The results are shown in figure \ref{fig:quicksort_speedup}. The data for these plots were obtained by taking the average of 5 different runs for each thread count to ensure reliable measurements.
 \begin{figure}[h]
@@ -664,4 +652,5 @@ We have then performed a strong scaling analysis by running the parallelized qui
 From the results shown in Figure \ref{fig:quicksort_speedup}, we observe that the parallel implementation of quicksort achieves a clear performance improvement as the number of threads increases, although the scaling remains far from the ideal case. For all tested problem sizes the speedup increases steadily up to 32 threads, after which the gains become more limited. The best observed speedup is around $6\times$ when using 64 threads.
 
 The deviation from the ideal linear scaling can be explained by several factors inherent to the quicksort algorithm and its task-based parallelization. First, quicksort exhibits irregular and data-dependent workloads, since the size of the partitions generated during the recursion depends on the pivot distribution. This can lead to load imbalance among threads, where some tasks finish earlier while others remain active. Second, the creation and scheduling of OpenMP tasks introduce runtime overhead, which becomes more significant as the recursion produces many small tasks. Although the cutoff parameter mitigates this effect by switching to sequential execution for small partitions, some overhead remains unavoidable.
+\printbibliography
 \end{document}

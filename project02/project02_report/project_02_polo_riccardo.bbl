@@ -1,0 +1,55 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{hager2010hpc}{book}{}
+      \name{author}{2}{}{%
+        {{hash=9e49d522461c2d5d9e44584ac6102f43}{%
+           family={Hager},
+           familyi={H\bibinitperiod},
+           given={Georg},
+           giveni={G\bibinitperiod}}}%
+        {{hash=0623d76ccb0e0ac76b02be5a26c96d44}{%
+           family={Wellein},
+           familyi={W\bibinitperiod},
+           given={Gerhard},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {CRC Press}%
+      }
+      \strng{namehash}{e44c0571bb2b75487dea9ffb739a0344}
+      \strng{fullhash}{e44c0571bb2b75487dea9ffb739a0344}
+      \strng{bibnamehash}{e44c0571bb2b75487dea9ffb739a0344}
+      \strng{authorbibnamehash}{e44c0571bb2b75487dea9ffb739a0344}
+      \strng{authornamehash}{e44c0571bb2b75487dea9ffb739a0344}
+      \strng{authorfullhash}{e44c0571bb2b75487dea9ffb739a0344}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{1}
+      \field{title}{Introduction to High Performance Computing for Scientists and Engineers}
+      \field{year}{2010}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

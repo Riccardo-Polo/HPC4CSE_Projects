@@ -1,0 +1,15 @@
+[0] Config.pm:307> INFO - This is Biber 2.19
+[0] Config.pm:310> INFO - Logfile is 'project_02_polo_riccardo.blg'
+[46] biber:340> INFO - === Tue Mar 17, 2026, 12:02:45
+[57] Biber.pm:419> INFO - Reading 'project_02_polo_riccardo.bcf'
+[99] Biber.pm:979> INFO - Found 1 citekeys in bib section 0
+[106] Biber.pm:4419> INFO - Processing section 0
+[113] Biber.pm:4610> INFO - Looking for bibtex file 'references.bib' for section 0
+[115] bibtex.pm:1713> INFO - LaTeX decoding ...
+[117] bibtex.pm:1519> INFO - Found BibTeX data source 'references.bib'
+[142] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[142] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[142] Biber.pm:4239> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'en-US'
+[142] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
+[143] bbl.pm:660> INFO - Writing 'project_02_polo_riccardo.bbl' with encoding 'UTF-8'
+[144] bbl.pm:763> INFO - Output to project_02_polo_riccardo.bbl

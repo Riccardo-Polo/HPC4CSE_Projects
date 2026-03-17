@@ -2,12 +2,13 @@ filename=project_02_polo_riccardo
 
 pdf:
 	pdflatex ${filename}
+	biber ${filename} || true
 	pdflatex ${filename}
-	make clean
+	pdflatex ${filename}
 
 read:
 	evince ${filename}.pdf &
 
 
 clean:
-	rm -f ${filename}.out ${filename}.log ${filename}.bbl ${filename}.blg ${filename}.au ${filename}.log  ${filename}.ps ${filename}.aux ${filename}.out ${filename}.dvi ${filename}.bbl ${filename}.blg ${filename}.toc  ${filename}.nav ${filename}.vrb ${filename}.snm
+	rm -f ${filename}.out ${filename}.log ${filename}.bbl ${filename}.blg ${filename}.aux ${filename}.ps ${filename}.dvi ${filename}.toc ${filename}.nav ${filename}.vrb ${filename}.snm ${filename}.bcf ${filename}.run.xml

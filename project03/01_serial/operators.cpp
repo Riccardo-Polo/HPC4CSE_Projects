@@ -35,8 +35,7 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
     for (int j=1; j < jend; j++) {
         for (int i=1; i < iend; i++) {
             // TODO
-            // f(i,j) = ...
-            f(i,j) = (4+alpha)*s_new(i,j) + s_new(i-1,j) + s_new(i+1,j) + s_new(i,j-1) + s_new(i,j+1) +beta*s_new(i,j)*(1-s_new(i,j)) +alpha*s_old(i,j);
+            f(i,j) = -(4+alpha)*s_new(i,j) + s_new(i-1,j) + s_new(i+1,j) + s_new(i,j-1) + s_new(i,j+1) +beta*s_new(i,j)*(1-s_new(i,j)) +alpha*s_old(i,j);
         }
     }
 
@@ -44,27 +43,39 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
     // TODO
     for(int j = 1 ; j < jend ; j++)
     {
-        f(iend,j) = 0.1;
+        f(iend,j) = -(4+alpha)*0.1 + s_new(iend-1,j) + s_new(iend,j-1) + s_new(iend,j+1) + beta*0.1*(1-0.1) + alpha*0.1;  
     }
     // west boundary
     // TODO
     for(int j = 1 ; j < jend ; j++)
     {
-        f(1,j) = 0.1;
+        f(0,j) = -(4+alpha)*0.1 + s_new(1,j) + s_new(0,j-1) + s_new(0,j+1) + beta*0.1*(1-0.1) + alpha*0.1;
     }
 
     // north boundary (plus NE and NW corners)
     // TODO
     for(int i = 0 ; i <= iend ; i++)
     {
-        f(i,jend) = 0.1;
+        f(i,jend) = -(4+alpha)*0.1 + s_new(i-1,jend) + s_new(i+1,jend) + s_new(i,jend-1) + beta*0.1*(1-0.1) + alpha*0.1;
+        
+        // NE corner
+        f(iend,jend) = -(4+alpha)*0.1 + s_new(iend-1,jend) + s_new(iend,jend-1) + beta*0.1*(1-0.1) + alpha*0.1;
+
+        // NW corner
+        f(0,jend) = -(4+alpha)*0.1 + s_new(1,jend) + s_new(0,jend-1) + beta*0.1*(1-0.1) + alpha*0.1;
     }
 
     // south boundary (plus SW and SE corners)
     // TODO
     for(int i = 0 ; i <= iend ; i++)
     {
-        f(i,0) = 0.1;
+        f(i,0) = -(4+alpha)*0.1 + s_new(i-1,0) + s_new(i+1,0) + s_new(i,1) + beta*0.1*(1-0.1) + alpha*0.1;
+
+        // SE corner
+        f(iend,0) = -(4+alpha)*0.1 + s_new(iend-1,0) + s_new(iend,1) + beta*0.1*(1-0.1) + alpha*0.1;
+
+        // SW corner
+        f(0,0) = -(4+alpha)*0.1 + s_new(1,0) + s_new(0,1) + beta*0.1*(1-0.1) + alpha*0.1;
     }
 
     // Accumulate the flop counts

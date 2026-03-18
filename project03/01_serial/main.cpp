@@ -89,6 +89,32 @@ void readcmdline(Discretization& options, int argc, char* argv[]) {
     options.beta = (R * options.dx * options.dx)/D;
 }
 
+
+void write_output(const Field& y, const std::string& bin_name,
+                  const std::string& bov_name, double time)
+{
+    int nx = options.nx;
+
+    // binary data
+    FILE* output = fopen(bin_name.c_str(), "wb");
+    fwrite(y.data(), sizeof(double), nx * nx, output);
+    fclose(output);
+
+    // bov header
+    std::ofstream fid(bov_name);
+    fid << "TIME: " << time << std::endl;
+    fid << "DATA_FILE: " << bin_name << std::endl;
+    fid << "DATA_SIZE: " << options.nx << " " << options.nx << " 1" << std::endl;
+    fid << "DATA_FORMAT: DOUBLE" << std::endl;
+    fid << "VARIABLE: phi" << std::endl;
+    fid << "DATA_ENDIAN: LITTLE" << std::endl;
+    fid << "CENTERING: nodal" << std::endl;
+    fid << "BRICK_ORIGIN: 0. 0. 0." << std::endl;
+    fid << "BRICK_SIZE: " << (options.nx - 1) * options.dx << ' '
+                          << (options.nx - 1) * options.dx << ' '
+                          << "1.0" << std::endl;
+}
+
 // =============================================================================
 
 int main(int argc, char* argv[]) {
@@ -156,6 +182,8 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    write_output(y_new, "output_initial.bin", "output_initial.bov", 0.0);
+
     tot_iters_cg = 0;
     tot_iters_newton = 0;
     unsigned int iters_cg = 0;
@@ -220,27 +248,7 @@ int main(int argc, char* argv[]) {
     // write final solution to BOV file for visualization
     ////////////////////////////////////////////////////////////////////
 
-    // binary data
-    {
-        FILE* output = fopen("output.bin", "w");
-        fwrite(y_new.data(), sizeof(double), nx * nx, output);
-        fclose(output);
-    }
-
-    std::ofstream fid("output.bov");
-    fid << "TIME: " << options.nt*options.dt << std::endl;
-    fid << "DATA_FILE: output.bin" << std::endl;
-    fid << "DATA_SIZE: " << options.nx << " " << options.nx << " 1"
-        << std::endl;
-    fid << "DATA_FORMAT: DOUBLE" << std::endl;
-    fid << "VARIABLE: phi" << std::endl;
-    fid << "DATA_ENDIAN: LITTLE" << std::endl;
-    fid << "CENTERING: nodal" << std::endl;
-    fid << "BRICK_ORIGIN: " << "0. 0. 0." << std::endl;
-    fid << "BRICK_SIZE: " << (options.nx-1)*options.dx << ' '
-                          << (options.nx-1)*options.dx << ' '
-                          << " 1.0"
-        << std::endl;
+    write_output(y_new, "output_final.bin", "output_final.bov", options.nt * options.dt);
 
     // print table summarizing results
     double timespent = time_end - time_start;

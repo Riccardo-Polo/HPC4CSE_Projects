@@ -55,11 +55,12 @@ def plot_data(fname, save=True):
     cbar.minorticks_on()
     if save:
         fname = fname.split(".")
-        fname[-1] = "png"
+        fname[-1] = "pdf"
         plt.savefig(".".join(fname), dpi=300, bbox_inches='tight')
     else:
         plt.show()
 
 
 if __name__ == "__main__":
-    plot_data("output.bov", save=True)
+    plot_data("output_initial.bov", save=True)
+    plot_data("output_final.bov", save=True)

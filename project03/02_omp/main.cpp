@@ -132,7 +132,7 @@ int main(int argc, char* argv[]) {
     double tolerance     = 1.e-6;
 
     // get number of threads
-    int threads = 4; // serial case
+    int threads = omp_get_max_threads(); 
 
     // welcome message
     std::cout << std::string(80, '=') << std::endl;

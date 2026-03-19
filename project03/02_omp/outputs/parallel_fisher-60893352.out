@@ -1,0 +1,124 @@
+rm -f main walltime.o   stats.o   data.o   operators.o   linalg.o   main.o output.*
+g++ -O3 -fopenmp -c walltime.cpp
+g++ -O3 -fopenmp -c stats.cpp
+g++ -O3 -fopenmp -c data.cpp
+g++ -O3 -fopenmp -c operators.cpp
+g++ -O3 -fopenmp -c linalg.cpp
+g++ -O3 -fopenmp -c main.cpp
+g++ -O3 -fopenmp walltime.o   stats.o   data.o   operators.o   linalg.o   main.o -o main
+================================================================================
+                      Welcome to mini-stencil!
+version   :: C++ OpenMP
+threads   :: 4
+mesh      :: 128 * 128 dx = 0.00787402
+time      :: 100 time steps from 0 .. 0.005
+iteration :: CG 300, Newton 50, tolerance 1e-06
+================================================================================
+step 1 required 3 Newton iterations and 19 CG iterations for residual 9.004e-07
+step 2 required 3 Newton iterations and 18 CG iterations for residual 9.08805e-07
+step 3 required 3 Newton iterations and 17 CG iterations for residual 9.21254e-07
+step 4 required 3 Newton iterations and 16 CG iterations for residual 9.30881e-07
+step 5 required 3 Newton iterations and 15 CG iterations for residual 9.4113e-07
+step 6 required 3 Newton iterations and 14 CG iterations for residual 9.42262e-07
+step 7 required 3 Newton iterations and 13 CG iterations for residual 9.57868e-07
+step 8 required 3 Newton iterations and 12 CG iterations for residual 9.55915e-07
+step 9 required 3 Newton iterations and 12 CG iterations for residual 5.4535e-07
+step 10 required 3 Newton iterations and 11 CG iterations for residual 6.40552e-07
+step 11 required 3 Newton iterations and 10 CG iterations for residual 9.17626e-07
+step 12 required 3 Newton iterations and 10 CG iterations for residual 6.68007e-07
+step 13 required 3 Newton iterations and 10 CG iterations for residual 5.48403e-07
+step 14 required 3 Newton iterations and 10 CG iterations for residual 4.8948e-07
+step 15 required 3 Newton iterations and 9 CG iterations for residual 7.63937e-07
+step 16 required 3 Newton iterations and 9 CG iterations for residual 4.94319e-07
+step 17 required 3 Newton iterations and 8 CG iterations for residual 8.8323e-07
+step 18 required 3 Newton iterations and 9 CG iterations for residual 6.32396e-07
+step 19 required 3 Newton iterations and 8 CG iterations for residual 8.38937e-07
+step 20 required 3 Newton iterations and 8 CG iterations for residual 7.24659e-07
+step 21 required 3 Newton iterations and 8 CG iterations for residual 5.8123e-07
+step 22 required 3 Newton iterations and 7 CG iterations for residual 8.09086e-07
+step 23 required 3 Newton iterations and 7 CG iterations for residual 7.02262e-07
+step 24 required 3 Newton iterations and 8 CG iterations for residual 6.07538e-07
+step 25 required 3 Newton iterations and 8 CG iterations for residual 5.73051e-07
+step 26 required 3 Newton iterations and 7 CG iterations for residual 7.64657e-07
+step 27 required 3 Newton iterations and 7 CG iterations for residual 8.51042e-07
+step 28 required 3 Newton iterations and 7 CG iterations for residual 9.39392e-07
+step 29 required 3 Newton iterations and 8 CG iterations for residual 2.62636e-07
+step 30 required 3 Newton iterations and 8 CG iterations for residual 2.28232e-07
+step 31 required 3 Newton iterations and 8 CG iterations for residual 1.81331e-07
+step 32 required 3 Newton iterations and 8 CG iterations for residual 2.21572e-07
+step 33 required 3 Newton iterations and 8 CG iterations for residual 2.15659e-07
+step 34 required 3 Newton iterations and 8 CG iterations for residual 3.25143e-07
+step 35 required 3 Newton iterations and 8 CG iterations for residual 2.71586e-07
+step 36 required 3 Newton iterations and 8 CG iterations for residual 3.24639e-07
+step 37 required 3 Newton iterations and 7 CG iterations for residual 9.71428e-07
+step 38 required 3 Newton iterations and 7 CG iterations for residual 7.73595e-07
+step 39 required 3 Newton iterations and 7 CG iterations for residual 8.1043e-07
+step 40 required 3 Newton iterations and 7 CG iterations for residual 6.88768e-07
+step 41 required 3 Newton iterations and 7 CG iterations for residual 6.83116e-07
+step 42 required 3 Newton iterations and 6 CG iterations for residual 8.17748e-07
+step 43 required 3 Newton iterations and 6 CG iterations for residual 9.19948e-07
+step 44 required 3 Newton iterations and 6 CG iterations for residual 9.37833e-07
+step 45 required 3 Newton iterations and 6 CG iterations for residual 9.10524e-07
+step 46 required 3 Newton iterations and 6 CG iterations for residual 9.54207e-07
+step 47 required 3 Newton iterations and 7 CG iterations for residual 5.10321e-07
+step 48 required 3 Newton iterations and 6 CG iterations for residual 8.9056e-07
+step 49 required 3 Newton iterations and 7 CG iterations for residual 3.72844e-07
+step 50 required 3 Newton iterations and 6 CG iterations for residual 8.00619e-07
+step 51 required 3 Newton iterations and 6 CG iterations for residual 9.66602e-07
+step 52 required 3 Newton iterations and 6 CG iterations for residual 9.79469e-07
+step 53 required 3 Newton iterations and 6 CG iterations for residual 6.34658e-07
+step 54 required 3 Newton iterations and 6 CG iterations for residual 8.62519e-07
+step 55 required 3 Newton iterations and 7 CG iterations for residual 3.21084e-07
+step 56 required 3 Newton iterations and 6 CG iterations for residual 9.16435e-07
+step 57 required 3 Newton iterations and 7 CG iterations for residual 3.23859e-07
+step 58 required 3 Newton iterations and 6 CG iterations for residual 9.98726e-07
+step 59 required 3 Newton iterations and 6 CG iterations for residual 7.61894e-07
+step 60 required 3 Newton iterations and 7 CG iterations for residual 2.54445e-07
+step 61 required 3 Newton iterations and 6 CG iterations for residual 7.9265e-07
+step 62 required 3 Newton iterations and 6 CG iterations for residual 7.79905e-07
+step 63 required 3 Newton iterations and 7 CG iterations for residual 3.28168e-07
+step 64 required 3 Newton iterations and 6 CG iterations for residual 7.57913e-07
+step 65 required 3 Newton iterations and 6 CG iterations for residual 9.53618e-07
+step 66 required 3 Newton iterations and 7 CG iterations for residual 2.86133e-07
+step 67 required 3 Newton iterations and 6 CG iterations for residual 9.76569e-07
+step 68 required 3 Newton iterations and 6 CG iterations for residual 6.87612e-07
+step 69 required 3 Newton iterations and 6 CG iterations for residual 9.53731e-07
+step 70 required 3 Newton iterations and 6 CG iterations for residual 5.38675e-07
+step 71 required 3 Newton iterations and 6 CG iterations for residual 9.55801e-07
+step 72 required 3 Newton iterations and 6 CG iterations for residual 8.62537e-07
+step 73 required 3 Newton iterations and 7 CG iterations for residual 2.59032e-07
+step 74 required 3 Newton iterations and 6 CG iterations for residual 9.05697e-07
+step 75 required 3 Newton iterations and 7 CG iterations for residual 3.28202e-07
+step 76 required 3 Newton iterations and 6 CG iterations for residual 9.62273e-07
+step 77 required 3 Newton iterations and 6 CG iterations for residual 6.46355e-07
+step 78 required 3 Newton iterations and 6 CG iterations for residual 9.33507e-07
+step 79 required 3 Newton iterations and 6 CG iterations for residual 7.66415e-07
+step 80 required 3 Newton iterations and 6 CG iterations for residual 8.95351e-07
+step 81 required 3 Newton iterations and 6 CG iterations for residual 9.90819e-07
+step 82 required 3 Newton iterations and 6 CG iterations for residual 6.64097e-07
+step 83 required 3 Newton iterations and 6 CG iterations for residual 8.57468e-07
+step 84 required 3 Newton iterations and 7 CG iterations for residual 2.75474e-07
+step 85 required 3 Newton iterations and 6 CG iterations for residual 8.53794e-07
+step 86 required 3 Newton iterations and 7 CG iterations for residual 2.53953e-07
+step 87 required 3 Newton iterations and 6 CG iterations for residual 8.55814e-07
+step 88 required 3 Newton iterations and 7 CG iterations for residual 2.45954e-07
+step 89 required 3 Newton iterations and 6 CG iterations for residual 7.94594e-07
+step 90 required 3 Newton iterations and 7 CG iterations for residual 2.39306e-07
+step 91 required 3 Newton iterations and 6 CG iterations for residual 8.17968e-07
+step 92 required 3 Newton iterations and 7 CG iterations for residual 2.26093e-07
+step 93 required 3 Newton iterations and 6 CG iterations for residual 7.60977e-07
+step 94 required 3 Newton iterations and 7 CG iterations for residual 2.4096e-07
+step 95 required 3 Newton iterations and 6 CG iterations for residual 7.95254e-07
+step 96 required 3 Newton iterations and 7 CG iterations for residual 2.33938e-07
+step 97 required 3 Newton iterations and 6 CG iterations for residual 7.18322e-07
+step 98 required 3 Newton iterations and 6 CG iterations for residual 7.96985e-07
+step 99 required 3 Newton iterations and 6 CG iterations for residual 6.31138e-07
+step 100 required 3 Newton iterations and 6 CG iterations for residual 5.86757e-07
+--------------------------------------------------------------------------------
+simulation took 2.89537 seconds
+1516 conjugate gradient iterations, at rate of 523.594 iters/second
+300 Newton iterations
+--------------------------------------------------------------------------------
+### 4, 128, 100, 1516, 300, 2.89537 ###
+Goodbye!
+Done running the program, now plotting the results...

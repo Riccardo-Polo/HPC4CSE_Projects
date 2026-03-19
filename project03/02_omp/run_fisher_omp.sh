@@ -3,7 +3,7 @@
 #SBATCH --output=outputs/%x-%j.out
 #SBATCH --error=outputs/%x-%j.err
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=3
+#SBATCH --cpus-per-task=64
 #SBATCH --mem-per-cpu=1024
 #SBATCH --time=01:00:00
 #SBATCH --constraint=EPYC_7763

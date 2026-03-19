@@ -67,7 +67,7 @@ void readcmdline(Discretization& options, int argc, char* argv[]) {
     }
 
     // set verbosity if requested
-    verbose_output = true;
+    verbose_output = false;
     if (argc==5) {
         verbose_output = true;
     }

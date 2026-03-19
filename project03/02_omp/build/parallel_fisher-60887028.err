@@ -1,0 +1,7 @@
+main.cpp:143:6: error: #else without #if
+  143 |     #else
+      |      ^~~~
+main.cpp:145:6: error: #endif without #if
+  145 |     #endif
+      |      ^~~~~
+make: *** [Makefile:26: main.o] Error 1

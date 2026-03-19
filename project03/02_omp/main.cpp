@@ -137,10 +137,10 @@ int main(int argc, char* argv[]) {
     // welcome message
     std::cout << std::string(80, '=') << std::endl;
     std::cout << "                      Welcome to mini-stencil!" << std::endl;
-    #ifdef OMP
+    #ifdef _OPENMP
     std::cout << "version   :: C++ OpenMP" << std::endl;
     #endif
-    #else
+    #ifndef _OPENMP
     std::cout << "version   :: C++ serial" << std::endl;
     #endif
     std::cout << "threads   :: " << threads << std::endl;

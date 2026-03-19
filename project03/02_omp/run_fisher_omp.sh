@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=parallel_fisher
-#SBATCH --output=build/%x-%j.out
-#SBATCH --error=build/%x-%j.err
+#SBATCH --output=outputs/%x-%j.out
+#SBATCH --error=outputs/%x-%j.err
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
 #SBATCH --mem-per-cpu=1024

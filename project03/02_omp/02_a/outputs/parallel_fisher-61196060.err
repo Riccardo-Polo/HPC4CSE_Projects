@@ -1,0 +1,14 @@
+operators.cpp: In function 'void operators::diffusion(const data::Field&, const data::Field&, data::Field&)':
+operators.cpp:37:34: error: expected '#pragma omp' clause before 'collpase'
+   37 |         #pragma omp parallel for collpase(2) nowait
+      |                                  ^~~~~~~~
+operators.cpp:49:34: error: 'nowait' is not valid for '#pragma omp parallel for'
+   49 |         #pragma omp parallel for nowait
+      |                                  ^~~~~~
+operators.cpp:59:34: error: 'nowait' is not valid for '#pragma omp parallel for'
+   59 |         #pragma omp parallel for nowait
+      |                                  ^~~~~~
+operators.cpp:69:34: error: 'nowait' is not valid for '#pragma omp parallel for'
+   69 |         #pragma omp parallel for nowait
+      |                                  ^~~~~~
+make: *** [Makefile:20: operators.o] Error 1

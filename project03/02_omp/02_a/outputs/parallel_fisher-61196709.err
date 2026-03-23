@@ -1,0 +1,5 @@
+operators.cpp: In function 'void operators::diffusion(const data::Field&, const data::Field&, data::Field&)':
+operators.cpp:37:25: error: expected '#pragma omp' clause before 'collpase'
+   37 |         #pragma omp for collpase(2) nowait
+      |                         ^~~~~~~~
+make: *** [Makefile:20: operators.o] Error 1

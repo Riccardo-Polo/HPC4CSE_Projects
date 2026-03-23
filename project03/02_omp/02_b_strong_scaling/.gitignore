@@ -1,0 +1,6 @@
+/venv
+.main.cpp.swp
+*.o
+main
+*.bin
+*.bov

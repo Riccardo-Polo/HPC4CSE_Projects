@@ -132,7 +132,12 @@ int main(int argc, char* argv[]) {
     double tolerance     = 1.e-6;
 
     // get number of threads
+    #ifdef _OPENMP
     int threads = omp_get_max_threads(); 
+    #endif
+    #ifndef _OPENMP
+    int threads = 1;
+    #endif
 
     // welcome message
     std::cout << std::string(80, '=') << std::endl;

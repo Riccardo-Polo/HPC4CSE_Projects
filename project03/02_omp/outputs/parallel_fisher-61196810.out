@@ -1,0 +1,24 @@
+rm -f main walltime.o   stats.o   data.o   operators.o   linalg.o   main.o output.*
+g++ -O3 -fopenmp -c walltime.cpp
+g++ -O3 -fopenmp -c stats.cpp
+g++ -O3 -fopenmp -c data.cpp
+g++ -O3 -fopenmp -c operators.cpp
+g++ -O3 -fopenmp -c linalg.cpp
+g++ -O3 -fopenmp -c main.cpp
+g++ -O3 -fopenmp walltime.o   stats.o   data.o   operators.o   linalg.o   main.o -o main
+================================================================================
+                      Welcome to mini-stencil!
+version   :: C++ OpenMP
+threads   :: 64
+mesh      :: 128 * 128 dx = 0.00787402
+time      :: 100 time steps from 0 .. 0.005
+iteration :: CG 300, Newton 50, tolerance 1e-06
+================================================================================
+--------------------------------------------------------------------------------
+simulation took 1.50752 seconds
+1514 conjugate gradient iterations, at rate of 1004.3 iters/second
+300 Newton iterations
+--------------------------------------------------------------------------------
+### 64, 128, 100, 1514, 300, 1.50752 ###
+Goodbye!
+Done running the program, now plotting the results...

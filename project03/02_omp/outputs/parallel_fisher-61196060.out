@@ -1,0 +1,5 @@
+rm -f main walltime.o   stats.o   data.o   operators.o   linalg.o   main.o output.*
+g++ -O3 -fopenmp -c walltime.cpp
+g++ -O3 -fopenmp -c stats.cpp
+g++ -O3 -fopenmp -c data.cpp
+g++ -O3 -fopenmp -c operators.cpp

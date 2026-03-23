@@ -34,7 +34,7 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
 
     #pragma omp parallel
     {
-        #pragma omp parallel for collpase(2) nowait
+        #pragma omp for collapse(2) nowait
         for (int j = 1; j < jend; j++) {
             for (int i = 1; i < iend; i++) {
                 f(i,j) = -(4+alpha)*s_new(i,j)
@@ -46,7 +46,7 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
         }
 
         // east interior boundary
-        #pragma omp parallel for nowait
+        #pragma omp for nowait
         for (int j = 1; j < jend; j++) {
             f(iend,j) = -(4+alpha)*s_new(iend,j)
                     + s_new(iend-1,j) + bndE[j]
@@ -56,7 +56,7 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
         }
 
         // west interior boundary
-        #pragma omp parallel for nowait
+        #pragma omp for nowait
         for (int j = 1; j < jend; j++) {
             f(1,j) = -(4+alpha)*s_new(1,j)
                 + bndW[j] + s_new(2,j)
@@ -66,7 +66,7 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
         }
 
         // north interior boundary
-        #pragma omp parallel for nowait
+        #pragma omp for nowait
         for (int i = 2; i < iend; i++) {
             f(i,jend) = -(4+alpha)*s_new(i,jend)
                     + s_new(i-1,jend) + s_new(i+1,jend)
@@ -76,7 +76,7 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
         }
 
         // south interior boundary:
-        #pragma omp parallel for
+        #pragma omp for
         for (int i = 2; i < iend; i++) {
             f(i,1) = -(4+alpha)*s_new(i,1)
                 + s_new(i-1,1) + s_new(i+1,1)

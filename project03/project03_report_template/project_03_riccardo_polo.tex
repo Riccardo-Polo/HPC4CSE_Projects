@@ -126,5 +126,40 @@ We can also see in figures \ref{fig:initial} and \ref{fig:final} the initial and
 
 \newpage
 \section{Task: Adding OpenMP to the nonlinear PDE mini-app [50 Points]}
+\subsection{Welcome message in \texttt{main.cpp} and serial compilation [5 points]}
+To solve this task we have modified the \texttt{main.cpp} file with the modifications shown in listing \ref{lst:omp_welcome}.
+\begin{lstlisting}[style=grayverbatim, label={lst:omp_welcome}, caption={Modifications to the welcome message in \texttt{main.cpp} to support OpenMP}]
+[...]
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
+[...]
+
+#ifdef _OPENMP
+int threads = omp_get_max_threads(); 
+#endif
+#ifndef _OPENMP
+int threads = 1;
+#endif
+
+[...]
+
+#ifdef _OPENMP
+std::cout << "version   :: C++ OpenMP" << std::endl;
+#endif
+#ifndef _OPENMP
+std::cout << "version   :: C++ serial" << std::endl;
+#endif
+
+[...]
+\end{lstlisting}
+\subsection{Linear algebra kernel [10 Points]}
+
+\subsection{The diffusion stencil [15 Points]}
+
+\subsection{Strong scaling [10 points]}
+
+\subsection{Weak scaling [10 points]}
 \end{document}

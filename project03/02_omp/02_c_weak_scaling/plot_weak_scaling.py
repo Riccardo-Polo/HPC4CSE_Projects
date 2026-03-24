@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import argparse
 import csv
 from collections import defaultdict
@@ -164,11 +164,11 @@ def main():
     parser = argparse.ArgumentParser(description="Plot weak scaling results.")
     parser.add_argument("--input", required=True, help="Raw CSV produced by run_weak_scaling.sh")
     parser.add_argument("--summary", required=True, help="Output CSV with averaged results")
-    parser.add_argument("--threads-plot", required=True, help="Output PNG for time-vs-threads plot")
+    parser.add_argument("--threads-plot", required=True, help="Output PDF for time-vs-threads plot")
     parser.add_argument(
         "--problem-size-plot",
         required=True,
-        help="Output PNG for time-vs-problem-size plot",
+        help="Output PDF for time-vs-problem-size plot",
     )
     args = parser.parse_args()
 

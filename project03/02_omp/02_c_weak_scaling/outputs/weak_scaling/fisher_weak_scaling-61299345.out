@@ -25,11 +25,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.0475587 seconds
-1007 conjugate gradient iterations, at rate of 21173.8 iters/second
+simulation took 0.0496097 seconds
+1007 conjugate gradient iterations, at rate of 20298.5 iters/second
 301 Newton iterations
 --------------------------------------------------------------------------------
-### 1, 64, 100, 1007, 301, 0.0475587 ###
+### 1, 64, 100, 1007, 301, 0.0496097 ###
 Goodbye!
   -> repeat 2/3
 ================================================================================
@@ -41,11 +41,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.0478357 seconds
-1007 conjugate gradient iterations, at rate of 21051.2 iters/second
+simulation took 0.0496951 seconds
+1007 conjugate gradient iterations, at rate of 20263.6 iters/second
 301 Newton iterations
 --------------------------------------------------------------------------------
-### 1, 64, 100, 1007, 301, 0.0478357 ###
+### 1, 64, 100, 1007, 301, 0.0496951 ###
 Goodbye!
   -> repeat 3/3
 ================================================================================
@@ -57,11 +57,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.0480388 seconds
-1007 conjugate gradient iterations, at rate of 20962.2 iters/second
+simulation took 0.0498317 seconds
+1007 conjugate gradient iterations, at rate of 20208 iters/second
 301 Newton iterations
 --------------------------------------------------------------------------------
-### 1, 64, 100, 1007, 301, 0.0480388 ###
+### 1, 64, 100, 1007, 301, 0.0498317 ###
 Goodbye!
 ============================================================
 Running base_n=64, threads=4, scaled_n=128
@@ -76,11 +76,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.0780188 seconds
-1515 conjugate gradient iterations, at rate of 19418.4 iters/second
+simulation took 0.123242 seconds
+1514 conjugate gradient iterations, at rate of 12284.8 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 4, 128, 100, 1515, 300, 0.0780188 ###
+### 4, 128, 100, 1514, 300, 0.123242 ###
 Goodbye!
   -> repeat 2/3
 ================================================================================
@@ -92,11 +92,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.0768309 seconds
-1514 conjugate gradient iterations, at rate of 19705.6 iters/second
+simulation took 0.119275 seconds
+1514 conjugate gradient iterations, at rate of 12693.4 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 4, 128, 100, 1514, 300, 0.0768309 ###
+### 4, 128, 100, 1514, 300, 0.119275 ###
 Goodbye!
   -> repeat 3/3
 ================================================================================
@@ -108,11 +108,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.0764742 seconds
-1513 conjugate gradient iterations, at rate of 19784.5 iters/second
+simulation took 0.123955 seconds
+1517 conjugate gradient iterations, at rate of 12238.3 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 4, 128, 100, 1513, 300, 0.0764742 ###
+### 4, 128, 100, 1517, 300, 0.123955 ###
 Goodbye!
 ============================================================
 Running base_n=64, threads=16, scaled_n=256
@@ -127,11 +127,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.232777 seconds
-2781 conjugate gradient iterations, at rate of 11947.1 iters/second
+simulation took 0.246659 seconds
+2782 conjugate gradient iterations, at rate of 11278.7 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 16, 256, 100, 2781, 300, 0.232777 ###
+### 16, 256, 100, 2782, 300, 0.246659 ###
 Goodbye!
   -> repeat 2/3
 ================================================================================
@@ -143,11 +143,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.242549 seconds
-2781 conjugate gradient iterations, at rate of 11465.7 iters/second
+simulation took 0.248659 seconds
+2780 conjugate gradient iterations, at rate of 11180 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 16, 256, 100, 2781, 300, 0.242549 ###
+### 16, 256, 100, 2780, 300, 0.248659 ###
 Goodbye!
   -> repeat 3/3
 ================================================================================
@@ -159,11 +159,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.225327 seconds
-2779 conjugate gradient iterations, at rate of 12333.2 iters/second
+simulation took 0.261163 seconds
+2778 conjugate gradient iterations, at rate of 10637 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 16, 256, 100, 2779, 300, 0.225327 ###
+### 16, 256, 100, 2778, 300, 0.261163 ###
 Goodbye!
 ============================================================
 Running base_n=64, threads=64, scaled_n=512
@@ -178,11 +178,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 1.23796 seconds
-5366 conjugate gradient iterations, at rate of 4334.56 iters/second
+simulation took 1.27352 seconds
+5361 conjugate gradient iterations, at rate of 4209.59 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 64, 512, 100, 5366, 300, 1.23796 ###
+### 64, 512, 100, 5361, 300, 1.27352 ###
 Goodbye!
   -> repeat 2/3
 ================================================================================
@@ -194,11 +194,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 1.19579 seconds
-5360 conjugate gradient iterations, at rate of 4482.39 iters/second
+simulation took 1.26546 seconds
+5361 conjugate gradient iterations, at rate of 4236.42 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 64, 512, 100, 5360, 300, 1.19579 ###
+### 64, 512, 100, 5361, 300, 1.26546 ###
 Goodbye!
   -> repeat 3/3
 ================================================================================
@@ -210,11 +210,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 1.00369 seconds
-5362 conjugate gradient iterations, at rate of 5342.3 iters/second
+simulation took 1.09703 seconds
+5359 conjugate gradient iterations, at rate of 4885.01 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 64, 512, 100, 5362, 300, 1.00369 ###
+### 64, 512, 100, 5359, 300, 1.09703 ###
 Goodbye!
 ============================================================
 Running base_n=128, threads=1, scaled_n=128
@@ -229,11 +229,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.198736 seconds
-1513 conjugate gradient iterations, at rate of 7613.12 iters/second
+simulation took 0.198333 seconds
+1513 conjugate gradient iterations, at rate of 7628.58 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 1, 128, 100, 1513, 300, 0.198736 ###
+### 1, 128, 100, 1513, 300, 0.198333 ###
 Goodbye!
   -> repeat 2/3
 ================================================================================
@@ -245,11 +245,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.195062 seconds
-1513 conjugate gradient iterations, at rate of 7756.5 iters/second
+simulation took 0.19515 seconds
+1513 conjugate gradient iterations, at rate of 7753.03 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 1, 128, 100, 1513, 300, 0.195062 ###
+### 1, 128, 100, 1513, 300, 0.19515 ###
 Goodbye!
   -> repeat 3/3
 ================================================================================
@@ -261,11 +261,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.196699 seconds
-1513 conjugate gradient iterations, at rate of 7691.96 iters/second
+simulation took 0.244075 seconds
+1513 conjugate gradient iterations, at rate of 6198.91 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 1, 128, 100, 1513, 300, 0.196699 ###
+### 1, 128, 100, 1513, 300, 0.244075 ###
 Goodbye!
 ============================================================
 Running base_n=128, threads=4, scaled_n=256
@@ -280,11 +280,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.434399 seconds
-2782 conjugate gradient iterations, at rate of 6404.26 iters/second
+simulation took 0.491039 seconds
+2781 conjugate gradient iterations, at rate of 5663.5 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 4, 256, 100, 2782, 300, 0.434399 ###
+### 4, 256, 100, 2781, 300, 0.491039 ###
 Goodbye!
   -> repeat 2/3
 ================================================================================
@@ -296,11 +296,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.41789 seconds
-2785 conjugate gradient iterations, at rate of 6664.43 iters/second
+simulation took 0.494922 seconds
+2779 conjugate gradient iterations, at rate of 5615.02 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 4, 256, 100, 2785, 300, 0.41789 ###
+### 4, 256, 100, 2779, 300, 0.494922 ###
 Goodbye!
   -> repeat 3/3
 ================================================================================
@@ -312,11 +312,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.415852 seconds
-2784 conjugate gradient iterations, at rate of 6694.69 iters/second
+simulation took 0.491821 seconds
+2781 conjugate gradient iterations, at rate of 5654.49 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 4, 256, 100, 2784, 300, 0.415852 ###
+### 4, 256, 100, 2781, 300, 0.491821 ###
 Goodbye!
 ============================================================
 Running base_n=128, threads=16, scaled_n=512
@@ -331,11 +331,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 1.05531 seconds
-5361 conjugate gradient iterations, at rate of 5080.01 iters/second
+simulation took 1.05524 seconds
+5354 conjugate gradient iterations, at rate of 5073.74 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 16, 512, 100, 5361, 300, 1.05531 ###
+### 16, 512, 100, 5354, 300, 1.05524 ###
 Goodbye!
   -> repeat 2/3
 ================================================================================
@@ -347,11 +347,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 1.03766 seconds
-5363 conjugate gradient iterations, at rate of 5168.36 iters/second
-301 Newton iterations
+simulation took 0.990723 seconds
+5361 conjugate gradient iterations, at rate of 5411.2 iters/second
+300 Newton iterations
 --------------------------------------------------------------------------------
-### 16, 512, 100, 5363, 301, 1.03766 ###
+### 16, 512, 100, 5361, 300, 0.990723 ###
 Goodbye!
   -> repeat 3/3
 ================================================================================
@@ -363,11 +363,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 0.97936 seconds
-5358 conjugate gradient iterations, at rate of 5470.92 iters/second
+simulation took 0.977684 seconds
+5361 conjugate gradient iterations, at rate of 5483.37 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 16, 512, 100, 5358, 300, 0.97936 ###
+### 16, 512, 100, 5361, 300, 0.977684 ###
 Goodbye!
 ============================================================
 Running base_n=128, threads=64, scaled_n=1024
@@ -382,11 +382,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 3.35516 seconds
-10501 conjugate gradient iterations, at rate of 3129.81 iters/second
-304 Newton iterations
+simulation took 3.49157 seconds
+10541 conjugate gradient iterations, at rate of 3018.99 iters/second
+306 Newton iterations
 --------------------------------------------------------------------------------
-### 64, 1024, 100, 10501, 304, 3.35516 ###
+### 64, 1024, 100, 10541, 306, 3.49157 ###
 Goodbye!
   -> repeat 2/3
 ================================================================================
@@ -398,11 +398,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 3.05596 seconds
-10491 conjugate gradient iterations, at rate of 3432.96 iters/second
+simulation took 3.12149 seconds
+10486 conjugate gradient iterations, at rate of 3359.29 iters/second
 303 Newton iterations
 --------------------------------------------------------------------------------
-### 64, 1024, 100, 10491, 303, 3.05596 ###
+### 64, 1024, 100, 10486, 303, 3.12149 ###
 Goodbye!
   -> repeat 3/3
 ================================================================================
@@ -414,11 +414,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 3.72965 seconds
-10470 conjugate gradient iterations, at rate of 2807.23 iters/second
-302 Newton iterations
+simulation took 3.62959 seconds
+10528 conjugate gradient iterations, at rate of 2900.61 iters/second
+306 Newton iterations
 --------------------------------------------------------------------------------
-### 64, 1024, 100, 10470, 302, 3.72965 ###
+### 64, 1024, 100, 10528, 306, 3.62959 ###
 Goodbye!
 ============================================================
 Running base_n=256, threads=1, scaled_n=256
@@ -433,11 +433,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 1.29575 seconds
-2780 conjugate gradient iterations, at rate of 2145.47 iters/second
+simulation took 1.29372 seconds
+2780 conjugate gradient iterations, at rate of 2148.85 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 1, 256, 100, 2780, 300, 1.29575 ###
+### 1, 256, 100, 2780, 300, 1.29372 ###
 Goodbye!
   -> repeat 2/3
 ================================================================================
@@ -449,11 +449,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 1.23089 seconds
-2780 conjugate gradient iterations, at rate of 2258.54 iters/second
+simulation took 1.29468 seconds
+2780 conjugate gradient iterations, at rate of 2147.25 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 1, 256, 100, 2780, 300, 1.23089 ###
+### 1, 256, 100, 2780, 300, 1.29468 ###
 Goodbye!
   -> repeat 3/3
 ================================================================================
@@ -465,11 +465,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 1.24083 seconds
-2780 conjugate gradient iterations, at rate of 2240.44 iters/second
+simulation took 1.29758 seconds
+2780 conjugate gradient iterations, at rate of 2142.45 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 1, 256, 100, 2780, 300, 1.24083 ###
+### 1, 256, 100, 2780, 300, 1.29758 ###
 Goodbye!
 ============================================================
 Running base_n=256, threads=4, scaled_n=512
@@ -484,11 +484,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 2.90169 seconds
-5363 conjugate gradient iterations, at rate of 1848.24 iters/second
+simulation took 2.95662 seconds
+5361 conjugate gradient iterations, at rate of 1813.22 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 4, 512, 100, 5363, 300, 2.90169 ###
+### 4, 512, 100, 5361, 300, 2.95662 ###
 Goodbye!
   -> repeat 2/3
 ================================================================================
@@ -500,11 +500,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 2.3774 seconds
-5356 conjugate gradient iterations, at rate of 2252.88 iters/second
+simulation took 2.97189 seconds
+5356 conjugate gradient iterations, at rate of 1802.22 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 4, 512, 100, 5356, 300, 2.3774 ###
+### 4, 512, 100, 5356, 300, 2.97189 ###
 Goodbye!
   -> repeat 3/3
 ================================================================================
@@ -516,11 +516,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 2.39402 seconds
-5358 conjugate gradient iterations, at rate of 2238.07 iters/second
+simulation took 2.54705 seconds
+5358 conjugate gradient iterations, at rate of 2103.61 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 4, 512, 100, 5358, 300, 2.39402 ###
+### 4, 512, 100, 5358, 300, 2.54705 ###
 Goodbye!
 ============================================================
 Running base_n=256, threads=16, scaled_n=1024
@@ -535,11 +535,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 5.70088 seconds
-10506 conjugate gradient iterations, at rate of 1842.87 iters/second
-305 Newton iterations
+simulation took 5.99204 seconds
+10474 conjugate gradient iterations, at rate of 1747.99 iters/second
+302 Newton iterations
 --------------------------------------------------------------------------------
-### 16, 1024, 100, 10506, 305, 5.70088 ###
+### 16, 1024, 100, 10474, 302, 5.99204 ###
 Goodbye!
   -> repeat 2/3
 ================================================================================
@@ -551,11 +551,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 5.29927 seconds
-10557 conjugate gradient iterations, at rate of 1992.16 iters/second
-307 Newton iterations
+simulation took 5.95404 seconds
+10497 conjugate gradient iterations, at rate of 1763 iters/second
+304 Newton iterations
 --------------------------------------------------------------------------------
-### 16, 1024, 100, 10557, 307, 5.29927 ###
+### 16, 1024, 100, 10497, 304, 5.95404 ###
 Goodbye!
   -> repeat 3/3
 ================================================================================
@@ -567,11 +567,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 5.85845 seconds
-10483 conjugate gradient iterations, at rate of 1789.38 iters/second
-303 Newton iterations
+simulation took 5.66583 seconds
+10542 conjugate gradient iterations, at rate of 1860.63 iters/second
+306 Newton iterations
 --------------------------------------------------------------------------------
-### 16, 1024, 100, 10483, 303, 5.85845 ###
+### 16, 1024, 100, 10542, 306, 5.66583 ###
 Goodbye!
 ============================================================
 Running base_n=256, threads=64, scaled_n=2048
@@ -586,11 +586,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 23.2648 seconds
-23794 conjugate gradient iterations, at rate of 1022.75 iters/second
-389 Newton iterations
+simulation took 24.9497 seconds
+23686 conjugate gradient iterations, at rate of 949.349 iters/second
+387 Newton iterations
 --------------------------------------------------------------------------------
-### 64, 2048, 100, 23794, 389, 23.2648 ###
+### 64, 2048, 100, 23686, 387, 24.9497 ###
 Goodbye!
   -> repeat 2/3
 ================================================================================
@@ -602,11 +602,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 22.8887 seconds
-23716 conjugate gradient iterations, at rate of 1036.14 iters/second
-387 Newton iterations
+simulation took 24.2177 seconds
+23836 conjugate gradient iterations, at rate of 984.237 iters/second
+390 Newton iterations
 --------------------------------------------------------------------------------
-### 64, 2048, 100, 23716, 387, 22.8887 ###
+### 64, 2048, 100, 23836, 390, 24.2177 ###
 Goodbye!
   -> repeat 3/3
 ================================================================================
@@ -618,14 +618,14 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 24.7191 seconds
-23769 conjugate gradient iterations, at rate of 961.564 iters/second
-389 Newton iterations
+simulation took 22.915 seconds
+23870 conjugate gradient iterations, at rate of 1041.68 iters/second
+390 Newton iterations
 --------------------------------------------------------------------------------
-### 64, 2048, 100, 23769, 389, 24.7191 ###
+### 64, 2048, 100, 23870, 390, 22.915 ###
 Goodbye!
 Weak scaling study completed.
 Raw data          : results/weak_scaling_raw.csv
 Summary data      : results/weak_scaling_summary.csv
-Threads plot      : figures/weak_scaling_time_threads.png
-Problem-size plot : figures/weak_scaling_time_problem_size.png
+Threads plot      : figures/weak_scaling_time_threads.pdf
+Problem-size plot : figures/weak_scaling_time_problem_size.pdf

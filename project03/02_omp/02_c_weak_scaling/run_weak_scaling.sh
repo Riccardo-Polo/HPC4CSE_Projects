@@ -5,7 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=64
 #SBATCH --mem-per-cpu=1024
-#SBATCH --time=03:00:00
+#SBATCH --time=0:30:00
 #SBATCH --constraint=EPYC_7763
 
 set -euo pipefail
@@ -28,8 +28,8 @@ TFINAL=${TFINAL:-0.005}
 
 RAW_CSV="results/weak_scaling_raw.csv"
 SUMMARY_CSV="results/weak_scaling_summary.csv"
-PLOT_THREADS="figures/weak_scaling_time_threads.png"
-PLOT_PROBLEM_SIZE="figures/weak_scaling_time_problem_size.png"
+PLOT_THREADS="figures/weak_scaling_time_threads.pdf"
+PLOT_PROBLEM_SIZE="figures/weak_scaling_time_problem_size.pdf"
 
 printf 'repeat,base_n,threads,scaled_n,problem_size,nt,tfinal,cg_iters,newton_iters,time_s\n' > "$RAW_CSV"
 

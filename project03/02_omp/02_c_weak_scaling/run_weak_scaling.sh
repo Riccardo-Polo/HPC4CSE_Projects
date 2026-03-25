@@ -107,12 +107,6 @@ python3 plot_weak_scaling_log.py \
     --threads-plot "$PLOT_THREADS" \
     --problem-size-plot "$PLOT_PROBLEM_SIZE"
 
-python3 plot_weak_scaling.py \
-    --input "$RAW_CSV" \
-    --summary "$SUMMARY_CSV" \
-    --threads-plot "$PLOT_THREADS" \
-    --problem-size-plot "$PLOT_PROBLEM_SIZE"
-
 echo "Weak scaling study completed."
 echo "Raw data          : $RAW_CSV"
 echo "Summary data      : $SUMMARY_CSV"

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.28)  24 MAR 2026 14:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.28)  24 MAR 2026 15:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -777,24 +777,54 @@ Package pdftex.def Info: ../01_serial/output_final.pdf  used on input line 119.
  [3 <../01_serial/output_initial.pdf> <../01_serial/output_final.pdf>]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
 (Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 129.
- [4] (project_03_riccardo_polo.aux)
+
+Underfull \hbox (badness 10000) in paragraph at lines 159--161
+
+ []
+
+(C:\Users\ricca\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
+File: lstlang1.sty 2025/11/14 1.11b listings language file
+) (C:\Users\ricca\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
+File: lstlang1.sty 2025/11/14 1.11b listings language file
+) (C:\Users\ricca\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
+File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
+)
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 166.
+
+Underfull \hbox (badness 10000) in paragraph at lines 181--183
+
+ []
+
+[4]
+<../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup.pdf, id=162, 578.16pt x 361.35pt>
+File: ../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup.pdf Graphic file (type pdf)
+<use ../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup.pdf>
+Package pdftex.def Info: ../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup.pdf  used on input line 215.
+(pdftex.def)             Requested size: 289.07928pt x 180.67456pt.
+<../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf, id=163, 578.16pt x 361.35pt>
+File: ../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf Graphic file (type pdf)
+<use ../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf>
+Package pdftex.def Info: ../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf  used on input line 223.
+(pdftex.def)             Requested size: 289.07928pt x 180.67456pt.
+ [5 <../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup.pdf>] [6 <../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf>] (project_03_riccardo_polo.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-06>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 39992 strings out of 467871
- 957221 string characters out of 5418375
- 1754230 words of memory out of 5000000
- 68307 multiletter control sequences out of 15000+600000
+ 40190 strings out of 467871
+ 960865 string characters out of 5418375
+ 1959512 words of memory out of 5000000
+ 68481 multiletter control sequences out of 15000+600000
  632951 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 110i,10n,107p,11327b,1112s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 110i,10n,107p,11327b,1331s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\ricca\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on project_03_riccardo_polo.pdf (4 pages, 662088 bytes).
+Output written on project_03_riccardo_polo.pdf (6 pages, 703938 bytes).
 PDF statistics:
- 256 PDF objects out of 1000 (max. 8388607)
- 55 named destinations out of 1000 (max. 500000)
- 100 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 372 PDF objects out of 1000 (max. 8388607)
+ 72 named destinations out of 1000 (max. 500000)
+ 110 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -156,10 +156,72 @@ std::cout << "version   :: C++ serial" << std::endl;
 [...]
 \end{lstlisting}
 \subsection{Linear algebra kernel [10 Points]}
-
+All the functions in the file \texttt{linalg.cpp} were parallelized using the \texttt{\#pragma omp parallel for} directive to parallelize the loops.\\
+For the function \texttt{hpc\_norm2} we have to take into account the reduction of the sum, which is done using the \texttt{reduction(+:sum)} clause.\\
 \subsection{The diffusion stencil [15 Points]}
+The parallelization of the \texttt{diffusion()} routine is based on OpenMP loop-level parallelism.\\  
+The largest amount of work is associated with the interior points, since they constitute almost the whole domain.  
+For this reason, the interior stencil evaluation is parallelized with
+\begin{lstlisting}[language=C++,style=grayverbatim]
+#pragma omp parallel
+{
+    #pragma omp for collapse(2) nowait
+    for (int j = 1; j < jend; j++) {
+        for (int i = 1; i < iend; i++) {
+            ...
+        }
+    }
+    ...
+}
+\end{lstlisting}
 
+The \texttt{\#pragma omp parallel} directive creates a team of threads only once, and all subsequent loop work-sharing constructs are executed inside the same parallel region.  
+This is more efficient than creating a new parallel region for every loop separately.
+
+For the interior update, the directive \texttt{\#pragma omp for collapse(2)} is used.  
+The \texttt{collapse(2)} clause merges the two nested loops over \(i\) and \(j\) into a single iteration space.\\
+
+After the interior points, the four non-corner boundaries are treated in separate loops:
+\begin{itemize}
+    \item east boundary,
+    \item west boundary,
+    \item north boundary,
+    \item south boundary.
+\end{itemize}
+These loops are also parallelized with \texttt{\#pragma omp for}.  
+They are kept separate because the stencil on each boundary differs from the interior stencil due to the Dirichlet boundary values \texttt{bndE}, \texttt{bndW}, \texttt{bndN}, and \texttt{bndS}.
+
+For the first boundary loops, the \texttt{nowait} clause is added:
+\begin{lstlisting}[language=C++,style=grayverbatim]
+#pragma omp for nowait
+\end{lstlisting}
+This removes the implicit barrier at the end of each loop.  
+Since the different boundary updates are independent, there is no need for all threads to synchronize after every single boundary loop.  
+Avoiding these unnecessary barriers reduces synchronization overhead and improves performance.
+
+The four corner points are computed outside the parallel region and therefore serially.  
+This choice is reasonable because only four grid points are involved, so the computational cost is negligible compared to the interior and edge updates.  
+Parallelizing these few operations would introduce extra overhead without any meaningful speedup.
+
+An important property of this implementation is that it is free of data races.  
+Each iteration writes to a distinct entry of the residual field \(f(i,j)\), while the fields \texttt{s\_old}, \texttt{s\_new}, and the boundary arrays are only read.  
+Therefore, no two threads update the same memory location simultaneously.
 \subsection{Strong scaling [10 points]}
+In the strong scaling test we have measured the time to solution for different combinations of number of threads and problem sizes.\\
+In particular, we have measured the time to solution for NCPU = 1, 2, 4, 8, 16 threads across resolutions of $n \times n$, where n = 64, 128, 256, 512, 1024.\\
+The results are shown in figure \ref{fig:strong_scaling}, where we can see the strong scaling speedup of the OpenMP implementation compared to the serial version.\\
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[scale=0.5]{../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup.pdf}
+    \caption{Strong scaling speedup of the OpenMP implementation compared to the serial version.}
+    \label{fig:strong_scaling}
+\end{figure}
 
 \subsection{Weak scaling [10 points]}
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[scale=0.5]{../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf}
+    \caption{Weak scaling time vs. number of threads for the OpenMP implementation.}
+    \label{fig:weak_scaling}
+\end{figure}
 \end{document}

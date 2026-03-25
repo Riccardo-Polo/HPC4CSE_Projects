@@ -17,7 +17,9 @@
 #include <cstdlib>
 #include <cstring>
 
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 
 #include "data.h"

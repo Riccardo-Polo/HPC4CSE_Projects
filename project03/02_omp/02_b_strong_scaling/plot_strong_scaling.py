@@ -124,6 +124,53 @@ def plot_speedup(summary, outpath):
     plt.savefig(outpath, dpi=200)
     plt.close()
 
+def plot_time_linear(summary, outpath):
+    plt.figure(figsize=(8, 5))
+    resolutions = sorted({row["n"] for row in summary})
+
+    for n in resolutions:
+        subset = [row for row in summary if row["n"] == n]
+        subset.sort(key=lambda row: row["threads"])
+        x = [row["threads"] for row in subset]
+        y = [row["time_mean_s"] for row in subset]
+        yerr = [row["time_std_s"] for row in subset]
+        plt.errorbar(x, y, yerr=yerr, marker="o", capsize=3, label=f"n={n}")
+
+    plt.xticks(sorted({row["threads"] for row in summary}))
+    plt.xlabel("OpenMP threads")
+    plt.ylabel("Time to solution [s]")
+    plt.title("Strong scaling of Fisher mini-app (linear scale)")
+    plt.grid(True, alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(outpath, dpi=200)
+    plt.close()
+
+
+def plot_speedup_linear(summary, outpath):
+    plt.figure(figsize=(8, 5))
+    resolutions = sorted({row["n"] for row in summary})
+    all_threads = sorted({row["threads"] for row in summary})
+
+    for n in resolutions:
+        subset = [row for row in summary if row["n"] == n]
+        subset.sort(key=lambda row: row["threads"])
+        x = [row["threads"] for row in subset]
+        y = [row["speedup"] for row in subset]
+        plt.plot(x, y, marker="o", label=f"n={n}")
+
+    plt.plot(all_threads, all_threads, linestyle="--", label="ideal")
+    plt.xticks(all_threads)
+    plt.yticks(all_threads)
+    plt.xlabel("OpenMP threads")
+    plt.ylabel("Speedup")
+    plt.title("Strong scaling speedup of Fisher mini-app (linear scale)")
+    plt.grid(True, alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(outpath, dpi=200)
+    plt.close()
+
 
 def main():
     parser = argparse.ArgumentParser(description="Plot strong scaling results.")
@@ -141,6 +188,8 @@ def main():
     write_summary(args.summary, summary)
     plot_time(summary, args.time_plot)
     plot_speedup(summary, args.speedup_plot)
+    plot_time_linear(summary, "figures/strong_scaling_time_linear.pdf")
+    plot_speedup_linear(summary, "figures/strong_scaling_speedup_linear.pdf")
 
 
 if __name__ == "__main__":

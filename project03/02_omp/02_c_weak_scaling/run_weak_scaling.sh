@@ -101,6 +101,12 @@ for base_n in "${BASE_RESOLUTIONS[@]}"; do
     done
 done
 
+python3 plot_weak_scaling_log.py \
+    --input "$RAW_CSV" \
+    --summary "$SUMMARY_CSV" \
+    --threads-plot "$PLOT_THREADS" \
+    --problem-size-plot "$PLOT_PROBLEM_SIZE"
+
 python3 plot_weak_scaling.py \
     --input "$RAW_CSV" \
     --summary "$SUMMARY_CSV" \

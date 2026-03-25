@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.28)  24 MAR 2026 15:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.28)  25 MAR 2026 13:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -797,34 +797,80 @@ Underfull \hbox (badness 10000) in paragraph at lines 181--183
  []
 
 [4]
-<../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup.pdf, id=162, 578.16pt x 361.35pt>
-File: ../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup.pdf Graphic file (type pdf)
-<use ../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup.pdf>
-Package pdftex.def Info: ../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup.pdf  used on input line 215.
-(pdftex.def)             Requested size: 289.07928pt x 180.67456pt.
-<../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf, id=163, 578.16pt x 361.35pt>
+<../02_omp/02_b_strong_scaling/figures/strong_scaling_time_linear.pdf, id=163, 578.16pt x 361.35pt>
+File: ../02_omp/02_b_strong_scaling/figures/strong_scaling_time_linear.pdf Graphic file (type pdf)
+<use ../02_omp/02_b_strong_scaling/figures/strong_scaling_time_linear.pdf>
+Package pdftex.def Info: ../02_omp/02_b_strong_scaling/figures/strong_scaling_time_linear.pdf  used on input line 217.
+(pdftex.def)             Requested size: 225.34381pt x 140.8377pt.
+<../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup_linear.pdf, id=164, 578.16pt x 361.35pt>
+File: ../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup_linear.pdf Graphic file (type pdf)
+<use ../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup_linear.pdf>
+Package pdftex.def Info: ../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup_linear.pdf  used on input line 224.
+(pdftex.def)             Requested size: 225.34381pt x 140.8377pt.
+
+
+LaTeX Warning: Reference `fig:fig:strong_time_linear' on page 5 undefined on input line 232.
+
+
+LaTeX Warning: Reference `fig:fig:strong_speedup_linear' on page 5 undefined on input line 232.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 232--233
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 234--235
+
+ []
+
+[5 <../02_omp/02_b_strong_scaling/figures/strong_scaling_time_linear.pdf> <../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup_linear.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 238--239
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 240--241
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 243--244
+
+ []
+
+<../02_omp/02_c_weak_scaling/figures/weak_scaling_time_problem_size.pdf, id=269, 578.16pt x 361.35pt>
+File: ../02_omp/02_c_weak_scaling/figures/weak_scaling_time_problem_size.pdf Graphic file (type pdf)
+<use ../02_omp/02_c_weak_scaling/figures/weak_scaling_time_problem_size.pdf>
+Package pdftex.def Info: ../02_omp/02_c_weak_scaling/figures/weak_scaling_time_problem_size.pdf  used on input line 250.
+(pdftex.def)             Requested size: 225.34381pt x 140.8377pt.
+<../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf, id=270, 578.16pt x 361.35pt>
 File: ../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf Graphic file (type pdf)
 <use ../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf>
-Package pdftex.def Info: ../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf  used on input line 223.
-(pdftex.def)             Requested size: 289.07928pt x 180.67456pt.
- [5 <../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup.pdf>] [6 <../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf>] (project_03_riccardo_polo.aux)
+Package pdftex.def Info: ../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf  used on input line 257.
+(pdftex.def)             Requested size: 225.34381pt x 140.8377pt.
+[6 <../02_omp/02_c_weak_scaling/figures/weak_scaling_time_problem_size.pdf> <../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf>] [7] (project_03_riccardo_polo.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-06>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
- 40190 strings out of 467871
- 960865 string characters out of 5418375
- 1959512 words of memory out of 5000000
- 68481 multiletter control sequences out of 15000+600000
- 632951 words of font info for 57 fonts, out of 8000000 for 9000
+ 40217 strings out of 467871
+ 962350 string characters out of 5418375
+ 1959775 words of memory out of 5000000
+ 68506 multiletter control sequences out of 15000+600000
+ 633297 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  110i,10n,107p,11327b,1331s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\ricca\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on project_03_riccardo_polo.pdf (6 pages, 703938 bytes).
+ <C:\Users\ricca\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/ricca/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on project_03_riccardo_polo.pdf (7 pages, 762784 bytes).
 PDF statistics:
- 372 PDF objects out of 1000 (max. 8388607)
- 72 named destinations out of 1000 (max. 500000)
- 110 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 496 PDF objects out of 1000 (max. 8388607)
+ 73 named destinations out of 1000 (max. 500000)
+ 120 words of extra memory for PDF output out of 10000 (max. 10000000)
 

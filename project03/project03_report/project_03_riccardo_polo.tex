@@ -89,8 +89,8 @@ implemented via the BLAS-like operation \texttt{hpc\_axpy}.
 The process is repeated until either convergence is reached or a maximum number of Newton iterations is exceeded. If convergence is not achieved, the simulation is terminated and an error message is reported.
 \subsection{Results}
 The implementation of the linear algebra functions and the stencil operators was successful, as the program runs without errors and produces results consistent with the expected behavior of the solution to Fisher's equation.\\
-In particular the output is given by the following listing
-\begin{lstlisting}[style=grayverbatim]
+In particular the output is given in listing \ref{lst:output_serial}
+\begin{lstlisting}[style=grayverbatim,label=lst:output_serial,caption=Output of serial implementation of Fisher mini-app]
 ================================================================================
                       Welcome to mini-stencil!
 version   :: C++ Serial
@@ -161,8 +161,8 @@ For the function \texttt{hpc\_norm2} we have to take into account the reduction 
 \subsection{The diffusion stencil [15 Points]}
 The parallelization of the \texttt{diffusion()} routine is based on OpenMP loop-level parallelism.\\  
 The largest amount of work is associated with the interior points, since they constitute almost the whole domain.  
-For this reason, the interior stencil evaluation is parallelized with
-\begin{lstlisting}[language=C++,style=grayverbatim]
+For this reason, the interior stencil evaluation is parallelized as one can see in listing \ref{lst:paral_1}.
+\begin{lstlisting}[language=C++,style=grayverbatim,label=lst:paral_1,caption=Interior grid points parallelization]
 #pragma omp parallel
 {
     #pragma omp for collapse(2) nowait
@@ -191,35 +191,31 @@ After the interior points, the four non-corner boundaries are treated in separat
 These loops are also parallelized with \texttt{\#pragma omp for}.  
 They are kept separate because the stencil on each boundary differs from the interior stencil due to the Dirichlet boundary values \texttt{bndE}, \texttt{bndW}, \texttt{bndN}, and \texttt{bndS}.
 
-For the first boundary loops, the \texttt{nowait} clause is added:
-\begin{lstlisting}[language=C++,style=grayverbatim]
-#pragma omp for nowait
-\end{lstlisting}
+For the first boundary loops, the \texttt{nowait} clause is added obtaining \texttt{\#pragma omp for nowait}.\\
 This removes the implicit barrier at the end of each loop.  
 Since the different boundary updates are independent, there is no need for all threads to synchronize after every single boundary loop.  
-Avoiding these unnecessary barriers reduces synchronization overhead and improves performance.
+Avoiding these unnecessary barriers reduces synchronization overhead and improves performance.\\
 
 The four corner points are computed outside the parallel region and therefore serially.  
 This choice is reasonable because only four grid points are involved, so the computational cost is negligible compared to the interior and edge updates.  
-Parallelizing these few operations would introduce extra overhead without any meaningful speedup.
+Parallelizing these few operations would introduce extra overhead without any meaningful speedup.\\
 
 An important property of this implementation is that it is free of data races.  
 Each iteration writes to a distinct entry of the residual field \(f(i,j)\), while the fields \texttt{s\_old}, \texttt{s\_new}, and the boundary arrays are only read.  
 Therefore, no two threads update the same memory location simultaneously.
 \subsection{Strong scaling [10 points]}
-In the strong scaling test we have measured the time to solution for different combinations of number of threads and problem sizes.\\
-In particular, we have measured the time to solution for NCPU = 1, 2, 4, 8, 16 threads across resolutions of $n \times n$, where n = 64, 128, 256, 512, 1024.\\
-The time to solution plot and the speedup plot are shown respectively in figures \ref{fig:strong_time_linear} and \ref{fig:strong_speedup_linear}.
+In the strong scaling test we have measured the time to solution for different combinations of number of threads and problem sizes. In particular, we have measured the time to solution for NCPU = 1, 2, 4, 8, 16 threads across resolutions of $n \times n$, where n = 64, 128, 256, 512, 1024.\\
+The time to solution plot and the speedup plot are shown respectively in figures \ref{fig:strong_time_linear} and \ref{fig:strong_speedup_linear}.\\ 
 \begin{figure}[htbp]
     \centering
-    \begin{subfigure}{0.48\textwidth}
+    \begin{subfigure}{0.8\textwidth}
         \centering
         \includegraphics[width=\textwidth]{../02_omp/02_b_strong_scaling/figures/strong_scaling_time_linear.pdf}
         \caption{Time-to-solution.}
         \label{fig:strong_time_linear}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{0.48\textwidth}
+    \begin{subfigure}{0.8\textwidth}
         \centering
         \includegraphics[width=\textwidth]{../02_omp/02_b_strong_scaling/figures/strong_scaling_speedup_linear.pdf}
         \caption{Speedup.}
@@ -229,15 +225,18 @@ The time to solution plot and the speedup plot are shown respectively in figures
     \label{fig:strong_scaling_linear}
 \end{figure}
 
-The strong scaling results in figures \ref{fig:fig:strong_time_linear} and \ref{fig:fig:strong_speedup_linear} show a marked dependence on the problem size. For the smallest meshes, \(n=64\) and, to a lesser extent, \(n=128\), the scaling is poor and even deteriorates as the number of threads increases. In these cases, the time-to-solution is already very small for low thread counts, so the parallel overhead associated with OpenMP, such as thread management, synchronization, and barriers, becomes comparable to or larger than the useful computational work. As a consequence, the measured speedup remains limited and for \(n=64\) even drops below one, meaning that the parallel execution is slower than the serial one.\\
+The strong scaling results in figures \ref{fig:strong_time_linear} and \ref{fig:strong_speedup_linear} show a marked dependence on the problem size. For the smallest meshes, \(n=64\) and, to a lesser extent, \(n=128\), the scaling is poor and even deteriorates as the number of threads increases. In these cases, the time-to-solution is already very small for low thread counts, so the parallel overhead associated with OpenMP, such as thread management, synchronization, and barriers, becomes comparable to or larger than the useful computational work. As a consequence, the measured speedup remains limited and for \(n=64\) even drops below one, meaning that the parallel execution is slower than the serial one.\\
 
 For the intermediate problem sizes, \(n=256\) and \(n=512\), the behavior improves significantly. The time-to-solution decreases as the number of threads increases, and the corresponding speedup is clearly positive. However, the scaling is still sublinear and tends to flatten at larger thread counts. This is a typical strong scaling effect: since the total problem size is fixed, increasing the number of threads reduces the amount of work assigned to each thread, while synchronization costs and memory-access overhead become more relevant.\\
 
-The largest problem, \(n=1024\), exhibits the best scaling performance. In this case, the computational workload is sufficiently large to amortize the parallel overhead, and the speedup continues to increase up to 16 threads. Moreover, the measured speedup slightly exceeds the ideal trend at the highest thread count. This superlinear behavior can be explained by improved cache efficiency: when the domain is divided among multiple threads, the working set handled by each thread becomes smaller and may fit better into cache, thereby reducing memory traffic compared with the single-thread execution.
+The largest problem, \(n=1024\), exhibits the best scaling performance. In this case, the computational workload is sufficiently large to amortize the parallel overhead, and the speedup continues to increase up to 16 threads. Moreover, the measured speedup slightly exceeds the ideal trend at the highest thread count. This superlinear behavior can be explained by improved cache efficiency: when the domain is divided among multiple threads, the working set handled by each thread becomes smaller and may fit better into cache, thereby reducing memory traffic compared with the single-thread execution.\\
 
-Overall, these results confirm that the effectiveness of strong scaling depends strongly on the granularity of the problem. Small grids do not provide enough work to exploit many threads efficiently, whereas larger grids benefit much more from parallelization. The departure from ideal scaling at higher thread counts is consistent with the combined effects of OpenMP overhead, memory bandwidth limitations, and the serial fraction of the algorithm.\\
+Overall, small grids do not provide enough work to exploit many threads efficiently, whereas larger grids benefit much more from parallelization.\\
 
 To perfrom the strong scaling test every data reported in the plots of figures \ref{fig:strong_time_linear} and \ref{fig:strong_speedup_linear} is the average of 3 runs, and the error bars represent the standard deviation across these runs.\\
+
+\subsubsection{Use of LLMs}
+Chat GPT 5.2 was used to create code for plotting and the bash file to properly run the strong scaling analysis. It was also used to review my comments and my results.
 
 \subsection{Weak scaling [10 points]}
 To assess the weak scaling behavior of the Fisher mini-app, we measured the time-to-solution while increasing the total problem size proportionally to the number of OpenMP threads, so as to keep the workload per thread approximately constant. In particular, the tests were performed with $N_{\mathrm{CPU}} = 1,\,4,\,16,\,64 $ and with three base resolutions \(n=64\), \(n=128\), and \(n=256\). For each base resolution, the grid size was increased according to the weak scaling requirement.\\
@@ -245,14 +244,14 @@ To assess the weak scaling behavior of the Fisher mini-app, we measured the time
 Figure \ref{fig:weak_scaling_linear} reports the weak scaling results in two complementary ways. Figure \ref{fig:weak_time_problem_size} shows the time-to-solution as a function of the total problem size, with annotations indicating the corresponding grid and thread count. Figure \ref{fig:weak_speedup_threads} shows the same runtimes as a function of the number of OpenMP threads for the three base resolutions.
 \begin{figure}[htbp]
     \centering
-    \begin{subfigure}{0.48\textwidth}
+    \begin{subfigure}{0.8\textwidth}
         \centering
         \includegraphics[width=\textwidth]{../02_omp/02_c_weak_scaling/figures/weak_scaling_time_problem_size.pdf}
         \caption{Time-to-solution.}
         \label{fig:weak_time_problem_size}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{0.48\textwidth}
+    \begin{subfigure}{0.8\textwidth}
         \centering
         \includegraphics[width=\textwidth]{../02_omp/02_c_weak_scaling/figures/weak_scaling_time_threads.pdf}
         \caption{Speedup.}
@@ -262,14 +261,15 @@ Figure \ref{fig:weak_scaling_linear} reports the weak scaling results in two com
     \label{fig:weak_scaling_linear}
 \end{figure}
 
-The weak scaling results in Figure \ref{fig:weak_scaling_linear} show that the runtime does \emph{not} remain constant as the number of threads and the problem size increase proportionally. For all three base resolutions, the time-to-solution increases with increasing thread count, which indicates a departure from ideal weak scaling. This means that, although the workload per thread is kept constant in terms of grid points, the total computational cost does not scale proportionally.
+The weak scaling results in Figure \ref{fig:weak_scaling_linear} show that the runtime does not remain constant as the number of threads and the problem size increase proportionally. For all three base resolutions, the time-to-solution increases with increasing thread count, which indicates a departure from ideal weak scaling. This means that, although the workload per thread is kept constant in terms of grid points, the total computational cost does not scale proportionally.\\
 
-A first reason for this behavior is the nonlinear nature of the problem. As suggested in the exercise statement, the convergence of the Newton--CG solver depends on the spatial resolution. When the grid is refined, the number of nonlinear and linear iterations may increase, so the cost per thread is no longer strictly constant even if the number of grid points handled by each thread remains approximately the same. Therefore, part of the runtime growth is due to the numerical solver itself and not only to parallel overhead.
-
-A second contribution comes from the parallel execution. As the number of threads increases, synchronization, reductions, and memory-access overhead become more relevant. These effects further prevent ideal weak scaling, for which the runtime would be expected to stay nearly flat.
-
-More specifically, the base case \(n=64\) exhibits the best absolute runtimes, but also shows a clear increase from the smallest to the largest configuration. The same qualitative trend is observed for base \(n=128\) and \(n=256\), with larger base resolutions leading to systematically larger runtimes. In particular, the \(n=256\) series is the most expensive and grows most markedly, indicating that the increased resolution significantly affects the total solution cost.
+A first reason for this behavior is the nonlinear nature of the problem. As suggested in the exercise statement, the convergence of the Newton--CG solver depends on the spatial resolution. When the grid is refined, the number of nonlinear and linear iterations may increase, so the cost per thread is no longer strictly constant even if the number of grid points handled by each thread remains approximately the same. Therefore, part of the runtime growth is due to the numerical solver itself and not only to parallel overhead.\\
+A second contribution comes from the parallel execution. As the number of threads increases, synchronization, reductions, and memory-access overhead become more relevant. These effects further prevent ideal weak scaling, for which the runtime would be expected to stay nearly flat.\\
+More specifically, the base case \(n=64\) exhibits the best absolute runtimes, but also shows a clear increase from the smallest to the largest configuration. The same qualitative trend is observed for base \(n=128\) and \(n=256\), with larger base resolutions leading to systematically larger runtimes. In particular, the \(n=256\) series is the most expensive and grows most markedly, indicating that the increased resolution significantly affects the total solution cost.\\
 
 Overall, the results show that the code exhibits only limited weak scaling. The increase in runtime with thread count suggests that keeping the number of grid points per thread constant is not sufficient to maintain a constant time-to-solution for this application. The main reason is that the computational work is influenced not only by the local grid size per thread, but also by the resolution-dependent convergence of the nonlinear solver, together with the usual OpenMP overheads and memory effects.
+
+\subsubsection{Use of LLMs}
+Chat GPT 5.2 was used to create code for plotting and the bash file to properly run the strong scaling analysis. It was also used to review my comments and my results.
 
 \end{document}

@@ -1,4 +1,4 @@
-filename=project_03_riccardo_polo
+filename=project_03_polo_riccardo
 
 pdf:
 	pdflatex ${filename}

@@ -157,7 +157,7 @@ std::cout << "version   :: C++ serial" << std::endl;
 \end{lstlisting}
 \subsection{Linear algebra kernel [10 Points]}
 All the functions in the file \texttt{linalg.cpp} were parallelized using the \texttt{\#pragma omp parallel for} directive to parallelize the loops.\\
-For the function \texttt{hpc\_norm2} we have to take into account the reduction of the sum, which is done using the \texttt{reduction(+:sum)} clause.\\
+For the function \texttt{hpc\_norm2} and \texttt{hpc\_dot} we have to take into account the reduction of the sum, which is done using the \texttt{reduction(+:sum)} clause.\\
 \subsection{The diffusion stencil [15 Points]}
 The parallelization of the \texttt{diffusion()} routine is based on OpenMP loop-level parallelism.\\  
 The largest amount of work is associated with the interior points, since they constitute almost the whole domain.  

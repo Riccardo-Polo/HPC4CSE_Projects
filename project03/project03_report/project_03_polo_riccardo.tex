@@ -52,7 +52,7 @@ The nonlinear system is solved with Newton's method applied to the residual equa
 We were asked to implement the linear algebra functions and the stencil operators, which are used in the Conjugate Gradient method and in the Newton's method, respectively.\\
 One can look at the linear algebra functions in the file \texttt{linalg.cpp} and the stencil operators in the file \texttt{operators.cpp}.\\
 In particular for the stencil operators we have to implement the residual function $f_{(i,j)}^k$ for the interior points, and for the points on the boundaries.\\
-The residual function in the interior points is given by eq. 7 of the project handout. For the boundery points, we have to take into account the Dirichlet boundary conditions, obtaining:
+The residual function in the interior points is given by eq. 7 of the project handout. For the boundary points, we have to take into account the Dirichlet boundary conditions, obtaining:
 \begin{align*}
     \text{East: }\quad &f_{(n+1,j)}^k = -(4+\alpha) s_{(n+1,j)}^k + s_{(n,j)}^k + 0.1 + s_{(n+1,j-1)}^k + s_{(n+1,j+1)}^k + \beta{s_{(n+1,j)}^k}(1-s_{(n+1,j)}^k) + \alpha s_{(n+1,j)}^{k-1}\\
     \text{West: }\quad &f_{(0,j)}^k = -(4+\alpha) s_{(0,j)}^k + 0.1 + s_{(1,j)}^k + s_{(0,j-1)}^k + s_{(0,j+1)}^k + \beta{s_{(0,j)}^k}(1-s_{(0,j)}^k) + \alpha s_{(0,j)}^{k-1}\\

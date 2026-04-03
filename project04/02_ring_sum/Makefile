@@ -1,5 +1,5 @@
 CC     = mpicc
-CFLAGS =
+CFLAGS = -O2
 
 ring_sum: ring_sum.c
 	$(CC) $(CFLAGS) $^ -o $@

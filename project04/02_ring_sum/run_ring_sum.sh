@@ -8,7 +8,7 @@
 #SBATCH --time=00:05:00
 #SBATCH --mem-per-cpu=256M
 
-module load stack/2024-06 gcc/12.2.0 openmpi/4.1.6
+module load stack gcc openmpi
 
 make clean
 make

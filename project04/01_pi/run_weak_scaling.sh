@@ -29,7 +29,7 @@ printf "# procs repeat pi N time\n" > "$OUTFILE"
 for p in "${THREADS[@]}"; do
   N=$((p * N_PER_PROC))
   for r in $(seq 1 "$REPEATS"); do
-    line=$(srun --mpi=pmix -n "$p" ./pi_mpi "$N" | tail -n 1)
+    line=$(srun -n "$p" ./pi_mpi "$N" | tail -n 1)
     pi=$(awk '{print $1}' <<< "$line")
     n=$(awk '{print $2}' <<< "$line")
     procs=$(awk '{print $3}' <<< "$line")

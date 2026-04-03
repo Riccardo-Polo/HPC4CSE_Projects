@@ -1,1 +1,5 @@
 /venv
+*.o
+pi_mpi
+pi_serial
+

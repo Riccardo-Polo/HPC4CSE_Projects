@@ -37,4 +37,4 @@ for p in "${THREADS[@]}"; do
   done
 done
 
-python3 plot_scaling.py strong "$OUTFILE" figures/strong_scaling_time.pdf figures/strong_scaling_speedup.pdf
+python plot_scaling.py strong "$OUTFILE" figures/strong_scaling_time.pdf figures/strong_scaling_speedup.pdf

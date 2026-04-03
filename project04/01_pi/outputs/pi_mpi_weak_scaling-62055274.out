@@ -1,0 +1,6 @@
+rm -f *.o pi_serial pi_mpi *.data *.pdf
+gcc -O3 -march=native -c pi_serial.c -o pi_serial.o
+gcc -O3 -march=native -c walltime.c -o walltime.o
+gcc -O3 -march=native pi_serial.o walltime.o -o pi_serial
+mpicc -O3 -march=native -c pi_mpi.c -o pi_mpi.o
+mpicc -O3 -march=native pi_mpi.o walltime.o -o pi_mpi

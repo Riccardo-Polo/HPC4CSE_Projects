@@ -38,4 +38,4 @@ for p in "${THREADS[@]}"; do
   done
 done
 
-python3 plot_scaling.py weak "$OUTFILE" figures/weak_scaling_time.pdf figures/weak_scaling_efficiency.pdf
+python plot_scaling.py weak "$OUTFILE" figures/weak_scaling_time.pdf figures/weak_scaling_efficiency.pdf

@@ -97,8 +97,8 @@ int main(int argc, char *argv[]) {
     
     // TODO: find your North/South/West/East neighbor using the new
     //       communicator, see MPI_Cart_shift()
-    MPI_Cart_shift(comm_cart, 0 , 1 , &rank_north , &rank_south);
-    MPI_Cart_shift(comm_cart, 1 , 1 , &rank_west , &rank_east);
+    MPI_Cart_shift(comm_cart, 1 , 1 , &rank_south , &rank_north);
+    MPI_Cart_shift(comm_cart, 0 , 1 , &rank_west , &rank_east);
 
     // TODO: create derived datatype data_ghost, create a datatype for sending
     //       the column, see MPI_Type_vector() and MPI_Type_commit()

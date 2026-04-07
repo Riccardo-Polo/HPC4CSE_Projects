@@ -85,24 +85,51 @@ int main(int argc, char *argv[]) {
 
     // TODO: set the dimensions of the processor grid and periodic boundaries
     // in both dimensions 
-    //dims[0]=
-    //dims[1]=
-    //periods[0]=
-    //periods[1]=
+    dims[0]= 3;
+    dims[1]= 4;
+    periods[0]= 1;
+    periods[1]= 1;
 
     // TODO: Create a Cartesian communicator (3*4) with periodic boundaries and
     //       use it to find your neighboring ranks in all dimensions in a
     //       cyclic manner. Use MPI_Cart_create for example.
+    MPI_Comm comm_cart;
+    MPI_Cart_create(MPI_COMM_WORLD, 2 ,dims , periods , 0 , &comm_cart);
     
     // TODO: find your North/South/West/East neighbor using the new
     //       communicator, see MPI_Cart_shift()
+    MPI_Cart_shift(comm_cart, 0 , 1 , &rank_north , &rank_south);
+    MPI_Cart_shift(comm_cart, 1 , 1 , &rank_west , &rank_east);
 
     // TODO: create derived datatype data_ghost, create a datatype for sending
     //       the column, see MPI_Type_vector() and MPI_Type_commit()
 
-    //  TODO: ghost cell exchange with the neighbouring cells in all directions
+    MPI_Datatype data_ghost;
+    MPI_Type(DOMAINSIZE ,1 , DOMAINSIZE , MPI_DOUBLE , &data_ghost);
+    MPI_Type_commit(&data_ghost);
+
+    // TODO: ghost cell exchange with the neighbouring cells in all directions
     //        Use MPI_Sendrecv for example.
 
+    // Send my top row to north, receive from south into bottom ghost row
+    MPI_Sendrecv(&data[DOMAINSIZE], DOMAINSIZE, MPI_DOUBLE, rank_north, 0,
+                 &data[DOMAINSIZE*(DOMAINSIZE-1)], DOMAINSIZE, MPI_DOUBLE, rank_south, 0,
+                 comm_cart, MPI_STATUS_IGNORE);
+
+    // Send my bottom row to south, receive from north into top ghost row
+    MPI_Sendrecv(&data[DOMAINSIZE*(DOMAINSIZE-2)], DOMAINSIZE, MPI_DOUBLE, rank_south, 0,
+                 &data[0], DOMAINSIZE, MPI_DOUBLE, rank_north, 0,
+                 comm_cart, MPI_STATUS_IGNORE);
+
+    // Send my right col to east, receive from west into left ghost col
+    MPI_Sendrecv(&data[DOMAINSIZE-2], 1 , data_ghost , rank_east, 0,
+                 &data[0], 1 , data_ghost , rank_west, 0,
+                 comm_cart, MPI_STATUS_IGNORE);
+
+    // Send my left col to west, receive from east into right ghost col
+    MPI_Sendrecv(&data[1], 1 , data_ghost , rank_west, 0,
+                 &data[DOMAINSIZE-1], 1 , data_ghost , rank_east, 0,
+                 comm_cart, MPI_STATUS_IGNORE);
     
     // print
     int io_rank = 5;
@@ -126,6 +153,8 @@ int main(int argc, char *argv[]) {
 
     // Free MPI resources (e.g., types and communicators)
     // TODO
+    MPI_Type_free(&data_ghost);
+    MPI_Comm_free(&comm_cart);
 
     // Finalize MPI
     MPI_Finalize();

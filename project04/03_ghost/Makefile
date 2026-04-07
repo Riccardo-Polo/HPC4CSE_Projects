@@ -1,5 +1,5 @@
 CC     = mpicc
-CFLAGS =
+CFLAGS = -O2
 
 ghost: ghost.c
 	$(CC) $(CFLAGS) $^ -o $@

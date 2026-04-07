@@ -93,7 +93,6 @@ int main(int argc, char *argv[]) {
     // TODO: Create a Cartesian communicator (3*4) with periodic boundaries and
     //       use it to find your neighboring ranks in all dimensions in a
     //       cyclic manner. Use MPI_Cart_create for example.
-    MPI_Comm comm_cart;
     MPI_Cart_create(MPI_COMM_WORLD, 2 ,dims , periods , 0 , &comm_cart);
     
     // TODO: find your North/South/West/East neighbor using the new

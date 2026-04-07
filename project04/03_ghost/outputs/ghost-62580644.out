@@ -1,0 +1,2 @@
+rm -f ghost
+mpicc -O2 ghost.c -o ghost

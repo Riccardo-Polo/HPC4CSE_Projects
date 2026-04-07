@@ -1,0 +1,31 @@
+ghost.c: In function 'main':
+ghost.c:96:14: error: redeclaration of 'comm_cart' with no linkage
+   96 |     MPI_Comm comm_cart;
+      |              ^~~~~~~~~
+ghost.c:58:14: note: previous declaration of 'comm_cart' with type 'MPI_Comm' {aka 'struct ompi_communicator_t *'}
+   58 |     MPI_Comm comm_cart;
+      |              ^~~~~~~~~
+ghost.c:107:18: error: redeclaration of 'data_ghost' with no linkage
+  107 |     MPI_Datatype data_ghost;
+      |                  ^~~~~~~~~~
+ghost.c:59:18: note: previous declaration of 'data_ghost' with type 'MPI_Datatype' {aka 'struct ompi_datatype_t *'}
+   59 |     MPI_Datatype data_ghost;
+      |                  ^~~~~~~~~~
+ghost.c:108:5: warning: implicit declaration of function 'MPI_Type'; did you mean 'MPI_Type_ub'? [-Wimplicit-function-declaration]
+  108 |     MPI_Type(DOMAINSIZE ,1 , DOMAINSIZE , MPI_DOUBLE , &data_ghost);
+      |     ^~~~~~~~
+      |     MPI_Type_ub
+make: *** [Makefile:5: ghost] Error 1
+[2026-04-07T09:58:29.112+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project04/03_ghost/./ghost: No such file or directory
+[2026-04-07T09:58:29.111+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project04/03_ghost/./ghost: No such file or directory
+[2026-04-07T09:58:29.114+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project04/03_ghost/./ghost: No such file or directory
+[2026-04-07T09:58:29.114+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project04/03_ghost/./ghost: No such file or directory
+[2026-04-07T09:58:29.114+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project04/03_ghost/./ghost: No such file or directory
+[2026-04-07T09:58:29.114+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project04/03_ghost/./ghost: No such file or directory
+[2026-04-07T09:58:29.116+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project04/03_ghost/./ghost: No such file or directory
+[2026-04-07T09:58:29.116+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project04/03_ghost/./ghost: No such file or directory
+[2026-04-07T09:58:29.116+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project04/03_ghost/./ghost: No such file or directory
+[2026-04-07T09:58:29.116+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project04/03_ghost/./ghost: No such file or directory
+[2026-04-07T09:58:29.116+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project04/03_ghost/./ghost: No such file or directory
+[2026-04-07T09:58:29.116+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project04/03_ghost/./ghost: No such file or directory
+srun: error: eu-a2p-418: tasks 0-11: Exited with exit code 2

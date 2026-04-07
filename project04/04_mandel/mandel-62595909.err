@@ -1,6 +1,0 @@
-/var/spool/slurm/slurmd/state/job62595909/slurm_script: line 21: mpirun: command not found
-/var/spool/slurm/slurmd/state/job62595909/slurm_script: line 21: mpirun: command not found
-/var/spool/slurm/slurmd/state/job62595909/slurm_script: line 21: mpirun: command not found
-/var/spool/slurm/slurmd/state/job62595909/slurm_script: line 21: mpirun: command not found
-/var/spool/slurm/slurmd/state/job62595909/slurm_script: line 21: mpirun: command not found
-Warning: empty y range [0:0], adjusting to [-1:1]

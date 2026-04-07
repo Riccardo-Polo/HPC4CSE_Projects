@@ -102,8 +102,6 @@ int main(int argc, char *argv[]) {
 
     // TODO: create derived datatype data_ghost, create a datatype for sending
     //       the column, see MPI_Type_vector() and MPI_Type_commit()
-
-    MPI_Datatype data_ghost;
     MPI_Type(DOMAINSIZE ,1 , DOMAINSIZE , MPI_DOUBLE , &data_ghost);
     MPI_Type_commit(&data_ghost);
 

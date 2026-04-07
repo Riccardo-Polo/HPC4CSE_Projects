@@ -97,35 +97,48 @@ int main(int argc, char *argv[]) {
     
     // TODO: find your North/South/West/East neighbor using the new
     //       communicator, see MPI_Cart_shift()
-    MPI_Cart_shift(comm_cart, 1 , 1 , &rank_south , &rank_north);
-    MPI_Cart_shift(comm_cart, 0 , 1 , &rank_west , &rank_east);
+    MPI_Cart_shift(comm_cart, 1, 1, &rank_south, &rank_north);
+    MPI_Cart_shift(comm_cart, 0, 1, &rank_west, &rank_east);
 
     // TODO: create derived datatype data_ghost, create a datatype for sending
     //       the column, see MPI_Type_vector() and MPI_Type_commit()
-    MPI_Type_vector(DOMAINSIZE ,1 , DOMAINSIZE , MPI_DOUBLE , &data_ghost);
+
+    MPI_Type_vector(SUBDOMAIN, 1, DOMAINSIZE, MPI_DOUBLE, &data_ghost);
     MPI_Type_commit(&data_ghost);
 
     // TODO: ghost cell exchange with the neighbouring cells in all directions
     //        Use MPI_Sendrecv for example.
 
-    // Send my top row to north, receive from south into bottom ghost row
-    MPI_Sendrecv(&data[DOMAINSIZE], DOMAINSIZE, MPI_DOUBLE, rank_north, 0,
-                 &data[DOMAINSIZE*(DOMAINSIZE-1)], DOMAINSIZE, MPI_DOUBLE, rank_south, 0,
+    /* send top interior row (j = SUBDOMAIN) to north, receive bottom ghost row (j = 0) from south */
+    MPI_Sendrecv(&data[SUBDOMAIN + 1 * DOMAINSIZE], 1, data_ghost,
+                 rank_north, 0,
+                 &data[0 + 1 * DOMAINSIZE], 1, data_ghost,
+                 rank_south, 0,
                  comm_cart, MPI_STATUS_IGNORE);
 
-    // Send my bottom row to south, receive from north into top ghost row
-    MPI_Sendrecv(&data[DOMAINSIZE*(DOMAINSIZE-2)], DOMAINSIZE, MPI_DOUBLE, rank_south, 0,
-                 &data[0], DOMAINSIZE, MPI_DOUBLE, rank_north, 0,
+    /* send bottom interior row (j = 1) to south,
+       receive top ghost row (j = SUBDOMAIN+1) from north */
+    MPI_Sendrecv(&data[1 + 1 * DOMAINSIZE], 1, data_ghost,
+                 rank_south, 1,
+                 &data[(SUBDOMAIN + 1) + 1 * DOMAINSIZE], 1, data_ghost,
+                 rank_north, 1,
                  comm_cart, MPI_STATUS_IGNORE);
 
-    // Send my right col to east, receive from west into left ghost col
-    MPI_Sendrecv(&data[DOMAINSIZE-2], 1 , data_ghost , rank_east, 0,
-                 &data[0], 1 , data_ghost , rank_west, 0,
+
+    /* send right interior column (i = SUBDOMAIN) to east,
+       receive left ghost column (i = 0) from west */
+    MPI_Sendrecv(&data[1 + SUBDOMAIN * DOMAINSIZE], SUBDOMAIN, MPI_DOUBLE,
+                 rank_east, 2,
+                 &data[1 + 0 * DOMAINSIZE], SUBDOMAIN, MPI_DOUBLE,
+                 rank_west, 2,
                  comm_cart, MPI_STATUS_IGNORE);
 
-    // Send my left col to west, receive from east into right ghost col
-    MPI_Sendrecv(&data[1], 1 , data_ghost , rank_west, 0,
-                 &data[DOMAINSIZE-1], 1 , data_ghost , rank_east, 0,
+    /* send left interior column (i = 1) to west,
+       receive right ghost column (i = SUBDOMAIN+1) from east */
+    MPI_Sendrecv(&data[1 + 1 * DOMAINSIZE], SUBDOMAIN, MPI_DOUBLE,
+                 rank_west, 3,
+                 &data[1 + (SUBDOMAIN + 1) * DOMAINSIZE], SUBDOMAIN, MPI_DOUBLE,
+                 rank_east, 3,
                  comm_cart, MPI_STATUS_IGNORE);
     
     // print

@@ -18,7 +18,7 @@ rm -f perf.data
 for np in 1 2 4 8 16
 do
   printf "Computing Mandelbrot set with %3d proc(s)...\n" $np
-  mpirun -np $np ./mandel_mpi > tmp.txt
+  srun -n $np ./mandel_mpi > tmp.txt
 
   for i in `seq 0 $((np-1))`
   do

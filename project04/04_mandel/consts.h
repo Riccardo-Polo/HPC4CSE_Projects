@@ -51,8 +51,8 @@ Partition createPartition(int mpi_rank, int mpi_size) {
     // TODO: Create cartesian communicator (p.comm), we do not allow the
     //       reordering of ranks here, see MPI_Cart_create()
     MPI_Comm cart_comm;
-    int periods[2] = {1 , 1};
-    MPI_Cart_create(MPI_COMM_WORLD , 2 , dims , periods , 0);
+    int periods[2] = {1, 1};
+    MPI_Cart_create(MPI_COMM_WORLD, 2, dims, periods, 0, &cart_comm);
     p.comm = cart_comm;
     
     // TODO: Determine the coordinates in the Cartesian grid (p.x, p.y),

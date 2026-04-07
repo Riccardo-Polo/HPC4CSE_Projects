@@ -92,6 +92,9 @@ int main(int argc, char** argv) {
     // TODO: send local partition c to the master process
     // printf("[Process %d] Sending partition %d of size %ld\n",
     //        mpi_rank, mpi_rank, d.nx*d.ny);
+    MPI_Send(c, d.nx * d.ny, MPI_INT, 0, 0, p.comm);
+    printf("[Process %d] Sent partition %d of size %ld\n",
+           mpi_rank, mpi_rank, d.nx*d.ny);
   }
   /****************************************************************************/
   // Write the image
@@ -113,6 +116,9 @@ int main(int argc, char** argv) {
       //       its data)
       // printf("[MASTER] Receiving partition %d of size %ld\n",
       //        proc, d1.nx*d1.ny);
+      MPI_Recv(c, d1.nx * d1.ny, MPI_INT, proc, 0, p.comm, MPI_STATUS_IGNORE);
+      printf("[MASTER] Received partition %d of size %ld\n",
+             proc, d1.nx*d1.ny);
 
       // write the partition of the process proc
       for (j = 0; j < d1.ny; j++) {
@@ -145,7 +151,7 @@ int main(int argc, char** argv) {
   if (mpi_rank == 0) ppm_write(&pPpm, "mandel.ppm");
 
   // Free and finalize MPI
-  //MPI_Comm_free(&p.comm); TODO: uncomment after you implement createPartition
+  MPI_Comm_free(&p.comm); // TODO: uncomment after you implement createPartition
   free(c);
   MPI_Finalize();
 

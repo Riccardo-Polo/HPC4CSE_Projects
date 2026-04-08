@@ -74,9 +74,50 @@ MPI_Finalize();
 Each process starts from its rank and iterates over the indices of the subintervals assigned to it by incrementing the index by the total number of processes in each iteration. This way, each process computes the contribution to $\pi$ from its assigned subintervals without overlap. After the local sums are computed, they are reduced to a single sum using \texttt{MPI\_Reduce}, which is then used to compute the final value of $\pi$ on the root process (rank 0).
 
 \subsection{Strong scaling}
-To evaluate the strong scaling of the parallel $\pi$ computation, we run the program with a fixed problem size $N$ and varying number of processes. The results are shown in.
+To evaluate the strong scaling of the parallel $\pi$ computation, we run the program with a fixed problem size $N$ and varying number of processes. The results are shown in figure ~\ref{fig:strong_scaling}, where we plot the speedup achieved by the parallel implementation compared to the serial version.
+
+\begin{figure}[ht]
+        \centering
+        \includegraphics[scale=0.6]{../01_pi/figures/strong_scaling_speedup.pdf}
+        \caption{Strong scaling speedup of the parallel $\pi$ computation. Obtained with $N=10^9$.}
+        \label{fig:strong_scaling}
+\end{figure}
+
+\begin{table}[!h]
+\centering
+\caption{Strong scaling results using the OpenMP reduction clause ($N=10^9$).}
+\label{tab:strong_scaling_reduction}
+\begin{tabular}{ccc}
+\hline
+Threads & Speedup \\
+\hline
+1   & 1.00 \\
+2   & 1.84 \\
+4   & 3.26 \\
+8   & 6.39 \\
+16  & 8.86 \\
+32  & 17.66 \\
+64  & 31.06 \\
+\hline
+\end{tabular}
+\end{table}
+The strong scaling results obtained with MPI show a near-linear increase in speedup for a small number of processes, closely following the ideal trend. As the number of processes increases, the measured speedup progressively deviates from the ideal curve, highlighting the impact of communication overhead and reduced computational workload per process. Nevertheless, the scalability remains good, reaching a speedup close to 100 with 128 processes.\\
+
+Comparing these results with the OpenMP reduction implementation in Table~\ref{tab:strong_scaling_reduction}, we observe a very similar scaling behavior. Both approaches exhibit efficient parallelization at low to moderate parallelism and a loss of efficiency at higher core counts. However, OpenMP achieves slightly better efficiency at comparable core counts, likely due to the shared-memory model which avoids explicit communication overhead.
+
 
 \subsection{Weak scaling}
+The results of the weak scaling tests are shown in figure ~\ref{fig:weak_scaling_efficiency}, where we plot the weak scaling efficiency as a function of the number of processes.\\
+
+The weak scaling efficiency remains high across all tested configurations, staying close to the ideal value of 1. This indicates that the workload is well balanced among MPI processes and that the parallelization strategy is effective.\\
+
+A slight degradation in efficiency is observed as the number of processes increases, particularly at the highest core counts. This behavior is expected and can be attributed to increasing communication overhead and synchronization costs, which become more significant as more processes are involved.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[scale = 0.6]{../01_pi/figures/weak_scaling_efficiency.pdf}
+    \caption{Weak scaling efficiency of the parallel $\pi$ computation.}
+    \label{fig:weak_scaling_efficiency}
+\end{figure}
 
 \newpage
 \section{Ring sum using MPI [10 points]}
@@ -114,6 +155,113 @@ To avoid deadlock issues, the implementation uses the \texttt{MPI\_Sendrecv} rou
 
 \newpage
 \section{Cartesian domain decomposition and ghost cells exchange [20 points]}
+
+\subsection{Cartesian 2D communicator}
+In listing \ref{lst:cartesian_comm} we show the implementation of the Cartesian 2D communicator using MPI.
+\begin{lstlisting}[style=grayverbatim, caption={Cartesian 2D communicator using MPI}, label={lst:cartesian_comm}]
+int rank, size, i, j, dims[2], periods[2], rank_north, rank_south, rank_west, rank_east;
+double data[DOMAINSIZE*DOMAINSIZE];
+MPI_Request request;
+MPI_Status status;
+MPI_Comm comm_cart;
+MPI_Datatype data_ghost;
+
+dims[0]= 3;
+dims[1]= 4;
+periods[0]= 1;
+periods[1]= 1;
+
+MPI_Cart_create(MPI_COMM_WORLD, 2 ,dims , periods , 0 , &comm_cart);
+
+MPI_Cart_shift(comm_cart, 1, 1, &rank_south, &rank_north);
+MPI_Cart_shift(comm_cart, 0, 1, &rank_west, &rank_east);
+\end{lstlisting}
+
+The code first defines the Cartesian topology of the process grid by setting
+\texttt{dims[0] = 3} and \texttt{dims[1] = 4}, corresponding to a $3 \times 4$
+decomposition. The array \texttt{periods} is set to 1 in both directions, meaning that the topology is periodic both horizontally and vertically: processes at one boundary are connected to processes on the opposite boundary. This implements the cyclic communication pattern required by the exercise.\\
+
+The call to \texttt{MPI\_Cart\_create} constructs a new communicator, \texttt{comm\_cart}, in which all processes are arranged according to this two-dimensional Cartesian topology. Using a Cartesian communicator makes neighbor discovery much simpler than manually computing ranks.\\
+
+The two calls to \texttt{MPI\_Cart\_shift} are then used to determine the ranks of the neighboring processes in the two coordinate directions. In particular, the first call identifies the south and north neighbors, while the second call identifies the west and east neighbors.
+
+\subsection{Derived data type for column boundary}
+In listing \ref{lst:derived_type} we show the implementation of the derived data type for column boundary using MPI.
+\begin{lstlisting}[style=grayverbatim, caption={Derived data type for column boundary using MPI}, label={lst:derived_type}]
+MPI_Type_vector(SUBDOMAIN, 1, DOMAINSIZE, MPI_DOUBLE, &data_ghost);
+MPI_Type_commit(&data_ghost);
+\end{lstlisting}
+
+The ghost-cell exchange in the horizontal direction involves non-contiguous memory, because a column of the local two-dimensional array is stored with a stride equal to
+\texttt{DOMAINSIZE}. To communicate such a column efficiently, a derived MPI datatype is created with \texttt{MPI\_Type\_vector}.\\
+
+This datatype describes \texttt{SUBDOMAIN} elements of type \texttt{MPI\_DOUBLE}, with one element taken from each row and a spacing of \texttt{DOMAINSIZE} elements between successive entries. In this way, the datatype represents exactly one column of the local subdomain. After its definition, \texttt{MPI\_Type\_commit} makes the
+datatype available for communication.\\
+
+\subsection{Exchange ghost cells}
+In listing \ref{lst:ghost_exchange} we show the implementation of the ghost cells exchange using MPI.
+\begin{lstlisting}[style=grayverbatim, caption={Ghost cells exchange using MPI}, label={lst:ghost_exchange}]
+/* send top interior row (j = SUBDOMAIN) to north, receive bottom ghost row (j = 0) from south */
+    MPI_Sendrecv(&data[SUBDOMAIN + 1 * DOMAINSIZE], 1, data_ghost,
+                 rank_north, 0,
+                 &data[0 + 1 * DOMAINSIZE], 1, data_ghost,
+                 rank_south, 0,
+                 comm_cart, MPI_STATUS_IGNORE);
+
+    /* send bottom interior row (j = 1) to south,
+       receive top ghost row (j = SUBDOMAIN+1) from north */
+    MPI_Sendrecv(&data[1 + 1 * DOMAINSIZE], 1, data_ghost,
+                 rank_south, 1,
+                 &data[(SUBDOMAIN + 1) + 1 * DOMAINSIZE], 1, data_ghost,
+                 rank_north, 1,
+                 comm_cart, MPI_STATUS_IGNORE);
+
+
+    /* send right interior column (i = SUBDOMAIN) to east,
+       receive left ghost column (i = 0) from west */
+    MPI_Sendrecv(&data[1 + SUBDOMAIN * DOMAINSIZE], SUBDOMAIN, MPI_DOUBLE,
+                 rank_east, 2,
+                 &data[1 + 0 * DOMAINSIZE], SUBDOMAIN, MPI_DOUBLE,
+                 rank_west, 2,
+                 comm_cart, MPI_STATUS_IGNORE);
+
+    /* send left interior column (i = 1) to west,
+       receive right ghost column (i = SUBDOMAIN+1) from east */
+    MPI_Sendrecv(&data[1 + 1 * DOMAINSIZE], SUBDOMAIN, MPI_DOUBLE,
+                 rank_west, 3,
+                 &data[1 + (SUBDOMAIN + 1) * DOMAINSIZE], SUBDOMAIN, MPI_DOUBLE,
+                 rank_east, 3,
+                 comm_cart, MPI_STATUS_IGNORE);
+\end{lstlisting}
+
+This part of the code performs the exchange of ghost cells with the four neighboring processes of the Cartesian grid. The communication is split into four steps, one for
+each boundary: north, south, east, and west. In each case, the interior boundary of the local subdomain is sent to the corresponding neighbor, while the matching ghost layer is received from the opposite side.\\
+
+The first two \texttt{MPI\_Sendrecv} calls handle the exchange in the vertical direction. The top interior boundary is sent to the north neighbor and the bottom ghost layer is received from the south neighbor. Similarly, the bottom interior boundary is sent to the south neighbor and the top ghost layer is received from the north neighbor. Because the domain is periodic, these communications also work correctly for processes located at the physical boundaries of the global domain.\\
+
+The last two \texttt{MPI\_Sendrecv} calls handle the exchange in the horizontal direction. Here the communication involves columns, so the memory layout must be treated carefully. One boundary column is exchanged with the east and west neighbors,
+and the received values are stored in the corresponding ghost columns.\\
+
+The use of \texttt{MPI\_Sendrecv} is particularly important because it avoids possible deadlock issues that could arise if all processes tried to perform blocking send operations before posting matching receives. By combining send and receive into one single communication call, the ghost-cell exchange is both safe and simple to implement.\\
+
+The output is shown in listing \ref{lst:ghost_output}.\\
+
+\begin{lstlisting}[style=grayverbatim, caption={Output of ghost cell exchange}, label={lst:ghost_output}]
+North rank 6, South rank 4, West rank 1, East rank 9
+data of rank 5 after communication
+j
+^
+| -1.0  6.0  6.0  6.0  6.0  6.0  6.0 -1.0 
+|  1.0  5.0  5.0  5.0  5.0  5.0  5.0  9.0 
+|  1.0  5.0  5.0  5.0  5.0  5.0  5.0  9.0 
+|  1.0  5.0  5.0  5.0  5.0  5.0  5.0  9.0 
+|  1.0  5.0  5.0  5.0  5.0  5.0  5.0  9.0 
+|  1.0  5.0  5.0  5.0  5.0  5.0  5.0  9.0 
+|  1.0  5.0  5.0  5.0  5.0  5.0  5.0  9.0 
+| -1.0  4.0  4.0  4.0  4.0  4.0  4.0 -1.0 
+------------------------------------------> i
+\end{lstlisting}
+
 
 \newpage
 \section{Parallelizing the Mandelbrot set using MPI [30 points]}

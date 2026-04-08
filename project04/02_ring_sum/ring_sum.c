@@ -10,19 +10,17 @@ int main(int argc, char *argv[]) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
   // IMPLEMENT: Ring sum algorithm
-  int sum = 0; // initialize sum
-  for (int i = 0; i < size; i++) {
-    sum += rank; // add own rank to sum
-
-    // Send sum to next process and receive from previous process
-    int send_to = (rank + 1) % size; // next process
-    int recv_from = (rank - 1 + size) % size; // previous process
+  int sum = rank;
+  for (int i = 0; i < size - 1; i++) {
+    int send_to = (rank + 1) % size;
+    int recv_from = (rank - 1 + size) % size;
 
     int recv_sum;
-    MPI_Send(&sum, 1, MPI_INT, send_to, 0, MPI_COMM_WORLD); // send sum
-    MPI_Recv(&recv_sum, 1, MPI_INT, recv_from, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE); // receive sum
+    MPI_Sendrecv(&sum, 1, MPI_INT, send_to, 0,
+                &recv_sum, 1, MPI_INT, recv_from, 0,
+                MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-    sum = recv_sum; // update sum with received value
+    sum += recv_sum;
   }
   printf("Process %i: Sum = %i\n", rank, sum);
 

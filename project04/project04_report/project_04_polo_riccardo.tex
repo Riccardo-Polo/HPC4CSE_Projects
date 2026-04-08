@@ -76,16 +76,47 @@ Each process starts from its rank and iterates over the indices of the subinterv
 \subsection{Strong scaling}
 To evaluate the strong scaling of the parallel $\pi$ computation, we run the program with a fixed problem size $N$ and varying number of processes. The results are shown in.
 
-
+\subsection{Weak scaling}
 
 \newpage
 \section{Ring sum using MPI [10 points]}
+In listing \ref{lst:ring_sum} we show the implementation of the ring sum using MPI.
+\begin{lstlisting}[style=grayverbatim, caption={Ring sum using MPI}, label={lst:ring_sum}]
+int size, rank;
+MPI_Init(&argc, &argv);
+MPI_Comm_size(MPI_COMM_WORLD, &size);
+MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+// IMPLEMENT: Ring sum algorithm
+int sum = rank;
+for (int i = 0; i < size - 1; i++) {
+  int send_to = (rank + 1) % size;
+  int recv_from = (rank - 1 + size) % size;
+
+  int recv_sum;
+  MPI_Sendrecv(&sum, 1, MPI_INT, send_to, 0,
+              &recv_sum, 1, MPI_INT, recv_from, 0,
+              MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+  sum += recv_sum;
+}
+printf("Process %i: Sum = %i\n", rank, sum);
+
+// Finalize MPI
+MPI_Finalize();
+\end{lstlisting}
+
+The implementation uses a \textbf{ring communication pattern}, where each process exchanges data only with its immediate neighbors in a cyclic topology. Specifically, process $i$ sends its current partial sum to process $(i+1) \bmod P$ and receives a value from process $(i-1 + P) \bmod P$, where $P$ is the total number of processes.\\
+
+Each process initializes its local sum with its rank and performs $P-1$ communication steps. At every iteration, it forwards its current partial sum to the next process and accumulates the value received from the previous one. This ensures that, after all iterations, every process has received contributions from all other processes and therefore holds the global sum.\\
+
+To avoid deadlock issues, the implementation uses the \texttt{MPI\_Sendrecv} routine instead of separate blocking send and receive calls. This function performs the send and receive operations in a single, coordinated step, ensuring that communication progresses safely without requiring explicit ordering between processes.
 
 \newpage
 \section{Cartesian domain decomposition and ghost cells exchange [20 points]}
 
 \newpage
-\section{Parallelizing the Mandelbrot set using MPI [30 oints]}
+\section{Parallelizing the Mandelbrot set using MPI [30 points]}
 
 \newpage
 \section{Parallel matrix-vector multiplication and the power method

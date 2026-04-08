@@ -1,5 +1,27 @@
 \documentclass[unicode,10pt,a4paper,oneside,numbers=endperiod,openany]{scrartcl}
-
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepgfplotslibrary{colorbrewer} % better colors
+\pgfplotsset{compat=1.18}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{multirow}
+\lstdefinestyle{grayverbatim}{
+  basicstyle=\ttfamily,%
+  backgroundcolor=\color{gray!10},%
+  frame=single,%
+  framesep=3pt,%
+  breaklines=true,%
+  columns=fullflexible%
+  numberstyle = \tiny,%
+  stepnumber = 1,%
+  numbersep = 5pt,%
+  numbers = left%
+}
+\definecolor{lightbluehighlight}{RGB}{204,232,255}
 \input{assignment.sty}
 
 \begin{document}
@@ -20,6 +42,41 @@
 
 \newpage
 \section{Computing $\pi$ with MPI [10 points]}
+%\input{sections/01_pi.tex}
+\subsection{Parellization using MPI}
+The parellel implementation of the $\pi$ computation is based on the idea of dividing the interval $[0, 1]$ into $N$ subintervals, where $N$ is the number of processes. Each process computes the contribution to $\pi$ from its assigned subinterval and then all contributions are summed together using MPI. In listing \ref{lst:pi_mpi} we show the implementation of the parallel $\pi$ computation using MPI.
+
+\begin{lstlisting}[style=grayverbatim, caption={Parallel $\pi$ computation using MPI}, label={lst:pi_mpi}]
+MPI_Init(&argc, &argv);
+MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+h = 1.0 / (double)N;
+
+MPI_Barrier(MPI_COMM_WORLD);
+time_start = walltime();
+
+for (uint64_t i = (uint64_t)rank; i < N; i += (uint64_t)size) {
+    double x = (i + 0.5) * h;
+    local_sum += 4.0 / (1.0 + x * x);
+}
+
+MPI_Reduce(&local_sum, &sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+double time = walltime() - time_start;
+if (rank == 0) {
+    pi = sum * h;
+    printf("# pi N procs time [secs]\n");
+    printf("%.15f %20" PRIu64 " %3d %.8f\n", pi, N, size, time);
+    }
+
+MPI_Finalize();
+\end{lstlisting}
+Each process starts from its rank and iterates over the indices of the subintervals assigned to it by incrementing the index by the total number of processes in each iteration. This way, each process computes the contribution to $\pi$ from its assigned subintervals without overlap. After the local sums are computed, they are reduced to a single sum using \texttt{MPI\_Reduce}, which is then used to compute the final value of $\pi$ on the root process (rank 0).
+
+\subsection{Strong scaling}
+To evaluate the strong scaling of the parallel $\pi$ computation, we run the program with a fixed problem size $N$ and varying number of processes. The results are shown in.
+
+
 
 \newpage
 \section{Ring sum using MPI [10 points]}

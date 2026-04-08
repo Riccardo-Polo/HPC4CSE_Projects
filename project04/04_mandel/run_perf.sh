@@ -9,6 +9,10 @@
 #SBATCH --constraint=EPYC_7763
 #SBATCH --time=00:20:00
 
+module load stack gcc openmpi
+make clean
+make
+
 echo "List of node(s): $SLURM_JOB_NODELIST"
 
 #offset added to x coordinate so that gnuplot does not overlap the bars

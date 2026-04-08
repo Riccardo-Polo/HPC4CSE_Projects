@@ -1,6 +1,0 @@
-rm -f ring_sum
-mpicc -O2 ring_sum.c -o ring_sum
-Process 1: Sum = 6
-Process 3: Sum = 6
-Process 0: Sum = 6
-Process 2: Sum = 6

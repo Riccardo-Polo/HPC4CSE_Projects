@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
   }
 
   // Give some info
-  if (rank == 0) {
+  if ( verbose && rank == 0) {
     printf("Doing %d power iterations on %dx%d matrix distributed row-wise"
            " over %d processes...\n", niter, n, n, size);
   }
@@ -151,6 +151,8 @@ int main(int argc, char* argv[]) {
   double* y_local = (double*) calloc(nrows_local, sizeof(double));
   double* v       = (double*) calloc(n, sizeof(double));
   int iter;
+
+  MPI_Barrier(MPI_COMM_WORLD);
   double time_start = walltime();
 
   // Build recvcounts and displacements for MPI_Allgatherv
@@ -227,21 +229,26 @@ int main(int argc, char* argv[]) {
 
     if (error < tol * fabs(theta)) break;
   }
+
+  MPI_Barrier(MPI_COMM_WORLD);
   double time_end = walltime();
 
   // Report result
   if (rank == 0) {
-    if (iter < niter) {
-      printf("Power method: Converged in ");
-    } else {
-      printf("Power method: NOT converged in ");
-    }
+    if (verbose) {
+      if (iter < niter) {
+        printf("Power method: Converged in ");
+      } else {
+        printf("Power method: NOT converged in ");
+      }
       printf("%d iteration(s) "
              "to largest absolute eigenvalue theta = %f "
              "in %f second(s) time.\n", iter, theta,
-              (time_end - time_start));
-      printf("### %d, %d, %d, %f, %f ###\n", size, n, iter, theta,
              (time_end - time_start));
+    }
+
+    printf("### %d, %d, %d, %f, %f ###\n",
+           size, n, iter, theta, (time_end - time_start));
   }
 
   // Free

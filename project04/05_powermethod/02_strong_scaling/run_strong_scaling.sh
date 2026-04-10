@@ -45,4 +45,4 @@ for p in "${PROCS[@]}"; do
 done
 
 echo "Strong scaling data written to $OUTFILE"
-python3 powermethod_solution/common/plot_scaling.py --strong "$OUTFILE" --outdir figures
+python3 ../common/plot_scaling.py --strong "$OUTFILE" --outdir figures

@@ -50,4 +50,4 @@ PY
 done
 
 echo "Weak scaling data written to $OUTFILE"
-python3 powermethod_solution/common/plot_scaling.py --weak "$OUTFILE" --outdir figures
+python3 ../common/plot_scaling.py --weak "$OUTFILE" --outdir figures

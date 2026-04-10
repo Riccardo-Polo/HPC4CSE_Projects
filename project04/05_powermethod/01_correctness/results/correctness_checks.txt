@@ -1,0 +1,30 @@
+Running: p=1, test_case=1, n=16, niter=100, tol=1e-12
+### 1, 16, 1, 16.000000, 0.000043 ###
+
+Running: p=2, test_case=1, n=16, niter=100, tol=1e-12
+### 2, 16, 1, 16.000000, 0.000062 ###
+
+Running: p=4, test_case=1, n=16, niter=100, tol=1e-12
+### 4, 16, 1, 16.000000, 0.000256 ###
+
+Running: p=1, test_case=2, n=16, niter=100, tol=1e-12
+### 1, 16, 0, 1.000000, 0.000036 ###
+
+Running: p=2, test_case=2, n=16, niter=100, tol=1e-12
+### 2, 16, 0, 1.000000, 0.000075 ###
+
+Running: p=4, test_case=2, n=16, niter=100, tol=1e-12
+### 4, 16, 0, 1.000000, 0.000159 ###
+
+Running: p=1, test_case=3, n=16, niter=100, tol=1e-12
+### 1, 16, 100, 15.999987, 0.000169 ###
+
+Running: p=2, test_case=3, n=16, niter=100, tol=1e-12
+### 2, 16, 100, 15.999999, 0.000572 ###
+
+Running: p=4, test_case=3, n=16, niter=100, tol=1e-12
+### 4, 16, 100, 15.999972, 0.001331 ###
+
+Running: p=4, test_case=4, n=16, niter=50, tol=1e-8
+### 4, 16, 9, 8.771835, 0.000318 ###
+

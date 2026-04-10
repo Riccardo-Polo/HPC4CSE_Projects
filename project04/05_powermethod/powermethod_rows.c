@@ -22,6 +22,8 @@ int main(int argc, char* argv[]) {
 
   // Seed random number generator
   srand(42);
+  
+  int verbose = 0;  // 0 = clean, 1 = debug
 
   // Initialize MPI, get size and rank
   int size, rank;
@@ -76,8 +78,10 @@ int main(int argc, char* argv[]) {
   }
 
   row_end_local = row_beg_local + nrows_local - 1;
-  printf("[Proc %3d] Doing rows %d to %d\n", rank, row_beg_local,
-         row_end_local);
+  
+  if (verbose) {
+  printf("[Proc %3d] Doing rows %d to %d\n", rank, row_beg_local, row_end_local);
+  }
 
   // Initialize matrix A
   double* A = (double*) calloc(nrows_local*n, sizeof(double));
@@ -216,7 +220,7 @@ int main(int argc, char* argv[]) {
 
     error = sqrt(error2);
 
-    if (rank == 0) {
+    if (verbose && rank == 0) {
       printf("iteration / theta / error: %4d / %15.5f / %25.15e\n",
              iter, theta, error);
     }

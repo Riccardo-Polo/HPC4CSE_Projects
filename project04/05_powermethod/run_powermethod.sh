@@ -6,7 +6,7 @@
 #SBATCH --ntasks=8
 #SBATCH --cpus-per-task=1
 #SBATCH --time=00:10:00
-#SBATCH --mem-per-cpu=512M
+#SBATCH --mem-per-cpu=2G
 #SBATCH --constraint=EPYC_7763
 
 set -euo pipefail
@@ -33,7 +33,7 @@ for p in "${PROCS[@]}"; do
     echo "----------------------------------------"
     echo "Running with $p MPI processes"
     echo "----------------------------------------"
-    
+
     srun -n "$p" ./powermethod_rows $TEST_CASE $N $NITER $TOL
 done
 

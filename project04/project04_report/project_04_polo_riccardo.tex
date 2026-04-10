@@ -123,35 +123,47 @@ A slight degradation in efficiency is observed as the number of processes increa
 \section{Ring sum using MPI [10 points]}
 In listing \ref{lst:ring_sum} we show the implementation of the ring sum using MPI.
 \begin{lstlisting}[style=grayverbatim, caption={Ring sum using MPI}, label={lst:ring_sum}]
+int main(int argc, char *argv[]) {
 int size, rank;
-MPI_Init(&argc, &argv);
-MPI_Comm_size(MPI_COMM_WORLD, &size);
-MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Init(&argc, &argv);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-// IMPLEMENT: Ring sum algorithm
-int sum = rank;
-for (int i = 0; i < size - 1; i++) {
-  int send_to = (rank + 1) % size;
+  int send_to   = (rank + 1) % size;
   int recv_from = (rank - 1 + size) % size;
 
-  int recv_sum;
-  MPI_Sendrecv(&sum, 1, MPI_INT, send_to, 0,
-              &recv_sum, 1, MPI_INT, recv_from, 0,
-              MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  int sum = rank;       
+  int value = rank;     
+  int recv_value;
 
-  sum += recv_sum;
+  for (int i = 0; i < size - 1; i++) {
+    MPI_Sendrecv(&value, 1, MPI_INT, send_to, 0,
+                 &recv_value, 1, MPI_INT, recv_from, 0,
+                 MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+    sum += recv_value;   
+    value = recv_value;  
+  }
+
+  printf("Process %d: Sum = %d\n", rank, sum);
+
+  MPI_Finalize();
+  return 0;
 }
-printf("Process %i: Sum = %i\n", rank, sum);
-
-// Finalize MPI
-MPI_Finalize();
 \end{lstlisting}
+We implemented the ring sum algorithm using a one-dimensional circular topology, where each process communicates with two neighbors: the next process in increasing rank direction and the previous one, defined respectively as $(\text{rank}+1) \bmod P$ and $(\text{rank}-1+P) \bmod P$, where $P$ is the number of processes.\\
 
-The implementation uses a \textbf{ring communication pattern}, where each process exchanges data only with its immediate neighbors in a cyclic topology. Specifically, process $i$ sends its current partial sum to process $(i+1) \bmod P$ and receives a value from process $(i-1 + P) \bmod P$, where $P$ is the total number of processes.\\
+Each process initializes a local accumulator with its own rank and a separate variable containing the value to be propagated through the ring. At every iteration, a process sends its current value to the right neighbor and simultaneously receives a value from the left neighbor. The received value is added to the local sum and then forwarded in the next iteration. After $P-1$ iterations, each process has received all other ranks exactly once, thus computing the global sum.\\
 
-Each process initializes its local sum with its rank and performs $P-1$ communication steps. At every iteration, it forwards its current partial sum to the next process and accumulates the value received from the previous one. This ensures that, after all iterations, every process has received contributions from all other processes and therefore holds the global sum.\\
+To avoid potential deadlock issues, we used the \texttt{MPI\_Sendrecv} routine, which combines sending and receiving into a single operation. This ensures that all processes can safely exchange messages without the risk of circular waiting that may arise when using separate blocking \texttt{MPI\_Send} and \texttt{MPI\_Recv} calls. The communication pattern is therefore fully synchronized and deadlock-free.
 
-To avoid deadlock issues, the implementation uses the \texttt{MPI\_Sendrecv} routine instead of separate blocking send and receive calls. This function performs the send and receive operations in a single, coordinated step, ensuring that communication progresses safely without requiring explicit ordering between processes.
+Finally, all processes obtain the same result, confirming the correctness of the implementation as one can see from the output shown in listing \ref{lst:ring_output}.
+\begin{lstlisting}[style=grayverbatim, caption={Output of ring sum}, label={lst:ring_output}]
+Process 1: Sum = 6
+Process 0: Sum = 6
+Process 2: Sum = 6
+Process 3: Sum = 6
+\end{lstlisting}
 
 \newpage
 \section{Cartesian domain decomposition and ghost cells exchange [20 points]}
@@ -245,6 +257,7 @@ and the received values are stored in the corresponding ghost columns.\\
 The use of \texttt{MPI\_Sendrecv} is particularly important because it avoids possible deadlock issues that could arise if all processes tried to perform blocking send operations before posting matching receives. By combining send and receive into one single communication call, the ghost-cell exchange is both safe and simple to implement.\\
 
 The output is shown in listing \ref{lst:ghost_output}.\\
+From it one can see the ranks of the neighboring processes and the data array after the ghost cell exchange, confirming that the communication was successful and that the ghost cells have been updated with the correct values from the neighbors.\\
 
 \begin{lstlisting}[style=grayverbatim, caption={Output of ghost cell exchange}, label={lst:ghost_output}]
 North rank 6, South rank 4, West rank 1, East rank 9
@@ -265,10 +278,138 @@ j
 
 \newpage
 \section{Parallelizing the Mandelbrot set using MPI [30 points]}
+\subsection{Partitioning of the image}
+In listing \ref{lst:partitioning} we can see the implementation of the function \texttt{createPartition}.\\
 
+\begin{lstlisting}[style=grayverbatim, caption={Partitioning of the image}, label={lst:partitioning}]
+Partition createPartition(int mpi_rank, int mpi_size) {
+    Partition p;
+
+    // TODO: determine size of the grid of MPI processes (p.nx, p.ny),
+    //       see MPI_Dims_create()
+    int dims[2];
+    MPI_Dims_create(mpi_size , 2 , dims );
+    p.ny = dims[0];
+    p.nx = dims[1];
+
+    // TODO: Create cartesian communicator (p.comm), we do not allow the
+    //       reordering of ranks here, see MPI_Cart_create()
+    MPI_Comm cart_comm;
+    int periods[2] = {1, 1};
+    MPI_Cart_create(MPI_COMM_WORLD, 2, dims, periods, 0, &cart_comm);
+    p.comm = cart_comm;
+    
+    // TODO: Determine the coordinates in the Cartesian grid (p.x, p.y),
+    //       see MPI_Cart_coords()
+    int coords[2];
+    MPI_Cart_coords(cart_comm , mpi_rank , 2 , coords);
+    p.y = coords[0];
+    p.x = coords[1];
+
+    return p;
+}
+\end{lstlisting}
+
+The function \texttt{createPartition} defines a two-dimensional Cartesian decomposition of the MPI processes. The use of \texttt{MPI\_Dims\_create} allows to automatically determine a balanced process grid \((p.ny, p.nx)\), which tends to minimize load imbalance by distributing processes as evenly as possible across both dimensions.\\
+A Cartesian communicator is constructed through \texttt{MPI\_Cart\_create}. Although periodic boundary conditions are enabled in both directions, this choice is not strictly required for the Mandelbrot computation, since no inter-process communication is needed.\\
+Each process retrieves its coordinates in the Cartesian topology using \texttt{MPI\_Cart\_coords}. These coordinates uniquely identify the position of the process in the logical grid and are later used to map the process to a specific portion of the global image.\\
+
+In listing \ref{lst:update_partitioning} we can see the implementation of the function \texttt{updatePartition}.
+\begin{lstlisting}[style=grayverbatim, caption={Updating the partitioning of the image}, label={lst:update_partitioning}]
+Partition updatePartition(Partition p_old, int mpi_rank) {
+    Partition p;
+
+    // copy grid dimension and the communicator
+    p.ny = p_old.ny;
+    p.nx = p_old.nx;
+    p.comm = p_old.comm;
+    
+    // TODO: Update the coordinates in the cartesian grid (p.x, p.y) for given
+    //       mpi_rank, see MPI_Cart_coords()
+    int coords[2];
+    MPI_Cart_coords(p.comm , mpi_rank , 2 , coords);
+    p.y = coords[0];
+    p.x = coords[1];
+
+    return p;
+}
+\end{lstlisting}
+
+The function \texttt{updatePartition} recomputes the Cartesian coordinates for a given rank while preserving the communicator and the grid dimensions. This ensures consistency of the mapping without reconstructing the full topology.
+
+\subsection{Dimensions and start/end of local domain}
+In listing \ref{lst:domain} we can see the implementation of the function \texttt{createDomain}.
+\begin{lstlisting}[style=grayverbatim, caption={Dimensions and start/end of local domain}, label={lst:domain}]
+Domain createDomain(Partition p) {
+    Domain d;
+
+    // TODO: Compute size of the local domain
+    d.nx = IMAGE_WIDTH/p.nx;
+    d.ny = IMAGE_HEIGHT/p.ny;
+
+    // TODO: Compute index of the first pixel in the local domain
+    d.startx = p.x * d.nx;
+    d.starty = p.y * d.ny;
+
+    // TODO: Compute index of the last pixel in the local domain
+    d.endx = d.startx + d.nx - 1;
+    d.endy = d.starty + d.ny - 1;
+
+    return d;
+}
+\end{lstlisting}
+
+The function \texttt{createDomain} assigns to each MPI process a rectangular subdomain of the global image.\\
+The local domain sizes are computed as
+\[
+\text{d.nx} = \frac{\text{IMAGE\_WIDTH}}{\text{p.nx}}, \qquad
+\text{d.ny} = \frac{\text{IMAGE\_HEIGHT}}{\text{p.ny}},
+\]
+which corresponds to a block decomposition of the image. This approach is simple and efficient, as it avoids overlap between processes and leads to contiguous memory regions.\\
+The starting indices \((\texttt{d.startx, d.starty}\)) are determined from the Cartesian coordinates of the process, while the ending indices \((\texttt{d.endx, d.endy}\)) define the inclusive bounds of the local subdomain.\\
+
+This implementation assumes that the global image dimensions are divisible by the number of processes in each direction. While this assumption is acceptable for the current setup, a more general implementation would handle non-divisible dimensions by distributing remainder pixels.
+
+\subsection{Output check}
+Figure~\ref{fig:mandelbrot_output} shows the final image obtained from the parallel computation. The result is visually consistent with the expected Mandelbrot set, indicating that the domain decomposition and the mapping between local and global indices are correct.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[scale = 0.05]{../04_mandel/mandel.pdf}
+    \caption{Output of the parallel Mandelbrot set implementation.}
+    \label{fig:mandelbrot_output}
+\end{figure}
+
+No visual artifacts, such as discontinuities or seams between subdomains, are observed. This confirms that each process correctly computes its assigned region and that the final assembly of the image is performed without errors.\\
+The subdivision of the domain into multiple MPI processes is not visible in the final image, which is expected since the computation is purely local and does not involve data exchange between neighboring processes.
+
+\subsection{Performance}
+Figure~\ref{fig:mandelbrot_performance} presents the local computation time for each MPI process at different levels of parallelism.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale = 1]{../04_mandel/perf.pdf}
+    \caption{Performance of the parallel Mandelbrot set implementation.}
+    \label{fig:mandelbrot_performance}
+\end{figure}
+
+A significant variability in execution time across processes can be observed. This is due to the intrinsic nature of the Mandelbrot set, where the number of iterations required for each pixel strongly depends on its position in the complex plane. Regions close to the boundary of the set require substantially more iterations, resulting in higher computational cost for the corresponding processes.\\
+
+As a consequence, the workload is not uniformly distributed, and some processes complete their computation much earlier than others. This leads to load imbalance, which limits the overall parallel efficiency since the total execution time is determined by the slowest process.\\
+
+Increasing the number of processes reduces the size of each subdomain but does not eliminate the imbalance. On the contrary, finer partitioning can make the variability more pronounced.\\
+
+\subsection{Possible performance improvements}
+Several strategies could be adopted to improve the performance of the MPI Mandelbrot implementation.\\
+
+A first possible improvement concerns load balancing. The current block decomposition assigns each process one contiguous rectangular portion of the image. Since the Mandelbrot set is highly non-uniform, some subdomains contain many points close to the boundary of the set and therefore require significantly more iterations than others. This leads to processes with very different execution times. A better strategy would be to distribute the work in a more balanced way, for example by assigning rows or small tiles cyclically among the MPI processes. In this way, each process would receive a mixture of easy and expensive regions, reducing the imbalance.\\
+
+Performance could also be improved by optimizing the local computation kernel. Since each process computes many independent pixels, the inner loops are good candidates for shared-memory parallelism through OpenMP, leading to a hybrid MPI+OpenMP implementation.\\
+
+A further optimization would be to improve data locality and vectorization in the pixel computation loop. Careful restructuring of the computation, compiler optimization flags, and ensuring contiguous memory access patterns could help the compiler generate more efficient code.
 \newpage
 \section{Parallel matrix-vector multiplication and the power method
          [30 points]}
 
 
 \end{document}
+
+

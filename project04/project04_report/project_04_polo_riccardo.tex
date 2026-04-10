@@ -198,17 +198,15 @@ The call to \texttt{MPI\_Cart\_create} constructs a new communicator, \texttt{co
 The two calls to \texttt{MPI\_Cart\_shift} are then used to determine the ranks of the neighboring processes in the two coordinate directions. In particular, the first call identifies the south and north neighbors, while the second call identifies the west and east neighbors.
 
 \subsection{Derived data type for column boundary}
-In listing \ref{lst:derived_type} we show the implementation of the derived data type for column boundary using MPI.
+In listing \ref{lst:derived_type} we show the implementation of the derived data type used for boundary communication.
 \begin{lstlisting}[style=grayverbatim, caption={Derived data type for column boundary using MPI}, label={lst:derived_type}]
 MPI_Type_vector(SUBDOMAIN, 1, DOMAINSIZE, MPI_DOUBLE, &data_ghost);
 MPI_Type_commit(&data_ghost);
 \end{lstlisting}
 
-The ghost-cell exchange in the horizontal direction involves non-contiguous memory, because a column of the local two-dimensional array is stored with a stride equal to
-\texttt{DOMAINSIZE}. To communicate such a column efficiently, a derived MPI datatype is created with \texttt{MPI\_Type\_vector}.\\
+The local domain is stored in a one-dimensional array, and the boundary elements that have to be exchanged are not always contiguous in memory. For this reason, a derived MPI datatype is introduced with \texttt{MPI\_Type\_vector}.\\
 
-This datatype describes \texttt{SUBDOMAIN} elements of type \texttt{MPI\_DOUBLE}, with one element taken from each row and a spacing of \texttt{DOMAINSIZE} elements between successive entries. In this way, the datatype represents exactly one column of the local subdomain. After its definition, \texttt{MPI\_Type\_commit} makes the
-datatype available for communication.\\
+The datatype \texttt{data\_ghost} describes \texttt{SUBDOMAIN} elements of type \texttt{MPI\_DOUBLE}, separated by a stride of \texttt{DOMAINSIZE} elements in memory. Hence, it represents a strided boundary segment of the local array. This is exactly the kind of memory layout that appears in the implementation shown in listing \ref{lst:ghost_exchange}, where one class of boundaries is accessed through elements that are spaced by one full leading dimension. After its definition, \texttt{MPI\_Type\_commit} makes the datatype available for communication.\\
 
 \subsection{Exchange ghost cells}
 In listing \ref{lst:ghost_exchange} we show the implementation of the ghost cells exchange using MPI.
@@ -246,13 +244,13 @@ In listing \ref{lst:ghost_exchange} we show the implementation of the ghost cell
                  comm_cart, MPI_STATUS_IGNORE);
 \end{lstlisting}
 
-This part of the code performs the exchange of ghost cells with the four neighboring processes of the Cartesian grid. The communication is split into four steps, one for
-each boundary: north, south, east, and west. In each case, the interior boundary of the local subdomain is sent to the corresponding neighbor, while the matching ghost layer is received from the opposite side.\\
+This part of the code performs the exchange of ghost cells with the four neighboring processes of the Cartesian grid. The communication is split into four steps, one for each neighboring direction. In each step, an interior boundary of the local subdomain is sent to the corresponding neighbor, while the matching ghost boundary is received from the opposite side.\\
 
-The first two \texttt{MPI\_Sendrecv} calls handle the exchange in the vertical direction. The top interior boundary is sent to the north neighbor and the bottom ghost layer is received from the south neighbor. Similarly, the bottom interior boundary is sent to the south neighbor and the top ghost layer is received from the north neighbor. Because the domain is periodic, these communications also work correctly for processes located at the physical boundaries of the global domain.\\
+An important point is that the implementation follows the indexing convention induced by the linearized storage \texttt{data[i + j * DOMAINSIZE]}. As a consequence, the different geometric boundaries of the local domain are not all represented in memory in the same way: some are stored as strided segments and are therefore communicated through the derived datatype \texttt{data\_ghost}, whereas others are contiguous in memory and can be sent directly as \texttt{SUBDOMAIN} entries of type \texttt{MPI\_DOUBLE}.\\
 
-The last two \texttt{MPI\_Sendrecv} calls handle the exchange in the horizontal direction. Here the communication involves columns, so the memory layout must be treated carefully. One boundary column is exchanged with the east and west neighbors,
-and the received values are stored in the corresponding ghost columns.\\
+For this reason, the first two \texttt{MPI\_Sendrecv} calls use the derived datatype \texttt{data\_ghost}. They exchange those boundaries that, under the chosen storage layout, are represented by elements separated by a stride of \texttt{DOMAINSIZE}. The last two \texttt{MPI\_Sendrecv} calls instead exchange boundaries that are contiguous in memory and can therefore be communicated with the basic datatype \texttt{MPI\_DOUBLE}.\\
+
+Thus, the distinction in the code is not between ``rows'' and ``columns'' in an abstract geometric sense, but between strided and contiguous memory segments in the chosen array layout. With this interpretation, the implementation is fully consistent: the appropriate MPI datatype is used in each case according to how the corresponding boundary is stored in memory.\\
 
 The use of \texttt{MPI\_Sendrecv} is particularly important because it avoids possible deadlock issues that could arise if all processes tried to perform blocking send operations before posting matching receives. By combining send and receive into one single communication call, the ghost-cell exchange is both safe and simple to implement.\\
 
@@ -274,8 +272,6 @@ j
 | -1.0  4.0  4.0  4.0  4.0  4.0  4.0 -1.0 
 ------------------------------------------> i
 \end{lstlisting}
-
-
 \newpage
 \section{Parallelizing the Mandelbrot set using MPI [30 points]}
 \subsection{Partitioning of the image}
@@ -371,16 +367,26 @@ The starting indices \((\texttt{d.startx, d.starty}\)) are determined from the C
 This implementation assumes that the global image dimensions are divisible by the number of processes in each direction. While this assumption is acceptable for the current setup, a more general implementation would handle non-divisible dimensions by distributing remainder pixels.
 
 \subsection{Output check}
-Figure~\ref{fig:mandelbrot_output} shows the final image obtained from the parallel computation. The result is visually consistent with the expected Mandelbrot set, indicating that the domain decomposition and the mapping between local and global indices are correct.
-\begin{figure}[ht]
-    \centering
-    \includegraphics[scale = 0.05]{../04_mandel/mandel.pdf}
-    \caption{Output of the parallel Mandelbrot set implementation.}
-    \label{fig:mandelbrot_output}
-\end{figure}
+Figure~\ref{fig:mandelbrot_comparison} compares the Mandelbrot set obtained with the parallel MPI implementation to the one produced by the serial code. The two images are visually identical, showing that the domain decomposition, the mapping from local to global pixel indices, and the final reconstruction of the global image on the master process are all correct.\\
 
-No visual artifacts, such as discontinuities or seams between subdomains, are observed. This confirms that each process correctly computes its assigned region and that the final assembly of the image is performed without errors.\\
-The subdivision of the domain into multiple MPI processes is not visible in the final image, which is expected since the computation is purely local and does not involve data exchange between neighboring processes.
+No visible artifacts such as discontinuities or seams appear at subdomain boundaries in the parallel result. This confirms that each process computes its assigned region correctly and that the local domains are assembled consistently into the final image. Since the Mandelbrot computation itself is purely local, this visual agreement with the serial implementation provides a clear verification of correctness.
+\begin{figure}[!h]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../04_mandel/mandel.pdf}
+    \caption{Parallel implementation}
+    \label{fig:mandelbrot_output}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{mandel.png}
+    \caption{Serial implementation}
+    \label{fig:serial_mandelbrot_output}
+  \end{subfigure}
+  \caption{Comparison of the Mandelbrot set computed with the parallel MPI implementation and the serial implementation.}
+  \label{fig:mandelbrot_comparison}
+\end{figure}
 
 \subsection{Performance}
 Figure~\ref{fig:mandelbrot_performance} presents the local computation time for each MPI process at different levels of parallelism.
@@ -409,7 +415,209 @@ A further optimization would be to improve data locality and vectorization in th
 \section{Parallel matrix-vector multiplication and the power method
          [30 points]}
 
+We now show how all the TODOs in the provided code template have been implemented.\\
+In listing \ref{lst:mv_mult} we show how we implement the partitioning of the "n" rows of the matrix evenly among the "size" MPI processes.
+\begin{lstlisting}[style=grayverbatim, caption={Partitioning of the matrix rows among MPI processes}, label={lst:mv_mult}]
+if (rank < n % size) {
+    nrows_local = n / size + 1;
+    row_beg_local = rank * nrows_local;
+  } else {
+    nrows_local = n / size;
+    row_beg_local = (n % size) * (n / size + 1)
+                  + (rank - (n % size)) * (n / size);
+  }
 
+  row_end_local = row_beg_local + nrows_local - 1;
+\end{lstlisting}
+
+The code in Listing \ref{lst:mv_mult} defines the row-wise data distribution of the matrix across the MPI processes. Since the matrix is partitioned by rows, each process is responsible for a contiguous block of rows and therefore computes only the corresponding entries of the matrix-vector product. The distribution is made as balanced as possible: every process receives either $\lfloor n/size \rfloor$ or $\lfloor n/size \rfloor + 1$ rows, so that the load imbalance is at most one row. This is important for parallel efficiency, because the work associated with the matrix-vector multiplication is proportional to the number of rows owned by each process. The variables \texttt{row\_beg\_local} and \texttt{row\_end\_local} identify the global row range assigned to each rank, which is then used consistently throughout the power iteration to map local computations onto the correct global indices.\\
+
+Then, we were asked to broadcast the random initial guess vector to all MPI processes. This was done using the \texttt{MPI\_Bcast} function, as shown in listing \ref{lst:broadcast}.
+\begin{lstlisting}[style=grayverbatim, caption={Broadcasting the initial guess vector to all MPI processes}, label={lst:broadcast}]
+MPI_Bcast(y, n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+\end{lstlisting}
+The operation shown in Listing \ref{lst:broadcast} ensures that all MPI processes start from the same initial guess vector. In the power method, every process needs access to the full current iterate, because even though each rank stores only a subset of matrix rows, the multiplication of one local row with the vector requires all vector entries. For this reason, the vector generated on rank~0 is broadcast to the entire communicator. This collective communication step establishes a consistent initial state on all processes and allows the subsequent iterations to proceed in parallel without ambiguity about the input vector.
+
+In listing \ref{lst:mv_mult_loop} we show the implementation of the power method loop.
+\begin{lstlisting}[style=grayverbatim, caption={Power method loop for parallel matrix-vector multiplication}, label={lst:mv_mult_loop}]
+    // Power method
+  double theta, error;
+  double* y_local = (double*) calloc(nrows_local, sizeof(double));
+  double* v       = (double*) calloc(n, sizeof(double));
+  int iter;
+
+  MPI_Barrier(MPI_COMM_WORLD);
+  double time_start = walltime();
+
+  // Build recvcounts and displacements for MPI_Allgatherv
+  int* recvcounts = (int*) calloc(size, sizeof(int));
+  int* displs     = (int*) calloc(size, sizeof(int));
+
+  for (int p = 0; p < size; ++p) {
+    if (p < n % size) {
+      recvcounts[p] = n / size + 1;
+      displs[p] = p * recvcounts[p];
+    } else {
+      recvcounts[p] = n / size;
+      displs[p] = (n % size) * (n / size + 1)
+                + (p - (n % size)) * (n / size);
+    }
+  }
+    for (iter = 0; iter < niter; ++iter) {
+
+    // Normalize vector: v = y / ||y||_2
+    double norm2_local = 0.0;
+    for (int i_local = 0; i_local < nrows_local; ++i_local) {
+      int i_global = row_beg_local + i_local;
+      norm2_local += y[i_global] * y[i_global];
+    }
+
+    double norm2 = 0.0;
+    MPI_Allreduce(&norm2_local, &norm2, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+
+    double norm = sqrt(norm2);
+
+    for (int i_global = 0; i_global < n; ++i_global) {
+      v[i_global] = y[i_global] / norm;
+    }
+
+    // Matrix-vector multiply: y_local = A_local * v
+    for (int i_local = 0; i_local < nrows_local; ++i_local) {
+      y_local[i_local] = 0.0;
+      for (int j_global = 0; j_global < n; ++j_global) {
+        y_local[i_local] += A[i_local*n + j_global] * v[j_global];
+      }
+    }
+
+    // Gather full y on all processes
+    MPI_Allgatherv(y_local, nrows_local, MPI_DOUBLE,
+                   y, recvcounts, displs, MPI_DOUBLE,
+                   MPI_COMM_WORLD);
+
+    // Compute eigenvalue: theta = v^T y
+    double theta_local = 0.0;
+    for (int i_local = 0; i_local < nrows_local; ++i_local) {
+      int i_global = row_beg_local + i_local;
+      theta_local += v[i_global] * y[i_global];
+    }
+
+    MPI_Allreduce(&theta_local, &theta, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+
+    // Check convergence: error = ||y - theta v||_2
+    double error2_local = 0.0;
+    for (int i_local = 0; i_local < nrows_local; ++i_local) {
+      int i_global = row_beg_local + i_local;
+      double r = y[i_global] - theta * v[i_global];
+      error2_local += r * r;
+    }
+
+    double error2 = 0.0;
+    MPI_Allreduce(&error2_local, &error2, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+
+    error = sqrt(error2);
+
+    if (verbose && rank == 0) {
+      printf("iteration / theta / error: %4d / %15.5f / %25.15e\n",
+             iter, theta, error);
+    }
+
+    if (error < tol * fabs(theta)) break;
+  }
+
+  MPI_Barrier(MPI_COMM_WORLD);
+  double time_end = walltime();
+\end{lstlisting}
+
+Listing \ref{lst:mv_mult_loop} contains the core parallel implementation of the power method. The algorithm combines local computation with collective MPI communication in each iteration. First, every process computes the contribution of its locally owned entries to the Euclidean norm of the current iterate, and \texttt{MPI\_Allreduce} is used to combine these partial results into the global norm. This allows all ranks to normalize the vector consistently. Each process then performs the matrix-vector multiplication only for its local block of rows, producing the partial result \texttt{y\_local}. Since the next power iteration again requires the full vector on every process, the local pieces are exchanged with \texttt{MPI\_Allgatherv}, which is necessary because the row distribution may be nonuniform.\\
+
+The same parallel pattern is used for the computation of the Rayleigh quotient and the convergence criterion. Each process evaluates its local contribution to the scalar product $v^T y$ and to the residual norm $\lVert y - \theta v \rVert_2$, and the global values are reconstructed with \texttt{MPI\_Allreduce}. In this way, the expensive matrix-vector multiplication is distributed across processes, while the collective operations maintain a synchronized global view of the iterate and of the convergence information. Overall, the implementation follows a replicated-vector, row-distributed-matrix strategy: the matrix is partitioned to distribute the computational work, whereas the vector is kept available on all processes to simplify the multiplication and the iterative update.
+
+\subsection{Correctness}
+We first verified the correctness of our implementation. This was by running the program on all the three test cases provided in the template, which consist of matrices with known dominant eigenvalues. In all cases, the computed eigenvalue converged to the expected value within the specified tolerance, confirming that the power method is correctly implemented and that the parallelization does not introduce errors. One can see the output for the first test case in listing \ref{lst:mv_mult_output}.
+\begin{lstlisting}[style=grayverbatim, caption={Output of the power method for the first test case}, label={lst:mv_mult_output}]
+    Running: p=1, test_case=1, n=16, niter=100, tol=1e-12
+### 1, 16, 1, 16.000000, 0.000043 ###
+
+Running: p=2, test_case=1, n=16, niter=100, tol=1e-12
+### 2, 16, 1, 16.000000, 0.000062 ###
+
+Running: p=4, test_case=1, n=16, niter=100, tol=1e-12
+### 4, 16, 1, 16.000000, 0.000256 ###
+
+Running: p=1, test_case=2, n=16, niter=100, tol=1e-12
+### 1, 16, 0, 1.000000, 0.000036 ###
+
+Running: p=2, test_case=2, n=16, niter=100, tol=1e-12
+### 2, 16, 0, 1.000000, 0.000075 ###
+
+Running: p=4, test_case=2, n=16, niter=100, tol=1e-12
+### 4, 16, 0, 1.000000, 0.000159 ###
+
+Running: p=1, test_case=3, n=16, niter=100, tol=1e-12
+### 1, 16, 100, 15.999987, 0.000169 ###
+
+Running: p=2, test_case=3, n=16, niter=100, tol=1e-12
+### 2, 16, 100, 15.999999, 0.000572 ###
+
+Running: p=4, test_case=3, n=16, niter=100, tol=1e-12
+### 4, 16, 100, 15.999972, 0.001331 ###
+\end{lstlisting}
+The results reported in Listing \ref{lst:mv_mult_output} confirm that the parallel implementation reproduces the expected dominant eigenvalues for all three verification cases and for all tested numbers of MPI processes. For test case 1, the dominant eigenvalue is correctly recovered as $16$, while for test case 2 the method converges to the expected value $1$. In test case 3, the approximation is again very close to the exact dominant eigenvalue, with only a small residual discrepancy due to the finite number of iterations and the slower convergence behavior of this case.\\
+An important observation is that the computed eigenvalue remains essentially unchanged when increasing the number of processes from $p=1$ to $p=2$ and $p=4$. This shows that the row-wise matrix distribution, the collective communications, and the global reductions are all functioning correctly.
+
+\subsection{Strong scaling}
+The request was to run the code for p = 1, 2, 4, 8, 16, 32, 64 MPI processes.
+
+\begin{figure}[!h]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../05_powermethod/02_strong_scaling/figures/strong_efficiency.pdf}
+    \caption{Strong scaling efficiency of the parallel power method.}
+    \label{fig:strong_efficiency}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../05_powermethod/02_strong_scaling/figures/strong_runtime.pdf}
+    \caption{Strong scaling runtime of the parallel power method.}
+    \label{fig:strong_runtime}
+  \end{subfigure}
+  \caption{Strong scaling results for the parallel power method.}
+\end{figure}
+
+Figure~\ref{fig:strong_efficiency} and Figure~\ref{fig:strong_runtime} show the strong scaling behavior of the parallel power method when the global problem size is kept fixed and the number of MPI processes is increased. As expected, the runtime decreases as more processes are used, since the matrix rows are distributed among a larger number of ranks and each process performs a smaller share of the matrix-vector multiplication. The reduction in runtime is initially quite significant, especially when going from $p=1$ to $p=8$, which indicates that the parallelization is effective in this range.\\
+
+However, the scaling is clearly not ideal. This is also visible in the efficiency plot, where the efficiency remains close to one only for a small number of processes and then progressively drops as $p$ increases. Up to approximately $p=4$ or $p=8$, the implementation still shows reasonably good efficiency, but beyond this point the benefit of adding more processes becomes much smaller. In particular, from $p=16$ onward the efficiency decreases sharply, which indicates that communication and synchronization costs start to dominate over the useful local computation.\\
+
+This behavior is expected for the present implementation of the power method. At every iteration, each process performs only a local matrix-vector multiplication, but several collective communication operations are also required: global reductions for the norm, the Rayleigh quotient, and the residual, as well as an \texttt{MPI\_Allgatherv} to reconstruct the full vector on all processes. When the number of processes increases while the global problem size remains fixed, the amount of local arithmetic work per process decreases, whereas the communication overhead does not decrease proportionally. As a consequence, the communication-to-computation ratio becomes less favorable and limits the strong scaling.\\
+
+Another observation is that the runtime plot becomes flatter at larger process counts. This means that the parallel execution is approaching a regime in which adding more MPI ranks provides only marginal acceleration. In other words, the code reaches the point where the distributed work is too small compared with the cost of collective communication and process synchronization. The visible error bar around one of the measurements also suggests that run-to-run variability becomes more noticeable once the execution time is short and communication effects are more dominant.
+
+\subsection{Weak scaling}
+For the weak scaling study, the code was executed with $p = 1, 2, 4, 8, 16, 32, 64$ MPI processes, while the matrix size $n$ was increased approximately proportionally to $\sqrt{p}$. With this choice, the total number of matrix entries, which scales as $n^2$, grows proportionally to the number of processes. As a consequence, both the amount of matrix data stored per process and the computational work assigned to each process remain approximately constant. In an ideal weak scaling scenario, the runtime should therefore remain constant as the number of MPI processes increases.
+
+\begin{figure}[!h]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../05_powermethod/03_weak_scaling/figures/weak_efficiency.pdf}
+    \caption{Weak scaling efficiency of the parallel power method.}
+    \label{fig:weak_efficiency}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../05_powermethod/03_weak_scaling/figures/weak_runtime.pdf}
+    \caption{Weak scaling runtime of the parallel power method.}
+    \label{fig:weak_runtime}
+  \end{subfigure}
+  \caption{Weak scaling results for the parallel power method.}
+\end{figure}
+
+Figure~\ref{fig:weak_efficiency} and Figure~\ref{fig:weak_runtime} show that the implementation exhibits good weak scaling only up to a moderate number of MPI processes. For $p=1,2,4$, and approximately also $8$, the runtime remains nearly constant and the parallel efficiency stays close to the ideal value. This indicates that, in this range, increasing the global problem size together with the number of processes successfully keeps the local workload roughly constant, and the additional communication overhead is still limited.\\
+
+For larger process counts, however, the behavior deteriorates noticeably. Starting around $p=16$, the runtime increases significantly and the efficiency drops well below the ideal curve, with a particularly strong degradation for $p=32$ and $p=64$. This shows that the implementation is no longer able to maintain constant time-to-solution when the number of processes becomes large, even though the work per process is kept approximately fixed.\\
+
+The main reason is again the communication pattern of the power method. At every iteration, the algorithm requires several collective communications, namely global reductions and one \texttt{MPI\_Allgatherv} to reconstruct the full iterate on all processes. While the local matrix-vector multiplication per process remains roughly constant in the weak scaling setup, the cost of these collective operations grows with the number of MPI ranks. Therefore, as the process count increases, communication and synchronization progressively dominate the runtime and reduce the weak scaling efficiency.
 \end{document}
 
 

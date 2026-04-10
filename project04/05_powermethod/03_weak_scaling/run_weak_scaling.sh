@@ -6,7 +6,7 @@
 #SBATCH --ntasks=64
 #SBATCH --ntasks-per-node=64
 #SBATCH --cpus-per-task=1
-#SBATCH --time=00:25:00
+#SBATCH --time=00:40:00
 #SBATCH --mem-per-cpu=2G
 #SBATCH --constraint=EPYC_7763
 

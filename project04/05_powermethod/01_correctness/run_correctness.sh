@@ -16,9 +16,6 @@ mkdir -p outputs results
 
 module load stack gcc openmpi
 
-make -f powermethod_solution/common/Makefile clean
-make -f powermethod_solution/common/Makefile
-
 RESULTS=results/correctness_checks.txt
 : > "$RESULTS"
 

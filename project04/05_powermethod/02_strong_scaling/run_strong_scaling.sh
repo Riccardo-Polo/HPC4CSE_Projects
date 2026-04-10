@@ -16,9 +16,6 @@ mkdir -p outputs results figures
 
 module load stack gcc openmpi python
 
-make -f powermethod_solution/common/Makefile clean
-make -f powermethod_solution/common/Makefile
-
 TEST_CASE=3
 N=10000
 NITER=300

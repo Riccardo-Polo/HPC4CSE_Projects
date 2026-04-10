@@ -16,6 +16,10 @@ mkdir -p outputs results
 
 module load stack gcc openmpi
 
+cp ../common/powermethod_rows .
+cp ../common/walltime.o .
+
+
 RESULTS=results/correctness_checks.txt
 : > "$RESULTS"
 

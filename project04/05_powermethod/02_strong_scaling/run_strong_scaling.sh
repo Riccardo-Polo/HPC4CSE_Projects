@@ -16,6 +16,9 @@ mkdir -p outputs results figures
 
 module load stack gcc openmpi python
 
+cp ../common/powermethod_rows .
+cp ../common/walltime.o .
+
 TEST_CASE=3
 N=10000
 NITER=300

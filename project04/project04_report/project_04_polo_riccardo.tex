@@ -44,7 +44,7 @@
 \section{Computing $\pi$ with MPI [10 points]}
 %\input{sections/01_pi.tex}
 \subsection{Parellization using MPI}
-The parellel implementation of the $\pi$ computation is based on the idea of dividing the interval $[0, 1]$ into $N$ subintervals, where $N$ is the number of processes. Each process computes the contribution to $\pi$ from its assigned subinterval and then all contributions are summed together using MPI. In listing \ref{lst:pi_mpi} we show the implementation of the parallel $\pi$ computation using MPI.
+The parellel implementation of the $\pi$ computation is based on the idea of dividing the interval $[0, 1]$ into $N$ subintervals. Each process computes the contribution to $\pi$ from its assigned subinterval and then all contributions are summed together using MPI. In listing \ref{lst:pi_mpi} we show the implementation of the parallel $\pi$ computation using MPI.
 
 \begin{lstlisting}[style=grayverbatim, caption={Parallel $\pi$ computation using MPI}, label={lst:pi_mpi}]
 MPI_Init(&argc, &argv);
@@ -83,6 +83,9 @@ To evaluate the strong scaling of the parallel $\pi$ computation, we run the pro
         \label{fig:strong_scaling}
 \end{figure}
 
+
+The strong scaling results obtained with MPI show a near-linear increase in speedup for a small number of processes, closely following the ideal trend. As the number of processes increases, the measured speedup progressively deviates from the ideal curve, highlighting the impact of communication overhead and reduced computational workload per process. Nevertheless, the scalability remains good, reaching a speedup close to 100 with 128 processes.\\
+
 \begin{table}[!h]
 \centering
 \caption{Strong scaling results using the OpenMP reduction clause ($N=10^9$).}
@@ -101,7 +104,6 @@ Threads & Speedup \\
 \hline
 \end{tabular}
 \end{table}
-The strong scaling results obtained with MPI show a near-linear increase in speedup for a small number of processes, closely following the ideal trend. As the number of processes increases, the measured speedup progressively deviates from the ideal curve, highlighting the impact of communication overhead and reduced computational workload per process. Nevertheless, the scalability remains good, reaching a speedup close to 100 with 128 processes.\\
 
 Comparing these results with the OpenMP reduction implementation in Table~\ref{tab:strong_scaling_reduction}, we observe a very similar scaling behavior. Both approaches exhibit efficient parallelization at low to moderate parallelism and a loss of efficiency at higher core counts. However, OpenMP achieves slightly better efficiency at comparable core counts, likely due to the shared-memory model which avoids explicit communication overhead.
 
@@ -566,58 +568,58 @@ The results reported in Listing \ref{lst:mv_mult_output} confirm that the parall
 An important observation is that the computed eigenvalue remains essentially unchanged when increasing the number of processes from $p=1$ to $p=2$ and $p=4$. This shows that the row-wise matrix distribution, the collective communications, and the global reductions are all functioning correctly.
 
 \subsection{Strong scaling}
-The request was to run the code for p = 1, 2, 4, 8, 16, 32, 64 MPI processes.
+
+To assess the strong scaling behavior of the MPI implementation, we fixed the problem size to \(n=10\,000\), the maximum number of iterations to \(niter=300\), and the tolerance to a negative value, \(\mathrm{tol}=-10^{-6}\), so that the algorithm always performs the full number of iterations. The study was carried out for \(p=1,2,4,8,16,32,64\) MPI processes and for two process distributions: all MPI processes on a single node, and one MPI process per node on different nodes.
 
 \begin{figure}[!h]
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{../05_powermethod/02_strong_scaling/figures/strong_efficiency.pdf}
-    \caption{Strong scaling efficiency of the parallel power method.}
-    \label{fig:strong_efficiency}
+    \includegraphics[width=\linewidth]{../05_powermethod/figures_compare/strong_efficiency_compare.pdf}
+    \caption{Strong scaling efficiency.}
+    \label{fig:strong_efficiency_compare}
   \end{subfigure}\hfill
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{../05_powermethod/02_strong_scaling/figures/strong_runtime.pdf}
-    \caption{Strong scaling runtime of the parallel power method.}
-    \label{fig:strong_runtime}
+    \includegraphics[width=\linewidth]{../05_powermethod/figures_compare/strong_runtime_compare.pdf}
+    \caption{Strong scaling runtime.}
+    \label{fig:strong_runtime_compare}
   \end{subfigure}
-  \caption{Strong scaling results for the parallel power method.}
+  \caption{Strong scaling results for the parallel power method for two MPI process distributions: all processes on one node and one process per node on different nodes.}
+  \label{fig:strong_scaling_compare}
 \end{figure}
 
-Figure~\ref{fig:strong_efficiency} and Figure~\ref{fig:strong_runtime} show the strong scaling behavior of the parallel power method when the global problem size is kept fixed and the number of MPI processes is increased. As expected, the runtime decreases as more processes are used, since the matrix rows are distributed among a larger number of ranks and each process performs a smaller share of the matrix-vector multiplication. The reduction in runtime is initially quite significant, especially when going from $p=1$ to $p=8$, which indicates that the parallelization is effective in this range.\\
+Figure \ref{fig:strong_scaling_compare} shows that the implementation scales well up to a moderate number of MPI processes, with efficiency close to ideal up to approximately \(8\) processes in both configurations. For larger process counts, the efficiency decreases significantly, which indicates that communication and synchronization overheads become increasingly important compared with the local computation. This behavior is expected, since each power-method iteration requires several collective communications, including global reductions and a global gather of the distributed vector.\\
 
-However, the scaling is clearly not ideal. This is also visible in the efficiency plot, where the efficiency remains close to one only for a small number of processes and then progressively drops as $p$ increases. Up to approximately $p=4$ or $p=8$, the implementation still shows reasonably good efficiency, but beyond this point the benefit of adding more processes becomes much smaller. In particular, from $p=16$ onward the efficiency decreases sharply, which indicates that communication and synchronization costs start to dominate over the useful local computation.\\
-
-This behavior is expected for the present implementation of the power method. At every iteration, each process performs only a local matrix-vector multiplication, but several collective communication operations are also required: global reductions for the norm, the Rayleigh quotient, and the residual, as well as an \texttt{MPI\_Allgatherv} to reconstruct the full vector on all processes. When the number of processes increases while the global problem size remains fixed, the amount of local arithmetic work per process decreases, whereas the communication overhead does not decrease proportionally. As a consequence, the communication-to-computation ratio becomes less favorable and limits the strong scaling.\\
-
-Another observation is that the runtime plot becomes flatter at larger process counts. This means that the parallel execution is approaching a regime in which adding more MPI ranks provides only marginal acceleration. In other words, the code reaches the point where the distributed work is too small compared with the cost of collective communication and process synchronization. The visible error bar around one of the measurements also suggests that run-to-run variability becomes more noticeable once the execution time is short and communication effects are more dominant.
+Comparing the two process distributions, the multi-node configuration is slightly slower at small to intermediate process counts, reflecting the higher cost of inter-node communication. However, for the largest process counts, the different-node configuration becomes competitive and even slightly better than the one-node case. A plausible explanation is that, when all ranks are placed on one node, the execution becomes more affected by contention for shared node resources such as memory bandwidth and internal communication paths. In contrast, distributing one MPI rank per node reduces such local contention, although it introduces network communication overhead.
 
 \subsection{Weak scaling}
-For the weak scaling study, the code was executed with $p = 1, 2, 4, 8, 16, 32, 64$ MPI processes, while the matrix size $n$ was increased approximately proportionally to $\sqrt{p}$. With this choice, the total number of matrix entries, which scales as $n^2$, grows proportionally to the number of processes. As a consequence, both the amount of matrix data stored per process and the computational work assigned to each process remain approximately constant. In an ideal weak scaling scenario, the runtime should therefore remain constant as the number of MPI processes increases.
+
+For the weak scaling study, we ran the code with \(p=1,2,4,8,16,32,64\) MPI processes and increased the matrix size approximately proportionally to \(\sqrt{p}\). Since the matrix has size \(n\times n\), both the total memory requirement and the total computational work scale as \(n^2\). Therefore, choosing \(n(p)\propto \sqrt{p}\) keeps the memory required per process and the work performed by each process approximately constant as the number of MPI processes increases. In practice, starting from \(n_0=10\,000\) for one MPI process, we used \(n(p)\approx 10\,000\sqrt{p}\). The maximum number of iterations was fixed to \(niter=300\), the tolerance was set to \(\mathrm{tol}=-10^{-6}\), and the study was repeated for two MPI process distributions: all processes on one node and one MPI process per node on different nodes.
 
 \begin{figure}[!h]
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{../05_powermethod/03_weak_scaling/figures/weak_efficiency.pdf}
+    \includegraphics[width=\linewidth]{../05_powermethod/figures_compare/weak_efficiency_compare.pdf}
     \caption{Weak scaling efficiency of the parallel power method.}
-    \label{fig:weak_efficiency}
+    \label{fig:weak_efficiency_compare}
   \end{subfigure}\hfill
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{../05_powermethod/03_weak_scaling/figures/weak_runtime.pdf}
+    \includegraphics[width=\linewidth]{../05_powermethod/figures_compare/weak_runtime_compare.pdf}
     \caption{Weak scaling runtime of the parallel power method.}
-    \label{fig:weak_runtime}
+    \label{fig:weak_runtime_compare}
   \end{subfigure}
-  \caption{Weak scaling results for the parallel power method.}
+  \caption{Weak scaling results for the parallel power method for two MPI process distributions: all processes on one node and one process per node on different nodes.}
+  \label{fig:weak_scaling_compare}
 \end{figure}
 
-Figure~\ref{fig:weak_efficiency} and Figure~\ref{fig:weak_runtime} show that the implementation exhibits good weak scaling only up to a moderate number of MPI processes. For $p=1,2,4$, and approximately also $8$, the runtime remains nearly constant and the parallel efficiency stays close to the ideal value. This indicates that, in this range, increasing the global problem size together with the number of processes successfully keeps the local workload roughly constant, and the additional communication overhead is still limited.\\
+Figure \ref{fig:weak_scaling_compare} shows that the implementation exhibits good weak scaling up to about \(8\) MPI processes in both configurations, since the runtime remains nearly constant and the efficiency stays close to the ideal value. For larger numbers of processes, the one-node configuration deteriorates significantly: the runtime increases sharply from \(p=16\) onward and the efficiency drops well below one. This indicates that, although the work per process is kept approximately constant, the execution becomes increasingly limited by contention for shared node resources, such as memory bandwidth, as well as by communication and synchronization overheads.\\
 
-For larger process counts, however, the behavior deteriorates noticeably. Starting around $p=16$, the runtime increases significantly and the efficiency drops well below the ideal curve, with a particularly strong degradation for $p=32$ and $p=64$. This shows that the implementation is no longer able to maintain constant time-to-solution when the number of processes becomes large, even though the work per process is kept approximately fixed.\\
+The different-node configuration shows a more favorable trend at large process counts. Its runtime grows more gradually and the weak scaling efficiency remains substantially higher than in the one-node case for \(p\ge 16\). This suggests that distributing one MPI process per node alleviates local contention effects, even though inter-node communication is more expensive.
 
-The main reason is again the communication pattern of the power method. At every iteration, the algorithm requires several collective communications, namely global reductions and one \texttt{MPI\_Allgatherv} to reconstruct the full iterate on all processes. While the local matrix-vector multiplication per process remains roughly constant in the weak scaling setup, the cost of these collective operations grows with the number of MPI ranks. Therefore, as the process count increases, communication and synchronization progressively dominate the runtime and reduce the weak scaling efficiency.
+
 \end{document}
 
 

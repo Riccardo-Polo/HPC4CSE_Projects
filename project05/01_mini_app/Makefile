@@ -1,5 +1,6 @@
 CXX      = mpicc
 CXXFLAGS = -O3
+LIBS    = -lm
 
 SOURCES = walltime.cpp stats.cpp data.cpp operators.cpp linalg.cpp main.cpp
 HEADERS = walltime.h   stats.h   data.h   operators.h   linalg.h
@@ -26,7 +27,7 @@ main.o: main.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c $<
 
 main: $(OBJ)
-	$(CXX) $(CXXFLAGS) $(OBJ) -o $@
+	$(CXX) $(CXXFLAGS) $(OBJ) $(LIBS) -o $@
 
 .PHONY: clean
 clean:

@@ -5,7 +5,6 @@
 
 #include <cmath>
 #include <cstdio>
-#include <mpi.h>
 
 #include "linalg.h"
 #include "operators.h"
@@ -50,10 +49,10 @@ double hpc_dot(Field const& x, Field const& y) {
     int N = y.length();
     double result = 0;
     // compute local result
-    for (int i = rank; i < N; i+=size) {
+    for (int i = 0; i < N; i++) {
         result += x[i] * y[i];
     }
-    MPI_Allreduce(MPI_IN_PLACE, &result, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+
     return result;
 }
 
@@ -63,10 +62,10 @@ double hpc_norm2(Field const& x) {
     int N = x.length();
     double result = 0;
     // compute local result
-    for (int i = rank; i < N; i+=size) {
+    for (int i = 0; i < N; i++) {
         result += x[i] * x[i];
     }
-    MPI_Allreduce(MPI_IN_PLACE, &result, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+
     return sqrt(result);
 }
 
@@ -75,7 +74,7 @@ double hpc_norm2(Field const& x) {
 // value is a scalar
 void hpc_fill(Field& x, const double value) {
     int N = x.length();
-    for (int i = rank; i < N; i+=size) {
+    for (int i = 0; i < N; i++) {
         x[i] = value;
     }
 }
@@ -89,7 +88,7 @@ void hpc_fill(Field& x, const double value) {
 // alpha is a scalar
 void hpc_axpy(Field& y, const double alpha, Field const& x) {
     int N = y.length();
-    for (int i = rank; i < N; i+=size) {
+    for (int i = 0; i < N; i++) {
         y[i] += alpha * x[i];
     }
 }
@@ -100,7 +99,7 @@ void hpc_axpy(Field& y, const double alpha, Field const& x) {
 void hpc_add_scaled_diff(Field& y, Field const& x, const double alpha,
                          Field const& l, Field const& r) {
     int N = y.length();
-    for (int i = rank; i < N; i+=size) {
+    for (int i = 0; i < N; i++) {
         y[i] = x[i] + alpha * (l[i] - r[i]);
     }
 }
@@ -111,9 +110,9 @@ void hpc_add_scaled_diff(Field& y, Field const& x, const double alpha,
 void hpc_scaled_diff(Field& y, const double alpha,
                      Field const& l, Field const& r) {
     int N = y.length();
-    for (int i = rank; i < N; i+=size) {
+
+    for (int i = 0; i < N; i++)
         y[i] = alpha * (l[i] - r[i]);
-    }
 }
 
 // computes y := alpha*x
@@ -121,7 +120,7 @@ void hpc_scaled_diff(Field& y, const double alpha,
 // y and x are vectors of length N
 void hpc_scale(Field& y, const double alpha, Field const& x) {
     int N = y.length();
-    for (int i = rank; i < N; i+=size) {
+    for (int i = 0; i < N; i++) {
         y[i] = alpha * x[i];
     }
 }
@@ -132,7 +131,7 @@ void hpc_scale(Field& y, const double alpha, Field const& x) {
 void hpc_lcomb(Field& y, const double alpha, Field const& x, const double beta,
                Field const& z) {
     int N = y.length();
-    for (int i = rank; i < N; i+=size) {
+    for (int i = 0; i < N; i++) {
         y[i] = alpha * x[i] + beta * z[i];
     }
 }
@@ -141,7 +140,7 @@ void hpc_lcomb(Field& y, const double alpha, Field const& x, const double beta,
 // x and y are vectors of length N
 void hpc_copy(Field& y, Field const& x) {
     int N = y.length();
-    for (int i = rank; i < N; i+=size) {
+    for (int i = 0; i < N; i++) {
         y[i] = x[i];
     }
 }

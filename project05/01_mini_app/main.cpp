@@ -35,9 +35,32 @@ using namespace stats;
 void write_binary(std::string fname, Field &u, SubDomain &domain,
                   Discretization &options) {
     // TODO: Implement output with MPI-IO
-    FILE* output = fopen(fname.c_str(), "w");
-    fwrite(u.data(), sizeof(double), options.nx * options.nx, output);
-    fclose(output);
+    
+    // Use MPI-IO to write the global field in a single binary file.
+    MPI_File file;
+    MPI_File_open(MPI_COMM_WORLD, fname.c_str(),
+                  MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+
+    // global sizes (full global grid)
+    int sizes[2] = { options.nx, options.nx };
+    // local subarray sizes
+    int subsizes[2] = { domain.nx, domain.ny };
+    // start indices in the global array (convert 1-based to 0-based)
+    int starts[2] = { domain.startx - 1, domain.starty - 1 };
+
+    MPI_Datatype filetype;
+    MPI_Type_create_subarray(2, sizes, subsizes, starts, MPI_ORDER_C,
+                             MPI_DOUBLE, &filetype);
+    MPI_Type_commit(&filetype);
+
+    MPI_Offset disp = 0;
+    MPI_File_set_view(file, disp, MPI_DOUBLE, filetype, "native", MPI_INFO_NULL);
+
+    // write the local data collectively
+    MPI_File_write_all(file, u.data(), domain.N, MPI_DOUBLE, MPI_STATUS_IGNORE);
+
+    MPI_Type_free(&filetype);
+    MPI_File_close(&file);
 }
 
 // read command line arguments

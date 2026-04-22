@@ -80,7 +80,7 @@ void SubDomain::print() {
                       << " local dims " << nx << " x " << ny
                       << std::endl;
         }
-//        MPI_Barrier(MPI_COMM_WORLD);
+        MPI_Barrier(MPI_COMM_WORLD);
     }
 }
 

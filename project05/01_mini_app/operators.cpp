@@ -39,40 +39,64 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
     int iend  = nx - 1;
     int jend  = ny - 1;
 
-    // TODO: exchange the ghost cells using non-blocking point-to-point
-    //       communication
+    // exchange the ghost cells using non-blocking point-to-point
+    // communication. We pack non-contiguous columns into temporary buffers
+    // and use contiguous rows directly.
+    int countx = nx - 2; // number of interior points in x for rows
+    int county = ny - 2; // number of interior points in y for columns
 
-    // me : copy boundary into buffers
-    //      then exchange buffers with boundary
-    MPI_Barrier(domain.comm_cart);
-    MPI_ISend(&s_new(1, ny-2), nx-2, MPI_DOUBLE, &buffN, 0,
-              domain.comm_cart, MPI_STATUS_IGNORE);
-    MPI_ISend(&s_new(1, 1), nx-2, MPI_DOUBLE, &buffS, 0,
-              domain.comm_cart, MPI_STATUS_IGNORE);
-    MPI_ISend(&s_new(1, 1), 1, MPI_DOUBLE, &buffW, 0,
-              domain.comm_cart, MPI_STATUS_IGNORE);
-    MPI_ISend(&s_new(nx-2, 1), 1, MPI_DOUBLE, &buffE, 0,
-              domain.comm_cart, MPI_STATUS_IGNORE);
+    // temporary send buffers for columns (non-contiguous in Field)
+    std::vector<double> sendW(county), sendE(county);
+    for (int j = 0; j < county; ++j) {
+        sendW[j] = s_new(1, j+1);         // left interior column
+        sendE[j] = s_new(nx-2, j+1);     // right interior column
+    }
 
-    /* send top interior row to north, receive bottom ghost row from south */
-    MPI_Sendrecv(&s_new(1, ny-2), nx-2, MPI_DOUBLE, domain.neighbour_north, 0,
-                 &buffS(1, 0), nx-2, MPI_DOUBLE, domain.neighbour_south, 0,
-                 domain.comm_cart, MPI_STATUS_IGNORE);
+    MPI_Request reqs[8];
+    int reqcnt = 0;
 
-    /* send bottom interior row to south, receive top ghost row from north */
-    MPI_Sendrecv(&s_new(1, 1), nx-2, MPI_DOUBLE, domain.neighbour_south, 0,
-                 &buffN(1, 0), nx-2, MPI_DOUBLE, domain.neighbour_north, 0,
-                 domain.comm_cart, MPI_STATUS_IGNORE);
-    
-    /* send left interior column to west, receive right ghost column from east */
-    MPI_Sendrecv(&s_new(1, 1), 1, MPI_DOUBLE, domain.neighbour_west, 0,
-                 &buffE(0, 1), 1, MPI_DOUBLE, domain.neighbour_east, 0,
-                 domain.comm_cart, MPI_STATUS_IGNORE);
-    
-    /* send right interior column to east, receive left ghost column from west */
-    MPI_Sendrecv(&s_new(nx-2, 1), 1, MPI_DOUBLE, domain.neighbour_east, 0,
-                 &buffW(0, 1), 1, MPI_DOUBLE, domain.neighbour_west, 0,
-                 domain.comm_cart, MPI_STATUS_IGNORE);
+    // Post non-blocking receives into the boundary arrays (contiguous)
+    if (domain.neighbour_north != MPI_PROC_NULL) {
+        MPI_Irecv(&bndN[1], countx, MPI_DOUBLE, domain.neighbour_north, 0,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+    if (domain.neighbour_south != MPI_PROC_NULL) {
+        MPI_Irecv(&bndS[1], countx, MPI_DOUBLE, domain.neighbour_south, 0,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+    if (domain.neighbour_west != MPI_PROC_NULL) {
+        MPI_Irecv(&bndW[1], county, MPI_DOUBLE, domain.neighbour_west, 1,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+    if (domain.neighbour_east != MPI_PROC_NULL) {
+        MPI_Irecv(&bndE[1], county, MPI_DOUBLE, domain.neighbour_east, 1,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+
+    // Post non-blocking sends
+    if (domain.neighbour_north != MPI_PROC_NULL) {
+        MPI_Isend(&s_new(1, ny-2), countx, MPI_DOUBLE, domain.neighbour_north, 0,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+    if (domain.neighbour_south != MPI_PROC_NULL) {
+        MPI_Isend(&s_new(1, 1), countx, MPI_DOUBLE, domain.neighbour_south, 0,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+    if (domain.neighbour_west != MPI_PROC_NULL) {
+        MPI_Isend(sendW.data(), county, MPI_DOUBLE, domain.neighbour_west, 1,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+    if (domain.neighbour_east != MPI_PROC_NULL) {
+        MPI_Isend(sendE.data(), county, MPI_DOUBLE, domain.neighbour_east, 1,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+
+    // Wait for all posted requests
+    if (reqcnt > 0) MPI_Waitall(reqcnt, reqs, MPI_STATUSES_IGNORE);
+
+    // Note: received halo data were placed directly into bndN/bndS/bndE/bndW
+    // at indices [1 .. count-]. The boundary code below expects these arrays
+    // to contain the neighbouring values (or Dirichlet values if MPI_PROC_NULL).
     
 
     // the interior grid points

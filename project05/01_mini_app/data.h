@@ -1,6 +1,7 @@
 #ifndef DATA_H
 #define DATA_H
 #include <cassert>
+#include <mpi.h>
 
 namespace data {
 // define some helper types that can be used to pass simulation

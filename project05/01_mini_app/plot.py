@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import matplotlib.pyplot as plt
+import matplotlib
 import numpy as np
 
 
@@ -36,6 +36,11 @@ def read_bov_data(header):
 
 def plot_data(fname, save=True):
     """Plot data from VisIt BOV file."""
+    if save:
+        matplotlib.use("Agg")
+
+    import matplotlib.pyplot as plt
+
     header = read_bov_header(fname)
     time = header[0]
     res = header[2]

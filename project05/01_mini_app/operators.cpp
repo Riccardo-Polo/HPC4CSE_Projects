@@ -45,13 +45,13 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
     // me : copy boundary into buffers
     //      then exchange buffers with boundary
     MPI_Barrier(domain.comm_cart);
-    MPI_ISend(&s_new(1, ny-2), nx-2, MPI_DOUBLE, &buffN, 0,
+    MPI_Isend(&s_new(1, ny-2), nx-2, MPI_DOUBLE, &buffN, 0,
               domain.comm_cart, MPI_STATUS_IGNORE);
-    MPI_ISend(&s_new(1, 1), nx-2, MPI_DOUBLE, &buffS, 0,
+    MPI_Isend(&s_new(1, 1), nx-2, MPI_DOUBLE, &buffS, 0,
               domain.comm_cart, MPI_STATUS_IGNORE);
-    MPI_ISend(&s_new(1, 1), 1, MPI_DOUBLE, &buffW, 0,
+    MPI_Isend(&s_new(1, 1), 1, MPI_DOUBLE, &buffW, 0,
               domain.comm_cart, MPI_STATUS_IGNORE);
-    MPI_ISend(&s_new(nx-2, 1), 1, MPI_DOUBLE, &buffE, 0,
+    MPI_Isend(&s_new(nx-2, 1), 1, MPI_DOUBLE, &buffE, 0,
               domain.comm_cart, MPI_STATUS_IGNORE);
 
     /* send top interior row to north, receive bottom ghost row from south */

@@ -10,6 +10,7 @@
 #include "operators.h"
 #include "stats.h"
 #include <mpi.h>
+#include <vector>
 
 namespace operators {
 

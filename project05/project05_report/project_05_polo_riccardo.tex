@@ -1,0 +1,51 @@
+\documentclass[unicode,10pt,a4paper,oneside,numbers=endperiod,openany]{scrartcl}
+
+\input{assignment.sty}
+
+\begin{document}
+
+
+\setassignment
+\setduedate{Monday 11 May 2026, 18:00~(Europe/Zurich)}
+
+\serieheader{High-Performance Computing Lab for CSE}{2026}
+            {Student: Riccardo Polo}
+            {Discussed with: Giovanni Guidarini}
+            {Solution for Project 5}{}
+\newline
+
+% you may comment this for the final submission, but make sure to comply with
+% the policy
+\assignmentpolicy
+
+\section{Parallel Space Solution of a nonlinear PDE using MPI
+         [in total 60 points]}
+
+\subsection{Initialize/finalize MPI and welcome message [5 Points]}
+
+\subsection{Domain decomposition [10 Points]}
+
+\subsection{Linear algebra kernels [5 Points]}
+
+\subsection{The diffusion stencil: Ghost cells exchange [10 Points]}
+
+\subsection{Implement parallel I/O [10 Points]}
+
+\subsection{Strong scaling [10 Points]}
+
+\subsection{Weak scaling [10 Points]}
+
+\subsection{Bonus [20 Points]: Overlapping computation/computation details}
+
+\newpage
+
+\section{Python for High-Performance Computing [in total 40 points]}
+
+\subsection{Sum of ranks: MPI collectives [5 Points]}
+
+\subsection{Ghost cell exchange between neighboring processes [5 Points]}
+
+\subsection{A self-scheduling example: Parallel Mandelbrot [30 Points]}
+
+
+\end{document}

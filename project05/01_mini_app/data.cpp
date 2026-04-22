@@ -32,7 +32,7 @@ void SubDomain::init(int mpi_rank, int mpi_size,
                      Discretization& discretization) {
     // TODO: determine the number of sub-domains in the x and y dimensions
     //       using MPI_Dims_create
-    int dims[2] = {1, 1};
+    int dims[2] = {0, 0};
     MPI_Dims_create(mpi_size,2,dims);
     ndomy = dims[0];
     ndomx = dims[1];

@@ -1,4 +1,4 @@
-CXX      = mpicc
+CXX      = mpicxx
 CXXFLAGS = -O3
 LIBS    = -lm
 

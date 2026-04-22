@@ -53,7 +53,11 @@ double hpc_dot(Field const& x, Field const& y) {
         result += x[i] * y[i];
     }
 
-    return result;
+    double global_result = 0.0;
+    MPI_Allreduce(&result, &global_result, 1, MPI_DOUBLE, MPI_SUM,
+                  MPI_COMM_WORLD);
+
+    return global_result;
 }
 
 // computes the 2-norm of x
@@ -66,7 +70,11 @@ double hpc_norm2(Field const& x) {
         result += x[i] * x[i];
     }
 
-    return sqrt(result);
+    double global_result = 0.0;
+    MPI_Allreduce(&result, &global_result, 1, MPI_DOUBLE, MPI_SUM,
+                  MPI_COMM_WORLD);
+
+    return sqrt(global_result);
 }
 
 // sets entries in a vector to value

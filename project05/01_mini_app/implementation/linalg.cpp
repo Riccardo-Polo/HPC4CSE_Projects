@@ -55,7 +55,7 @@ double hpc_dot(Field const& x, Field const& y) {
 
     double global_result = 0.0;
     MPI_Allreduce(&result, &global_result, 1, MPI_DOUBLE, MPI_SUM,
-                  MPI_COMM_WORLD);
+                  data::domain.comm_cart);
 
     return global_result;
 }
@@ -72,7 +72,7 @@ double hpc_norm2(Field const& x) {
 
     double global_result = 0.0;
     MPI_Allreduce(&result, &global_result, 1, MPI_DOUBLE, MPI_SUM,
-                  MPI_COMM_WORLD);
+                  data::domain.comm_cart);
 
     return sqrt(global_result);
 }

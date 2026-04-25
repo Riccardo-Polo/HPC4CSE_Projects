@@ -340,6 +340,6 @@ int main(int argc, char* argv[]) {
     }
 
     // TODO: finalize MPI
+    MPI_Comm_free(&domain.comm_cart);
     MPI_Finalize();
-    return 0;
 }

@@ -7,14 +7,19 @@ rank = comm.Get_rank()
 proc = MPI.Get_processor_name()
 
 
-sum = rank
+total = rank
 current_value = rank
-recvalue = 0
 
-for i in range(size-1):
-    comm.Sendrecv(sum , (rank+1)%size, 0, recvalue, (rank-1+size)%size , 0)
-    sum += recvalue
-    current_value = recvalue
+for _ in range(size - 1):
+    received_value = comm.sendrecv(
+        current_value,
+        dest=(rank + 1) % size,
+        sendtag=0,
+        source=(rank - 1 + size) % size,
+        recvtag=0,
+    )
+    total += received_value
+    current_value = received_value
 
-print(f"Sum is {sum} on processor {proc}, rank {rank} out of {size} "
+print(f"Sum is {total} on processor {proc}, rank {rank} out of {size} "
       f"processes")

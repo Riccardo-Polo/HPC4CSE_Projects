@@ -43,14 +43,14 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
     // exchange the ghost cells using non-blocking point-to-point
     // communication. We pack non-contiguous columns into temporary buffers
     // and use contiguous rows directly.
-    int countx = nx - 2; // number of interior points in x for rows
-    int county = ny - 2; // number of interior points in y for columns
+    int countx = nx ; // number of interior points in x for rows
+    int county = ny ; // number of interior points in y for columns
 
     // temporary send buffers for columns (non-contiguous in Field)
     std::vector<double> sendW(county), sendE(county);
     for (int j = 0; j < county; ++j) {
-        sendW[j] = s_new(1, j+1);         // left interior column
-        sendE[j] = s_new(nx-2, j+1);     // right interior column
+        sendW[j] = s_new(0, j);         // left interior column
+        sendE[j] = s_new(nx-1, j);     // right interior column
     }
 
     MPI_Request reqs[8];
@@ -58,29 +58,29 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
 
     // Post non-blocking receives into the boundary arrays (contiguous)
     if (domain.neighbour_north != MPI_PROC_NULL) {
-        MPI_Irecv(&bndN[1], countx, MPI_DOUBLE, domain.neighbour_north, 0,
+        MPI_Irecv(&bndN[0], countx, MPI_DOUBLE, domain.neighbour_north, 0,
                   domain.comm_cart, &reqs[reqcnt++]);
     }
     if (domain.neighbour_south != MPI_PROC_NULL) {
-        MPI_Irecv(&bndS[1], countx, MPI_DOUBLE, domain.neighbour_south, 0,
+        MPI_Irecv(&bndS[0], countx, MPI_DOUBLE, domain.neighbour_south, 0,
                   domain.comm_cart, &reqs[reqcnt++]);
     }
     if (domain.neighbour_west != MPI_PROC_NULL) {
-        MPI_Irecv(&bndW[1], county, MPI_DOUBLE, domain.neighbour_west, 1,
+        MPI_Irecv(&bndW[0], county, MPI_DOUBLE, domain.neighbour_west, 1,
                   domain.comm_cart, &reqs[reqcnt++]);
     }
     if (domain.neighbour_east != MPI_PROC_NULL) {
-        MPI_Irecv(&bndE[1], county, MPI_DOUBLE, domain.neighbour_east, 1,
+        MPI_Irecv(&bndE[0], county, MPI_DOUBLE, domain.neighbour_east, 1,
                   domain.comm_cart, &reqs[reqcnt++]);
     }
 
     // Post non-blocking sends
     if (domain.neighbour_north != MPI_PROC_NULL) {
-        MPI_Isend(&s_new(1, ny-2), countx, MPI_DOUBLE, domain.neighbour_north, 0,
+        MPI_Isend(&s_new(0, ny-1), countx, MPI_DOUBLE, domain.neighbour_north, 0,
                   domain.comm_cart, &reqs[reqcnt++]);
     }
     if (domain.neighbour_south != MPI_PROC_NULL) {
-        MPI_Isend(&s_new(1, 1), countx, MPI_DOUBLE, domain.neighbour_south, 0,
+        MPI_Isend(&s_new(0, 0), countx, MPI_DOUBLE, domain.neighbour_south, 0,
                   domain.comm_cart, &reqs[reqcnt++]);
     }
     if (domain.neighbour_west != MPI_PROC_NULL) {

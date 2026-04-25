@@ -60,7 +60,7 @@ def plot_data(fname, save=True):
     cbar.minorticks_on()
     if save:
         fname = fname.split(".")
-        fname[-1] = "png"
+        fname[-1] = "pdf"
         plt.savefig(".".join(fname), dpi=300, bbox_inches='tight')
     else:
         plt.show()

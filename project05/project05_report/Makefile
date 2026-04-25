@@ -2,6 +2,8 @@ filename=project_05_polo_riccardo
 
 pdf:
 	pdflatex ${filename}
+	biber ${filename}
+	pdflatex ${filename}
 	pdflatex ${filename}
 	make clean
 

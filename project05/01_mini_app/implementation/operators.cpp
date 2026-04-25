@@ -93,7 +93,7 @@ void diffusion(data::Field const& s_old, data::Field const& s_new,
     }
 
     // Wait for all posted requests
-    // if (reqcnt > 0) MPI_Waitall(reqcnt, reqs, MPI_STATUSES_IGNORE);
+    if (reqcnt > 0) MPI_Waitall(reqcnt, reqs, MPI_STATUSES_IGNORE);
 
     // Note: received halo data were placed directly into bndN/bndS/bndE/bndW
     // at indices [1 .. count-]. The boundary code below expects these arrays

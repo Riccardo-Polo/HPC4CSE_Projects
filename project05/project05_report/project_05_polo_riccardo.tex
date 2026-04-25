@@ -1,5 +1,29 @@
 \documentclass[unicode,10pt,a4paper,oneside,numbers=endperiod,openany]{scrartcl}
-
+\usepackage[backend=biber,style=numeric]{biblatex}
+\addbibresource{references.bib}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepgfplotslibrary{colorbrewer} % better colors
+\pgfplotsset{compat=1.18}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{multirow}
+\lstdefinestyle{grayverbatim}{
+  basicstyle=\ttfamily,%
+  backgroundcolor=\color{gray!10},%
+  frame=single,%
+  framesep=3pt,%
+  breaklines=true,%
+  columns=fullflexible%
+  numberstyle = \tiny,%
+  stepnumber = 1,%
+  numbersep = 5pt,%
+  numbers = left%
+}
+\definecolor{lightbluehighlight}{RGB}{204,232,255}
 \input{assignment.sty}
 
 \begin{document}
@@ -18,19 +42,285 @@
 % the policy
 \assignmentpolicy
 
+\newpage
 \section{Parallel Space Solution of a nonlinear PDE using MPI
          [in total 60 points]}
 
 \subsection{Initialize/finalize MPI and welcome message [5 Points]}
+First we are asked to complete the initialization and finalization of MPI in the main function, and to print a welcome message with the simulation parameters in the file \texttt{main.cpp}.\\
+In listings \ref{lst:main} we can see the initialization of MPI. We initialize MPI with \texttt{MPI\_Init}, and then we query the number of processes and the rank of each process with \texttt{MPI\_Comm\_size} and \texttt{MPI\_Comm\_rank}. We store these values in the \texttt{domain} object, which is defined in the file \texttt{data.h}.
+\begin{lstlisting}[style=grayverbatim,label={lst:main},caption={Initialization of MPI}]
+    MPI_Init(&argc, &argv);
+
+    int size = 1, rank = 0;
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    domain.rank = rank;
+    domain.size = size;
+
+    // read command line arguments
+    readcmdline(options, argc, argv);
+
+    // initialize sub-domain (data.{h,cpp})
+    domain.init(rank, size, options);
+    int nx = domain.nx;
+    int ny = domain.ny;
+    int N  = domain.N;
+    int nt  = options.nt;
+\end{lstlisting}
+In listing \ref{lst:main_finalize} we can see the finalization of MPI. We free the Cartesian communicator that we created in the initialization phase, and then we call \texttt{MPI\_Finalize} to clean up all MPI resources.
+\begin{lstlisting}[style=grayverbatim,label={lst:main_finalize},caption={Finalization of MPI}]
+    // finalize MPI
+    MPI_Comm_free(&domain.comm_cart);
+    MPI_Finalize();
+\end{lstlisting}
+In listing \ref{lst:main_welcome} we can see the welcome message that we print at the beginning of the simulation. We only print this message from the rank 0 process, to avoid cluttering the output.
+\begin{lstlisting}[style=grayverbatim,label={lst:main_welcome},caption={Welcome message}]
+if(rank == 0)
+    {
+        std::cout << std::string(80, '=') << std::endl;
+        std::cout << "                      Welcome to mini-stencil!" << std::endl;
+        std::cout << "version   :: C++ MPI" << std::endl;
+        std::cout << "processes :: " << size << std::endl;
+        std::cout << "mesh      :: " << options.nx << " * " << options.nx
+                                     << " dx = " << options.dx << std::endl;
+        std::cout << "time      :: " << nt << " time steps from 0 .. "
+                                           << options.nt*options.dt << std::endl;
+        std::cout << "iteration :: " << "CG "          << max_cg_iters
+                                     << ", Newton "    << max_newton_iters
+                                     << ", tolerance " << tolerance << std::endl;
+        std::cout << std::string(80, '=') << std::endl;
+    }
+\end{lstlisting}
 
 \subsection{Domain decomposition [10 Points]}
+Here we are asked to design a domain decomposition strategy that is compatible with any square grid size and any number of MPI processes while considering load balancing, communication overhead and computational efficiency. We were suggested to look at the short discussion in \cite[Sec. 10.4.1]{hager2010hpc}.\\
+We can first notice that for a subdomain of size $n_x \times n_y$ we have a total computation of $n_x \cdot n_y$ while the halo exchange requires $2 \cdot (n_x + n_y)$ communicated boundary points. For a fixed local area $A = n_x n_y$, the arithmetic-geometric mean inequality gives
+\[
+n_x + n_y \ge 2\sqrt{n_x n_y} = 2\sqrt{A},
+\]
+with equality when $n_x = n_y$. Therefore, for a fixed local area, communication is minimized when the rectangle is as close to a square as possible. Indeed in \cite[Sec. 10.4.1]{hager2010hpc} they suggest that we have to avoid slab decomposition. For example, if you split only in $x$, each process has a long thin strip. It computes fewer points, but the communicated boundary length stays large. A 2D Cartesian decomposition is better because both $n_x$ and $n_y$ decrease as the number of MPI processes increases.
+
+\begin{lstlisting}[style=grayverbatim,label={lst:subdomain_init},caption={Initialization of the sub-domain}]
+void SubDomain::init(int mpi_rank, int mpi_size,
+                     Discretization& discretization) {
+    // Determine the number of sub-domains in the x and y dimensions
+    //       using MPI_Dims_create
+    int dims[2] = {0, 0};
+    MPI_Dims_create(mpi_size,2,dims);
+    ndomy = dims[0];
+    ndomx = dims[1];
+
+    // Create a 2D non-periodic Cartesian topology using MPI_Cart_create
+    int periods[2] = {0, 0};
+    MPI_Cart_create(MPI_COMM_WORLD,2,dims,periods,0,&comm_cart);
+
+    // Retrieve coordinates of the rank in the topology using
+    // MPI_Cart_coords
+    int coords[2] = {0, 0};
+    MPI_Cart_coords(comm_cart, mpi_rank , 2 , coords);
+    domy = coords[0] + 1;
+    domx = coords[1] + 1;
+
+    // Set neighbours for all directions using MPI_Cart_shift
+    MPI_Cart_shift(comm_cart, 0 , 1 , &neighbour_south, &neighbour_north);
+    MPI_Cart_shift(comm_cart, 1 , 1 , &neighbour_west, &neighbour_east);
+
+    // get Cartesian coordinates, but use 0-based versions for computations
+    int coord_y = coords[0];
+    int coord_x = coords[1];
+
+    // distribute grid points in x direction
+    int base_nx = discretization.nx / ndomx;
+    int rem_x   = discretization.nx % ndomx;
+
+    nx = base_nx + (coord_x < rem_x ? 1 : 0);
+
+    startx = coord_x * base_nx + std::min(coord_x, rem_x);
+    endx   = startx + nx - 1;
+
+    // distribute grid points in y direction
+    int base_ny = discretization.nx / ndomy;
+    int rem_y   = discretization.nx % ndomy;
+
+    ny = base_ny + (coord_y < rem_y ? 1 : 0);
+
+    starty = coord_y * base_ny + std::min(coord_y, rem_y);
+    endy   = starty + ny - 1;
+
+    // get total number of grid points in this sub-domain
+    N = nx*ny;
+
+    rank = mpi_rank;
+    size = mpi_size;
+}
+\end{lstlisting}
+This code splits the global $N \times N$ grid into a 2D Cartesian process grid. The total number of points in each direction is divided by the number of processes along that axis, giving a base block size (\texttt{base\_nx} and \texttt{base\_ny}). The remainders (\texttt{rem\_x} and \texttt{rem\_y}) are assigned one extra grid point to the first ranks in each direction, so the subdomains differ in size by at most one cell. The expressions for \texttt{startx}, \texttt{endx}, \texttt{starty}, and \texttt{endy} then compute the global index range of each local block using prefix sums. This keeps the workload balanced while still covering the full domain without overlaps or gaps.
 
 \subsection{Linear algebra kernels [5 Points]}
+The linear algebra kernels were adapted to the MPI domain-decomposed setting.
+Most vector operations, such as \texttt{hpc\_fill}, \texttt{hpc\_axpy},
+\texttt{hpc\_scale}, \texttt{hpc\_lcomb}, \texttt{hpc\_copy},
+\texttt{hpc\_scaled\_diff}, and \texttt{hpc\_add\_scaled\_diff}, remain local.
+Each MPI process stores only its own subdomain, and these routines operate
+independently on the local entries.\\
+
+The only kernels requiring MPI communication are the reduction operations
+\texttt{hpc\_dot} and \texttt{hpc\_norm2}. In both cases, each process first
+computes its local contribution. The local results are then combined across all
+MPI ranks using \texttt{MPI\_Allreduce} with \texttt{MPI\_SUM}. This is necessary
+because scalar products and norms are global quantities over the full
+distributed vector. In listing \ref{lst:hpc_dot} we can see the implementation of the dot product. Each process computes the local dot product of its subdomain, and then we call \texttt{MPI\_Allreduce} to sum up the local results into a global result. The same pattern is used for the 2-norm in listing \ref{lst:hpc_norm2}, where we compute the local sum of squares and then take the square root of the global sum.
+
+\begin{lstlisting}[style=grayverbatim,label={lst:hpc_dot},caption={MPI parallel implementation of the dot product}]
+double hpc_dot(Field const& x, Field const& y) {
+    int N = y.length();
+    double result = 0;
+    // compute local result
+    for (int i = 0; i < N; i++) {
+        result += x[i] * y[i];
+    }
+
+    double global_result = 0.0;
+    MPI_Allreduce(&result, &global_result, 1, MPI_DOUBLE, MPI_SUM,
+                  data::domain.comm_cart);
+
+    return global_result;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=grayverbatim,label={lst:hpc_norm2},caption={MPI parallel implementation of the 2-norm}]
+double hpc_norm2(Field const& x) {
+    int N = x.length();
+    double result = 0;
+    // compute local result
+    for (int i = 0; i < N; i++) {
+        result += x[i] * x[i];
+    }
+
+    double global_result = 0.0;
+    MPI_Allreduce(&result, &global_result, 1, MPI_DOUBLE, MPI_SUM,
+                  data::domain.comm_cart);
+
+    return sqrt(global_result);
+}
+\end{lstlisting}
+
+The conjugate-gradient solver \texttt{hpc\_cg} did not require structural
+changes, since it calls the linear algebra kernels internally. Once the dot
+products and norms are made global, the CG coefficients are computed
+consistently across all ranks.
+
+
 
 \subsection{The diffusion stencil: Ghost cells exchange [10 Points]}
+Here we are asked to implement the ghost cell exchange between neighboring processes using non-
+blocking point-to-point communication with the objective to overlap computation and communication.\\
+In listing \ref{lst:ghost_exchange} we provide a piece of the \texttt{diffusion} method where we tried to implement the ghost cell exchange.
+\begin{lstlisting}[style=grayverbatim,label={lst:ghost_exchange},caption={Ghost cell exchange using non-blocking point-to-point communication}]
+    int countx = nx ; // number of interior points in x for rows
+    int county = ny ; // number of interior points in y for columns
+
+    // temporary send buffers for columns (non-contiguous in Field)
+    std::vector<double> sendW(county), sendE(county);
+    for (int j = 0; j < county; ++j) {
+        sendW[j] = s_new(0, j);         // left interior column
+        sendE[j] = s_new(nx-1, j);     // right interior column
+    }
+
+    MPI_Request reqs[8];
+    int reqcnt = 0;
+
+    // Post non-blocking receives into the boundary arrays (contiguous)
+    if (domain.neighbour_north != MPI_PROC_NULL) {
+        MPI_Irecv(&bndN[0], countx, MPI_DOUBLE, domain.neighbour_north, 0,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+    if (domain.neighbour_south != MPI_PROC_NULL) {
+        MPI_Irecv(&bndS[0], countx, MPI_DOUBLE, domain.neighbour_south, 0,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+    if (domain.neighbour_west != MPI_PROC_NULL) {
+        MPI_Irecv(&bndW[0], county, MPI_DOUBLE, domain.neighbour_west, 1,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+    if (domain.neighbour_east != MPI_PROC_NULL) {
+        MPI_Irecv(&bndE[0], county, MPI_DOUBLE, domain.neighbour_east, 1,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+
+    // Post non-blocking sends
+    if (domain.neighbour_north != MPI_PROC_NULL) {
+        MPI_Isend(&s_new(0, ny-1), countx, MPI_DOUBLE, domain.neighbour_north, 0,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+    if (domain.neighbour_south != MPI_PROC_NULL) {
+        MPI_Isend(&s_new(0, 0), countx, MPI_DOUBLE, domain.neighbour_south, 0,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+    if (domain.neighbour_west != MPI_PROC_NULL) {
+        MPI_Isend(sendW.data(), county, MPI_DOUBLE, domain.neighbour_west, 1,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+    if (domain.neighbour_east != MPI_PROC_NULL) {
+        MPI_Isend(sendE.data(), county, MPI_DOUBLE, domain.neighbour_east, 1,
+                  domain.comm_cart, &reqs[reqcnt++]);
+    }
+
+    // Wait for all posted requests
+    if (reqcnt > 0) MPI_Waitall(reqcnt, reqs, MPI_STATUSES_IGNORE);
+\end{lstlisting}
+
+This implementation exchanges the halo cells by separating the communication
+into two directions. The north and south boundaries can be sent directly,
+because the corresponding rows are contiguous in memory, while the west and
+east boundaries require temporary buffers since the columns of the local field
+are not stored contiguously. For this reason, first we pack the left and
+right interior columns into \texttt{sendW} and \texttt{sendE}, and then posts
+non-blocking receives and sends for all available neighbors. Using
+\texttt{MPI\_Irecv} and \texttt{MPI\_Isend} allows the communication to
+progress while the interior part of the stencil can still be computed, which is
+the main mechanism for overlapping communication and computation. The tags
+\texttt{0} and \texttt{1} distinguish row and column messages, and the checks
+against \texttt{MPI\_PROC\_NULL} ensure that boundary processes simply skip
+the missing neighbors. Finally, \texttt{MPI\_Waitall} guarantees that all
+halo exchanges are complete before the updated ghost layers are used in the
+next stencil step.
 
 \subsection{Implement parallel I/O [10 Points]}
+By looking at the file \texttt{mpio\_io.c} we were asked to implement the output of the computed solution with MPI-I/O.\\
+This was done by completing the function \texttt{write\_binary} in \texttt{main.cpp} as shown in listing \ref{lst:mpio_io}.
+\begin{lstlisting}[style=grayverbatim,label={lst:mpio_io},caption={MPI-IO implementation of the output}]
+void write_binary(std::string fname, Field &u, SubDomain &domain,
+                  Discretization &options) {
+    MPI_File file;
+    MPI_File_open(MPI_COMM_WORLD, fname.c_str(),
+                  MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
 
+    // global sizes (full global grid)
+    int sizes[2] = { options.nx, options.nx };
+    // local subarray sizes
+    int subsizes[2] = { domain.ny, domain.nx };
+    // start indices in the global array
+    int starts[2] = { domain.starty, domain.startx };
+
+    MPI_Datatype filetype;
+    MPI_Type_create_subarray(2, sizes, subsizes, starts, MPI_ORDER_C,
+                             MPI_DOUBLE, &filetype);
+    MPI_Type_commit(&filetype);
+
+    MPI_Offset disp = 0;
+    MPI_File_set_view(file, disp, MPI_DOUBLE, filetype, "native", MPI_INFO_NULL);
+
+    // write the local data collectively
+    MPI_File_write_all(file, u.data(), domain.N, MPI_DOUBLE, MPI_STATUS_IGNORE);
+
+    MPI_Type_free(&filetype);
+    MPI_File_close(&file);
+}
+\end{lstlisting}
+The implementation uses MPI-IO to write the distributed field data into a single binary file. Each process defines a subarray datatype that describes its local portion of the global grid, and then collectively writes its data using \texttt{MPI\_File\_write\_all}. The use of \texttt{MPI\_Type\_create\_subarray} allows each process to specify its unique offset and size within the global array, enabling a seamless parallel output without the need for gathering data on a single rank.
 \subsection{Strong scaling [10 Points]}
 
 \subsection{Weak scaling [10 Points]}
@@ -47,5 +337,5 @@
 
 \subsection{A self-scheduling example: Parallel Mandelbrot [30 Points]}
 
-
+\printbibliography
 \end{document}

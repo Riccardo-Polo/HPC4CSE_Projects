@@ -8,8 +8,8 @@ rank = comm.Get_rank()
 proc = MPI.Get_processor_name()
 
 
-total = np.array(rank, dtype=np.int)
-current_value = np.array(rank, dtype=np.int)
+total = np.array(rank)
+current_value = np.array(rank)
 
 for _ in range(size - 1):
     received_value = comm.Sendrecv(

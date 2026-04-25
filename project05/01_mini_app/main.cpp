@@ -42,11 +42,11 @@ void write_binary(std::string fname, Field &u, SubDomain &domain,
                   MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
 
     // global sizes (full global grid)
-    int sizes[2] = { options.nx, options.nx };
+    int sizes[2] = { options.nx, options.ny };
     // local subarray sizes
-    int subsizes[2] = { domain.ny, domain.nx };
+    int subsizes[2] = { domain.nx, domain.ny };
     // start indices in the global array
-    int starts[2] = { domain.starty, domain.startx };
+    int starts[2] = { domain.startx, domain.starty };
 
     MPI_Datatype filetype;
     MPI_Type_create_subarray(2, sizes, subsizes, starts, MPI_ORDER_C,

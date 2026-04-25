@@ -10,7 +10,7 @@ proc = MPI.Get_processor_name()
 
 total = np.array(rank,dtype=np.int32)
 current_value = np.array(rank,dtype=np.int32)
-received_value = np.empty(1,dtype=np.int32)
+received_value = np.empty(current_value)
 
 for _ in range(size - 1):
     comm.Sendrecv(

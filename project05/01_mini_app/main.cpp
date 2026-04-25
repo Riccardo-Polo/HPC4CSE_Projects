@@ -42,11 +42,11 @@ void write_binary(std::string fname, Field &u, SubDomain &domain,
                   MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
 
     // global sizes (full global grid)
-    int sizes[2] = { options.nx, options.ny };
+    int sizes[2] = { options.nx, options.nx };
     // local subarray sizes
-    int subsizes[2] = { domain.nx, domain.ny };
+    int subsizes[2] = { domain.ny, domain.nx };
     // start indices in the global array
-    int starts[2] = { domain.startx, domain.starty };
+    int starts[2] = { domain.starty, domain.startx };
 
     MPI_Datatype filetype;
     MPI_Type_create_subarray(2, sizes, subsizes, starts, MPI_ORDER_C,
@@ -209,12 +209,17 @@ int main(int argc, char* argv[]) {
     double xc = 1.0 / 4.0;
     double yc = 1.0 / 4.0;
     double radius = std::min(xc, yc) / 2.0;
-    for (int j = domain.starty-1; j < domain.endy; j++) {
-        double y = (j - 1) * options.dx;
-        for (int i = domain.startx-1; i < domain.endx; i++) {
-            double x = (i - 1) * options.dx;
+    for (int j = domain.starty; j <= domain.endy; j++) {
+        double y = j * options.dx;
+
+        for (int i = domain.startx; i <= domain.endx; i++) {
+            double x = i * options.dx;
+
+            int iloc = i - domain.startx;
+            int jloc = j - domain.starty;
+
             if ((x - xc) * (x - xc) + (y - yc) * (y - yc) < radius * radius) {
-                y_new(i-domain.startx+1,j-domain.starty+1) = inner_circle;
+                y_new(iloc, jloc) = inner_circle;
             }
         }
     }

@@ -50,7 +50,7 @@ void SubDomain::init(int mpi_rank, int mpi_size,
     domx = coords[1] + 1;
 
     // TODO: set neighbours for all directions using MPI_Cart_shift
-    MPI_Cart_shift(comm_cart, 0 , 1 , &neighbour_north, &neighbour_south);
+    MPI_Cart_shift(comm_cart, 0 , 1 , &neighbour_south, &neighbour_north);
     MPI_Cart_shift(comm_cart, 1 , 1 , &neighbour_west, &neighbour_east);
 
     // get Cartesian coordinates, but use 0-based versions for computations

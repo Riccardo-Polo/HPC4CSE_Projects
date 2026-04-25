@@ -22,8 +22,8 @@ for _ in range(size - 1):
         recvtag=0,
     )
 
-    np.add(total, received_value, out=total,casting='unsafe')
-    np.add(current_value, received_value, out=current_value,casting='unsafe')
+    np.add(total, received_value, out=total)
+    np.add(current_value, received_value, out=current_value)
 
 print(f"Sum is {total} on processor {proc}, rank {rank} out of {size} "
       f"processes")

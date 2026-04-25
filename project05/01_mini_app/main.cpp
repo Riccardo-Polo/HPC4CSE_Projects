@@ -46,7 +46,7 @@ void write_binary(std::string fname, Field &u, SubDomain &domain,
     // local subarray sizes
     int subsizes[2] = { domain.nx, domain.ny };
     // start indices in the global array
-    int starts[2] = { domain.startx, domain.starty };
+    int starts[2] = { domain.starty, domain.startx };
 
     MPI_Datatype filetype;
     MPI_Type_create_subarray(2, sizes, subsizes, starts, MPI_ORDER_C,

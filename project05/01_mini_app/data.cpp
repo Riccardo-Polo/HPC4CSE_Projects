@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cmath>
 #include <mpi.h>
+#include <algorithm>
 
 
 
@@ -52,13 +53,27 @@ void SubDomain::init(int mpi_rank, int mpi_size,
     MPI_Cart_shift(comm_cart, 0 , 1 , &neighbour_north, &neighbour_south);
     MPI_Cart_shift(comm_cart, 1 , 1 , &neighbour_west, &neighbour_east);
 
-    // get bounding box
-    nx = discretization.nx / ndomx;
-    ny = discretization.nx / ndomy;
-    startx = (domx-1)*nx+1;
-    starty = (domy-1)*ny+1;
-    endx = startx + nx -1;
-    endy = starty + ny -1;
+    // get Cartesian coordinates, but use 0-based versions for computations
+    int coord_y = coords[0];
+    int coord_x = coords[1];
+
+    // distribute grid points in x direction
+    int base_nx = discretization.nx / ndomx;
+    int rem_x   = discretization.nx % ndomx;
+
+    nx = base_nx + (coord_x < rem_x ? 1 : 0);
+
+    startx = coord_x * base_nx + std::min(coord_x, rem_x);
+    endx   = startx + nx - 1;
+
+    // distribute grid points in y direction
+    int base_ny = discretization.nx / ndomy;
+    int rem_y   = discretization.nx % ndomy;
+
+    ny = base_ny + (coord_y < rem_y ? 1 : 0);
+
+    starty = coord_y * base_ny + std::min(coord_y, rem_y);
+    endy   = starty + ny - 1;
 
     // get total number of grid points in this sub-domain
     N = nx*ny;

@@ -8,9 +8,9 @@ rank = comm.Get_rank()
 proc = MPI.Get_processor_name()
 
 
-total = np.array(rank)
-current_value = np.array(rank)
-received_value = np.array(0)
+total = np.array(rank,dtype=np.int32)
+current_value = np.array(rank,dtype=np.int32)
+received_value = np.array(0,dtype=np.int32)
 
 for _ in range(size - 1):
     comm.Sendrecv(
@@ -22,8 +22,8 @@ for _ in range(size - 1):
         recvtag=0,
     )
 
-    total += received_value
-    current_value = received_value
+    np.add(total, received_value, out=total,casting='unsafe')
+    np.add(current_value, received_value, out=current_value,casting='unsafe')
 
 print(f"Sum is {total} on processor {proc}, rank {rank} out of {size} "
       f"processes")

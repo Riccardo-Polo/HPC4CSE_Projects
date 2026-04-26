@@ -14,67 +14,63 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-data = np.ndarray((DOMAIN_SIZE, DOMAIN_SIZE), dtype=np.int32)
+# Initialization
+data = np.full((DOMAIN_SIZE, DOMAIN_SIZE), -1, dtype=np.int32)
+data[1:-1, 1:-1] = rank
 
-if (size != 12):
-    if rank == 0:
-        print("Please run this with exactly 12 processes.")
-    exit()
+dims = [3, 4]
+periods = [True, True]
 
-# Initialize the domain
-for i in range(1, DOMAIN_SIZE):
-    for j in range(1, DOMAIN_SIZE):
-        data[i, j] = rank
-# set corners to dummy value
-data[0,0] = -1
-data[0,DOMAIN_SIZE-1] = -1
-data[DOMAIN_SIZE-1,0] = -1
-data[DOMAIN_SIZE-1,DOMAIN_SIZE-1] = -1
+cart = comm.Create_cart(dims=dims, periods=periods, reorder=False)
 
-# set the dimensions of the processor grid and periodic boundaries in both dimensions 
-dims = np.array((2,1), dtype=np.int32)
-dims[0] = 3
-dims[1] = 4
-periods = np.array((2,1), dtype=np.int32)
-periods[0] = 1
-periods[1] = 1
+rank_south, rank_north = cart.Shift(1, 1)
+rank_west, rank_east   = cart.Shift(0, 1)
 
-#Create a Cartesian communicator (3*4) with periodic boundaries and
-#  use it to find your neighboring ranks in all dimensions in a
-#  cyclic manner.
-cart = comm.Create_cart(dims=dims,periods=periods,reorder=True)
-cart_rank = cart.Get_rank()
-coords = cart.Get_coords(cart_rank)
-
-# get the neighboring ranks in all dimensions
-rank_south , rank_north = cart.Shift(1,-1)
-rank_west , rank_east = cart.Shift(0,1)
-
-# exchange the ghost cells with the neighbors
-
-# send top interior row to nort , receive bottom ghost row from south
-comm.Sendrecv(
-    np.ascontiguousarray(data[1,:]), dest=rank_north, sendtag=0,
-    recvbuf=np.ascontiguousarray(data[DOMAIN_SIZE-1,:]), source=rank_south, recvtag=0
+# North/South exchange
+cart.Sendrecv(
+    sendbuf=data[DOMAIN_SIZE-2, 1:-1],
+    dest=rank_north,
+    sendtag=0,
+    recvbuf=data[0, 1:-1],
+    source=rank_south,
+    recvtag=0
 )
 
-#send bottom interior row to south,receive top ghost row from north 
-comm.Sendrecv(
-    np.ascontiguousarray(data[DOMAIN_SIZE-2,:]), dest=rank_south, sendtag=1,
-    recvbuf=np.ascontiguousarray(data[0,:]), source=rank_north, recvtag=1
+cart.Sendrecv(
+    sendbuf=data[1, 1:-1],
+    dest=rank_south,
+    sendtag=1,
+    recvbuf=data[DOMAIN_SIZE-1, 1:-1],
+    source=rank_north,
+    recvtag=1
 )
 
-#send right interior column to east, receive left ghost column from west
-comm.Sendrecv(
-    np.ascontiguousarray(data[:, DOMAIN_SIZE-2]), dest=rank_east, sendtag=2,
-    recvbuf=np.ascontiguousarray(data[:, 0]), source=rank_west, recvtag=2
-)
+# West/East exchange: columns are not contiguous, so use temporary arrays
+recv_west = np.empty(SUBDOMAIN_SIZE, dtype=np.int32)
+recv_east = np.empty(SUBDOMAIN_SIZE, dtype=np.int32)
 
-# send left interior column to west, receive right ghost column  from east 
-comm.Sendrecv(
-    np.ascontiguousarray(data[:, 1]), dest=rank_west, sendtag=3,
-    recvbuf=np.ascontiguousarray(data[:, DOMAIN_SIZE-1]), source=rank_east, recvtag=3
+send_east = np.ascontiguousarray(data[1:-1, DOMAIN_SIZE-2])
+send_west = np.ascontiguousarray(data[1:-1, 1])
+
+cart.Sendrecv(
+    sendbuf=send_east,
+    dest=rank_east,
+    sendtag=2,
+    recvbuf=recv_west,
+    source=rank_west,
+    recvtag=2
 )
+data[1:-1, 0] = recv_west
+
+cart.Sendrecv(
+    sendbuf=send_west,
+    dest=rank_west,
+    sendtag=3,
+    recvbuf=recv_east,
+    source=rank_east,
+    recvtag=3
+)
+data[1:-1, DOMAIN_SIZE-1] = recv_east
 
 io_rank = 5
 if rank == io_rank:

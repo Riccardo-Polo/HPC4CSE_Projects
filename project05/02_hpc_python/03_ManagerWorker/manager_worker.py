@@ -47,7 +47,7 @@ def manager(comm, tasks):
         tasks[task_id] = completed_task
 
         if next_task < len(tasks):
-            comm.send(tasks[next_task], dest=worker, tag=TAG_TASK)
+            comm.send((next_task, tasks[next_task]), dest=worker, tag=TAG_TASK)
             next_task += 1
         else:
             comm.send(None, dest=worker, tag=TAG_DONE)

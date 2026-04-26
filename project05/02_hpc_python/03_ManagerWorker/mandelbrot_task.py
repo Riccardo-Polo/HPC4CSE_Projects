@@ -100,6 +100,8 @@ class mandelbrot_patch():
         grid spacing in y-direction
     Nmax : int
         Maximum number of iterations
+    Done : bool
+        Whether the patch has been computed or not
     """
     def __init__(self, i_start, nx_local, x_start, dx,
                        j_start, ny_local, y_start, dy, Nmax):
@@ -112,6 +114,7 @@ class mandelbrot_patch():
         self._y_start  = y_start
         self._dy       = dy
         self._Nmax = Nmax
+        self._Done = False
 
     def do_work(self):
         """Compute Mandelbrot (sub)set/patch."""
@@ -125,6 +128,7 @@ class mandelbrot_patch():
             z[mask] = z[mask]**2 + c[mask]
             mask[np.abs(z) > 2.] = False
         self._patch = (np.abs(z) <= 2.)
+        self._Done = True
 
 def main():
     import matplotlib.pyplot as plt

@@ -24,7 +24,7 @@ def manager(comm, tasks):
     # send initial tasks
     for worker in range(1, size):
         if next_task < len(tasks):
-            comm.send(tasks[next_task], dest=worker, tag=TAG_TASK)
+            comm.send((next_task, tasks[next_task]), dest=worker, tag=TAG_TASK)
             next_task += 1
             active_workers += 1
         else:
@@ -34,17 +34,17 @@ def manager(comm, tasks):
     status = MPI.Status()
 
     while active_workers > 0:
-        completed_task = comm.recv(
-            source=MPI.ANY_SOURCE,
-            tag=TAG_TASK_DONE,
-            status=status
+        task_id, completed_task = comm.recv(
+        source=MPI.ANY_SOURCE,
+        tag=TAG_TASK_DONE,
+        status=status
         )
 
         worker = status.Get_source()
         TasksDoneByWorker[worker] += 1
 
         # replace the completed task in the task list
-        tasks[completed_task._Id] = completed_task
+        tasks[task_id] = completed_task
 
         if next_task < len(tasks):
             comm.send(tasks[next_task], dest=worker, tag=TAG_TASK)
@@ -59,13 +59,15 @@ def manager(comm, tasks):
 def worker(comm):
     while True:
         status = MPI.Status()
-        task = comm.recv(source=MANAGER, tag=MPI.ANY_TAG, status=status)
+        message = comm.recv(source=MANAGER, tag=MPI.ANY_TAG, status=status)
 
         if status.Get_tag() == TAG_DONE:
             break
 
+        task_id, task = message
         task.do_work()
-        comm.send(task, dest=MANAGER, tag=TAG_TASK_DONE)
+
+        comm.send((task_id, task), dest=MANAGER, tag=TAG_TASK_DONE)
 
 def readcmdline(rank):
     """

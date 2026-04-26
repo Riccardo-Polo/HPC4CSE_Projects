@@ -14,7 +14,7 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-data = np.array((DOMAIN_SIZE, DOMAIN_SIZE), dtype=np.int32)
+data = np.ndarray((DOMAIN_SIZE, DOMAIN_SIZE), dtype=np.int32)
 
 if (size != 12):
     if rank == 0:
@@ -26,16 +26,16 @@ for i in range(1, DOMAIN_SIZE):
     for j in range(1, DOMAIN_SIZE):
         data[i, j] = rank
 # set corners to dummy value
-data(0,0) = -1
-data(0,DOMAIN_SIZE-1) = -1
-data(DOMAIN_SIZE-1,0) = -1
-data(DOMAIN_SIZE-1,DOMAIN_SIZE-1) = -1
+data[0,0] = -1
+data[0,DOMAIN_SIZE-1] = -1
+data[DOMAIN_SIZE-1,0] = -1
+data[DOMAIN_SIZE-1,DOMAIN_SIZE-1] = -1
 
 # set the dimensions of the processor grid and periodic boundaries in both dimensions 
-dims = np.array((2,), dtype=np.int32)
+dims = np.array((2,1), dtype=np.int32)
 dims[0] = 3
 dims[1] = 4
-periods = np.array((2,), dtype=np.int32)
+periods = np.array((2,1), dtype=np.int32)
 periods[0] = 1
 periods[1] = 1
 
@@ -47,33 +47,33 @@ cart_rank = cart.Get_rank()
 coords = cart.Get_coords(cart_rank)
 
 # get the neighboring ranks in all dimensions
-rank_south , rank_north = cart.shift(1,1)
-rank_west , rank_east = cart.shift(0,1)
+rank_south , rank_north = cart.Shift(1,-1)
+rank_west , rank_east = cart.Shift(0,-1)
 
 # exchange the ghost cells with the neighbors
 
 # send top interior row to nort , receive bottom ghost row from south
 comm.Sendrecv(
-    data[1,:], dest=rank_north, sendtag=0,
-    recvbuf=data[DOMAIN_SIZE-1,:], source=rank_south, recvtag=0
+    np.ascontiguousarray(data[1,:]), dest=rank_north, sendtag=0,
+    recvbuf=np.ascontiguousarray(data[DOMAIN_SIZE-1,:]), source=rank_south, recvtag=0
 )
 
 #send bottom interior row to south,receive top ghost row from north 
 comm.Sendrecv(
-    data[DOMAIN_SIZE-2,:], dest=rank_south, sendtag=1,
-    recvbuf=data[0,:], source=rank_north, recvtag=1
+    np.ascontiguousarray(data[DOMAIN_SIZE-2,:]), dest=rank_south, sendtag=1,
+    recvbuf=np.ascontiguousarray(data[0,:]), source=rank_north, recvtag=1
 )
 
 #send right interior column to east, receive left ghost column from west
 comm.Sendrecv(
-    data[:, DOMAIN_SIZE-2], dest=rank_east, sendtag=2,
-    recvbuf=data[:, 0], source=rank_west, recvtag=2
+    np.ascontiguousarray(data[:, DOMAIN_SIZE-2]), dest=rank_east, sendtag=2,
+    recvbuf=np.ascontiguousarray(data[:, 0]), source=rank_west, recvtag=2
 )
 
 # send left interior column to west, receive right ghost column  from east 
 comm.Sendrecv(
-    data[:, 1], dest=rank_west, sendtag=3,
-    recvbuf=data[:, DOMAIN_SIZE-1], source=rank_east, recvtag=3
+    np.ascontiguousarray(data[:, 1]), dest=rank_west, sendtag=3,
+    recvbuf=np.ascontiguousarray(data[:, DOMAIN_SIZE-1]), source=rank_east, recvtag=3
 )
 
 io_rank = 5

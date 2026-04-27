@@ -136,18 +136,22 @@ if __name__ == "__main__":
         M = mandelbrot(x_min, x_max, nx, y_min, y_max, ny, ntasks)
         tasks = M.get_tasks()
 
-        TasksDoneByWorker = manager(comm, tasks)
+        if size == 1:
+            for task in tasks:
+                task.do_work()
+            TasksDoneByWorker = {0: len(tasks)}
+        else:
+            TasksDoneByWorker = manager(comm, tasks)
 
         m = M.combine_tasks(tasks)
         plt.imshow(m.T, cmap="gray", extent=[x_min, x_max, y_min, y_max])
         plt.savefig("mandelbrot.pdf")
 
-        # stop timer
         timespent += time.perf_counter()
 
         print(f"Run took {timespent:f} seconds")
-        for i in range(1, size):
-            print(f"Process {i:5d} has done {TasksDoneByWorker[i]:10d} tasks")
+        for i in range(size):
+            print(f"Process {i:5d} has done {TasksDoneByWorker.get(i, 0):10d} tasks")
         print("Done.")
 
     else:

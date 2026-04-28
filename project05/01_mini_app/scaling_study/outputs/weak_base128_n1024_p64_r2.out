@@ -1,4 +1,3 @@
-srun: Step created for StepId=65023882.22
 ================================================================================
                       Welcome to mini-stencil!
 version   :: C++ MPI
@@ -8,9 +7,9 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 2.2474 seconds
-10511 conjugate gradient iterations, at rate of 4676.96 iters/second
+simulation took 1.28955 seconds
+10511 conjugate gradient iterations, at rate of 8150.92 iters/second
 304 Newton iterations
 --------------------------------------------------------------------------------
-### 64, 1024, 100, 10511, 304, 2.2474 ###
+### 64, 1024, 100, 10511, 304, 1.28955 ###
 Goodbye!

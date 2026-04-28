@@ -7,9 +7,9 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ================================================================================
 --------------------------------------------------------------------------------
-simulation took 1.09604 seconds
-2784 conjugate gradient iterations, at rate of 2540.04 iters/second
+simulation took 1.06531 seconds
+2784 conjugate gradient iterations, at rate of 2613.31 iters/second
 300 Newton iterations
 --------------------------------------------------------------------------------
-### 1, 256, 100, 2784, 300, 1.09604 ###
+### 1, 256, 100, 2784, 300, 1.06531 ###
 Goodbye!

@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/cluster/home/ripolo/hpc_projects/project05/01_mini_app/scaling_study/plot_scaling.py", line 5, in <module>
-    import matplotlib
-ModuleNotFoundError: No module named 'matplotlib'

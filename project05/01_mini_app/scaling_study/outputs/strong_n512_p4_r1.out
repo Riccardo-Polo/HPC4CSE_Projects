@@ -1,5 +1,15 @@
-[2026-04-28T14:20:47.595+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project05/01_mini_app/scaling_study/./main: No such file or directory
-[2026-04-28T14:20:47.597+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project05/01_mini_app/scaling_study/./main: No such file or directory
-[2026-04-28T14:20:47.597+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project05/01_mini_app/scaling_study/./main: No such file or directory
-[2026-04-28T14:20:47.597+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project05/01_mini_app/scaling_study/./main: No such file or directory
-srun: error: eu-a2p-483: tasks 0-3: Exited with exit code 2
+================================================================================
+                      Welcome to mini-stencil!
+version   :: C++ MPI
+processes :: 4
+mesh      :: 512 * 512 dx = 0.00195695
+time      :: 100 time steps from 0 .. 0.005
+iteration :: CG 300, Newton 50, tolerance 1e-06
+================================================================================
+--------------------------------------------------------------------------------
+simulation took 2.30668 seconds
+5355 conjugate gradient iterations, at rate of 2321.52 iters/second
+300 Newton iterations
+--------------------------------------------------------------------------------
+### 4, 512, 100, 5355, 300, 2.30668 ###
+Goodbye!

@@ -332,10 +332,357 @@ The implementation uses MPI-IO to write the distributed field data into a single
 \section{Python for High-Performance Computing [in total 40 points]}
 
 \subsection{Sum of ranks: MPI collectives [5 Points]}
+We were asked to implement the sum of ranks using MPI for Python’s collective communication method.
+\subsubsection{Pickle based}
+In the first case we had to use pickle-based communication of generic Python objects, i.e. the all-lowercase methods.\\
+In listing \ref{lst:sum_ranks_pickle} we can see the implementation of the sum of ranks using the pickle-based collective communication method.
+\begin{lstlisting}[style=grayverbatim,label={lst:sum_ranks_pickle},caption={Sum of ranks using pickle-based collective communication}]
+from mpi4py import MPI
 
+# get comm, size, rank & host name
+comm = MPI.COMM_WORLD
+size = comm.Get_size()
+rank = comm.Get_rank()
+proc = MPI.Get_processor_name()
+
+total = rank
+current_value = rank
+
+for _ in range(size - 1):
+    received_value = comm.sendrecv(
+        current_value,
+        dest=(rank + 1) % size,
+        sendtag=0,
+        source=(rank - 1 + size) % size,
+        recvtag=0,
+    )
+    total += received_value
+    current_value = received_value
+
+print(f"Sum is {total} on processor {proc}, rank {rank} out of {size} "
+      f"processes")
+\end{lstlisting}
+To compute the sum of ranks, we use a ring communication pattern where each process sends its current value to the next process and receives a value from the previous process. Each process starts with its own rank as the initial value, and in each iteration, it adds the received value to its total. After $size - 1$ iterations, each process will have the complete sum of all ranks. The use of \texttt{comm.sendrecv} allows for simultaneous sending and receiving, which can help to reduce communication overhead compared to separate send and receive calls.\\
+The output of this code (on a system with 8 processes on 4 nodes) is given in listing \ref{lst:sum_ranks_output}.
+\begin{lstlisting}[style=grayverbatim,label={lst:sum_ranks_output},caption={Output of the sum of ranks using pickle-based collective communication}]
+ripolo@eu-login-14:~/hpc_projects/project05/02_hpc_python/01_sum$ srun python3 sum_pickle.py
+Sum is 28 on processor eu-a2p-301, rank 2 out of 8 processes
+Sum is 28 on processor eu-a2p-301, rank 3 out of 8 processes
+Sum is 28 on processor eu-a2p-299, rank 0 out of 8 processes
+Sum is 28 on processor eu-a2p-344, rank 6 out of 8 processes
+Sum is 28 on processor eu-a2p-335, rank 5 out of 8 processes
+Sum is 28 on processor eu-a2p-299, rank 1 out of 8 processes
+Sum is 28 on processor eu-a2p-344, rank 7 out of 8 processes
+Sum is 28 on processor eu-a2p-335, rank 4 out of 8 processes
+\end{lstlisting}
+\subsubsection{Direct array data communication}
+In the second case we had to use direct array data communication with the all-uppercase methods, i.e. the MPI methods that directly handle array data without pickling.\\
+In listing \ref{lst:sum_ranks_direct} we can see the implementation of the sum of ranks using direct array data communication.
+\begin{lstlisting}[style=grayverbatim,label={lst:sum_ranks_direct},caption={Sum of ranks using direct array data communication}]
+from mpi4py import MPI
+import numpy as np
+
+# get comm, size, rank & host name
+comm = MPI.COMM_WORLD
+size = comm.Get_size()
+rank = comm.Get_rank()
+proc = MPI.Get_processor_name()
+
+
+total = np.array(rank,dtype=np.int32)
+current_value = np.array(rank,dtype=np.int32)
+received_value = np.array(0,dtype=np.int32)
+for _ in range(size - 1):
+    comm.Sendrecv(
+        current_value,
+        dest=(rank + 1) % size,
+        sendtag=0,
+        recvbuf=received_value,
+        source=(rank - 1 + size) % size,
+        recvtag=0,
+    )
+
+    total += received_value
+    current_value[...] = received_value
+
+print(f"Sum is {total} on processor {proc}, rank {rank} out of {size} "
+      f"processes")
+\end{lstlisting}
+This implementation is similar to the previous one, but instead of using the pickle-based \texttt{comm.sendrecv}, we use \texttt{comm.Sendrecv} which directly sends and receives NumPy arrays. We create NumPy arrays for the total, current value, and received value, and we use the same ring communication pattern to compute the sum of ranks. The use of direct array communication can be more efficient than pickling, especially for larger data, as it avoids the overhead of serialization and deserialization.\\
+The output of this code (on a system with 8 processes on 4 nodes) is given in listing \ref{lst:sum_ranks_direct_output}.
+\begin{lstlisting}[style=grayverbatim,label={lst:sum_ranks_direct_output},caption={Output of the sum of ranks using direct array data communication}]
+ripolo@eu-login-14:~/hpc_projects/project05/02_hpc_python/01_sum$ srun python3 sum_fast.py
+Sum is 28 on processor eu-a2p-335, rank 4 out of 8 processes
+Sum is 28 on processor eu-a2p-335, rank 5 out of 8 processes
+Sum is 28 on processor eu-a2p-301, rank 2 out of 8 processes
+Sum is 28 on processor eu-a2p-299, rank 0 out of 8 processes
+Sum is 28 on processor eu-a2p-344, rank 6 out of 8 processes
+Sum is 28 on processor eu-a2p-301, rank 3 out of 8 processes
+Sum is 28 on processor eu-a2p-299, rank 1 out of 8 processes
+Sum is 28 on processor eu-a2p-344, rank 7 out of 8 processes
+\end{lstlisting}
 \subsection{Ghost cell exchange between neighboring processes [5 Points]}
+Here we were asked to create a two-dimensional, periodic Cartesian topology and implement ghost cell exchange.\\
+In listing \ref{lst:ghost_exchange_python} we can see the implementation of the ghost cell exchange between neighboring processes in Python using mpi4py.
+\begin{lstlisting}[style=grayverbatim,label={lst:ghost_exchange_python},caption={Ghost cell exchange between neighboring processes in Python using mpi4py}]
+from mpi4py import MPI
+import numpy as np
 
+# get comm, size, rank & host name
+comm = MPI.COMM_WORLD
+size = comm.Get_size()
+rank = comm.Get_rank()
+proc = MPI.Get_processor_name()
+
+SUBDOMAIN_SIZE = 6
+DOMAIN_SIZE = SUBDOMAIN_SIZE + 2
+
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
+
+# Initialization
+data = np.full((DOMAIN_SIZE, DOMAIN_SIZE), -1, dtype=np.int32)
+data[1:-1, 1:-1] = rank
+
+dims = [3, 4]
+periods = [True, True]
+
+cart = comm.Create_cart(dims=dims, periods=periods, reorder=False)
+
+rank_south, rank_north = cart.Shift(1, 1)
+rank_west, rank_east   = cart.Shift(0, 1)
+
+# North/South exchange
+cart.Sendrecv(
+    sendbuf=data[DOMAIN_SIZE-2, 1:-1],
+    dest=rank_north,
+    sendtag=0,
+    recvbuf=data[0, 1:-1],
+    source=rank_south,
+    recvtag=0
+)
+
+cart.Sendrecv(
+    sendbuf=data[1, 1:-1],
+    dest=rank_south,
+    sendtag=1,
+    recvbuf=data[DOMAIN_SIZE-1, 1:-1],
+    source=rank_north,
+    recvtag=1
+)
+
+# West/East exchange: columns are not contiguous, so use temporary arrays
+recv_west = np.empty(SUBDOMAIN_SIZE, dtype=np.int32)
+recv_east = np.empty(SUBDOMAIN_SIZE, dtype=np.int32)
+
+send_east = np.ascontiguousarray(data[1:-1, DOMAIN_SIZE-2])
+send_west = np.ascontiguousarray(data[1:-1, 1])
+
+cart.Sendrecv(
+    sendbuf=send_east,
+    dest=rank_east,
+    sendtag=2,
+    recvbuf=recv_west,
+    source=rank_west,
+    recvtag=2
+)
+data[1:-1, 0] = recv_west
+
+cart.Sendrecv(
+    sendbuf=send_west,
+    dest=rank_west,
+    sendtag=3,
+    recvbuf=recv_east,
+    source=rank_east,
+    recvtag=3
+)
+data[1:-1, DOMAIN_SIZE-1] = recv_east
+
+\end{lstlisting}
+The output of this code (on a system with 12 processes arranged in a 3x4 grid) is given in listing \ref{lst:ghost_exchange_python_output}.
+\begin{lstlisting}[style=grayverbatim,label={lst:ghost_exchange_python_output},caption={Output of the ghost cell exchange between neighboring processes in Python using mpi4py}]
+ripolo@eu-login-14:~/hpc_projects/project05/02_hpc_python/02_ghost$ srun python3 ghost.py
+North rank 6, South rank 4, West rank 1, East rank 9
+data of rank 5 after communication
+j
+^
+| -1.0  6.0  6.0  6.0  6.0  6.0  6.0 -1.0
+|  1.0  5.0  5.0  5.0  5.0  5.0  5.0  9.0
+|  1.0  5.0  5.0  5.0  5.0  5.0  5.0  9.0
+|  1.0  5.0  5.0  5.0  5.0  5.0  5.0  9.0
+|  1.0  5.0  5.0  5.0  5.0  5.0  5.0  9.0
+|  1.0  5.0  5.0  5.0  5.0  5.0  5.0  9.0
+|  1.0  5.0  5.0  5.0  5.0  5.0  5.0  9.0
+| -1.0  4.0  4.0  4.0  4.0  4.0  4.0 -1.0
+------------------------------------------> i
+\end{lstlisting}
 \subsection{A self-scheduling example: Parallel Mandelbrot [30 Points]}
+Here we were asked to implement the manager-worker pattern to compute the Mandelbrot set in parallel. The manager process is responsible for distributing the work and collecting the results, while the worker processes perform the actual computation of the Mandelbrot set for assigned tasks.\\
+The implementation of the manager-worker pattern for computing the Mandelbrot set is provided in the listing \ref{lst:mandelbrot_manager_worker}.
+\begin{lstlisting}[style=grayverbatim,label={lst:mandelbrot_manager_worker},caption={Manager-worker pattern for computing the Mandelbrot set in parallel}]
+# some parameters
+MANAGER = 0       # rank of manager
+TAG_TASK      = 1 # task       message tag
+TAG_TASK_DONE = 2 # tasks done message tag
+TAG_DONE      = 3 # done       message tag
+
+def manager(comm, tasks):
+    size = comm.Get_size()
+    nworkers = size - 1
+
+    next_task = 0
+    active_workers = 0
+    TasksDoneByWorker = {i: 0 for i in range(size)}
+
+    # send initial tasks
+    for worker in range(1, size):
+        if next_task < len(tasks):
+            comm.send((next_task, tasks[next_task]), dest=worker, tag=TAG_TASK)
+            next_task += 1
+            active_workers += 1
+        else:
+            comm.send(None, dest=worker, tag=TAG_DONE)
+
+    # receive results and assign new tasks
+    status = MPI.Status()
+
+    while active_workers > 0:
+        task_id, completed_task = comm.recv(
+        source=MPI.ANY_SOURCE,
+        tag=TAG_TASK_DONE,
+        status=status
+        )
+
+        worker = status.Get_source()
+        TasksDoneByWorker[worker] += 1
+
+        # replace the completed task in the task list
+        tasks[task_id] = completed_task
+
+        if next_task < len(tasks):
+            comm.send((next_task, tasks[next_task]), dest=worker, tag=TAG_TASK)
+            next_task += 1
+        else:
+            comm.send(None, dest=worker, tag=TAG_DONE)
+            active_workers -= 1
+
+    return TasksDoneByWorker
+
+
+def worker(comm):
+    while True:
+        status = MPI.Status()
+        message = comm.recv(source=MANAGER, tag=MPI.ANY_TAG, status=status)
+
+        if status.Get_tag() == TAG_DONE:
+            break
+
+        task_id, task = message
+        task.do_work()
+
+        comm.send((task_id, task), dest=MANAGER, tag=TAG_TASK_DONE)
+
+def readcmdline(rank):
+    """
+    Read command line arguments
+
+    Parameters
+    ----------
+    rank : int
+        Rank of calling MPI process
+
+    Returns
+    -------
+    nx : int
+        number of gridpoints in x-direction
+    ny : int
+        number of gridpoints in y-direction
+    ntasks : int
+        number of tasks
+    """
+    # report usage
+    if len(sys.argv) != 4:
+        if rank == MANAGER:
+            print("Usage: manager_worker nx ny ntasks")
+            print("  nx     number of gridpoints in x-direction")
+            print("  ny     number of gridpoints in y-direction")
+            print("  ntasks number of tasks")
+        sys.exit()
+
+    # read nx, ny, ntasks
+    nx = int(sys.argv[1])
+    if nx < 1:
+        sys.exit("nx must be a positive integer")
+    ny = int(sys.argv[2])
+    if ny < 1:
+        sys.exit("ny must be a positive integer")
+    ntasks = int(sys.argv[3])
+    if ntasks < 1:
+        sys.exit("ntasks must be a positive integer")
+
+    return nx, ny, ntasks
+
+
+if __name__ == "__main__":
+
+    # get COMMON WORLD communicator, size & rank
+    comm    = MPI.COMM_WORLD
+    size    = comm.Get_size()
+    my_rank = comm.Get_rank()
+
+    # report on MPI environment
+    if my_rank == MANAGER:
+        print(f"MPI initialized with {size:5d} processes")
+
+    # read command line arguments
+    nx, ny, ntasks = readcmdline(my_rank)
+
+    # start timer
+    timespent = - time.perf_counter()
+
+    if my_rank == MANAGER:
+        x_min = -2.
+        x_max = +1.
+        y_min = -1.5
+        y_max = +1.5
+
+        M = mandelbrot(x_min, x_max, nx, y_min, y_max, ny, ntasks)
+        tasks = M.get_tasks()
+
+        if size == 1:
+            for task in tasks:
+                task.do_work()
+            TasksDoneByWorker = {0: len(tasks)}
+        else:
+            TasksDoneByWorker = manager(comm, tasks)
+
+        m = M.combine_tasks(tasks)
+        plt.imshow(m.T, cmap="gray", extent=[x_min, x_max, y_min, y_max])
+        plt.savefig("mandelbrot.pdf")
+
+        timespent += time.perf_counter()
+
+        print(f"Run took {timespent:f} seconds")
+        for i in range(size):
+            print(f"Process {i:5d} has done {TasksDoneByWorker.get(i, 0):10d} tasks")
+        print("Done.")
+
+    else:
+        worker(comm)
+\end{lstlisting}
+
+\begin{lstlisting}
+ripolo@eu-login-14:~/hpc_projects/project05/02_hpc_python/03_ManagerWorker$ srun python3 manager_worker.py 4001 4001 100
+srun: warning: can't honor --ntasks-per-node set to 3 which doesn't match the requested tasks 4 with the maximum number of requested nodes 1. Ignoring --ntasks-per-node.
+MPI initialized with     4 processes
+Run took 3.746471 seconds
+Process     0 has done          0 tasks
+Process     1 has done         33 tasks
+Process     2 has done         34 tasks
+Process     3 has done         33 tasks
+Done.
+\end{lstlisting}
 
 \printbibliography
 \end{document}

@@ -1,0 +1,587 @@
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=2, MPI processes=3, nodes used=3, repeat=1
+============================================================
+MPI initialized with     3 processes
+Run took 5.161518 seconds
+Process     0 has done          0 tasks
+Process     1 has done         25 tasks
+Process     2 has done         25 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=2, MPI processes=3, nodes used=3, repeat=2
+============================================================
+MPI initialized with     3 processes
+Run took 4.929822 seconds
+Process     0 has done          0 tasks
+Process     1 has done         26 tasks
+Process     2 has done         24 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=2, MPI processes=3, nodes used=3, repeat=3
+============================================================
+MPI initialized with     3 processes
+Run took 5.094880 seconds
+Process     0 has done          0 tasks
+Process     1 has done         25 tasks
+Process     2 has done         25 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=4, MPI processes=5, nodes used=5, repeat=1
+============================================================
+MPI initialized with     5 processes
+Run took 4.566158 seconds
+Process     0 has done          0 tasks
+Process     1 has done         12 tasks
+Process     2 has done         13 tasks
+Process     3 has done         13 tasks
+Process     4 has done         12 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=4, MPI processes=5, nodes used=5, repeat=2
+============================================================
+MPI initialized with     5 processes
+Run took 3.490457 seconds
+Process     0 has done          0 tasks
+Process     1 has done         13 tasks
+Process     2 has done         12 tasks
+Process     3 has done         12 tasks
+Process     4 has done         13 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=4, MPI processes=5, nodes used=5, repeat=3
+============================================================
+MPI initialized with     5 processes
+Run took 3.353528 seconds
+Process     0 has done          0 tasks
+Process     1 has done         13 tasks
+Process     2 has done         12 tasks
+Process     3 has done         12 tasks
+Process     4 has done         13 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=8, MPI processes=9, nodes used=9, repeat=1
+============================================================
+MPI initialized with     9 processes
+Run took 2.816001 seconds
+Process     0 has done          0 tasks
+Process     1 has done          7 tasks
+Process     2 has done          6 tasks
+Process     3 has done          6 tasks
+Process     4 has done          6 tasks
+Process     5 has done          6 tasks
+Process     6 has done          7 tasks
+Process     7 has done          6 tasks
+Process     8 has done          6 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=8, MPI processes=9, nodes used=9, repeat=2
+============================================================
+MPI initialized with     9 processes
+Run took 2.902398 seconds
+Process     0 has done          0 tasks
+Process     1 has done          6 tasks
+Process     2 has done          7 tasks
+Process     3 has done          7 tasks
+Process     4 has done          7 tasks
+Process     5 has done          5 tasks
+Process     6 has done          6 tasks
+Process     7 has done          6 tasks
+Process     8 has done          6 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=8, MPI processes=9, nodes used=9, repeat=3
+============================================================
+MPI initialized with     9 processes
+Run took 3.564159 seconds
+Process     0 has done          0 tasks
+Process     1 has done          6 tasks
+Process     2 has done          7 tasks
+Process     3 has done          7 tasks
+Process     4 has done          6 tasks
+Process     5 has done          5 tasks
+Process     6 has done          7 tasks
+Process     7 has done          6 tasks
+Process     8 has done          6 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=16, MPI processes=17, nodes used=17, repeat=1
+============================================================
+MPI initialized with    17 processes
+Run took 2.511234 seconds
+Process     0 has done          0 tasks
+Process     1 has done          3 tasks
+Process     2 has done          4 tasks
+Process     3 has done          4 tasks
+Process     4 has done          4 tasks
+Process     5 has done          3 tasks
+Process     6 has done          4 tasks
+Process     7 has done          3 tasks
+Process     8 has done          3 tasks
+Process     9 has done          3 tasks
+Process    10 has done          3 tasks
+Process    11 has done          3 tasks
+Process    12 has done          3 tasks
+Process    13 has done          3 tasks
+Process    14 has done          2 tasks
+Process    15 has done          3 tasks
+Process    16 has done          2 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=16, MPI processes=17, nodes used=17, repeat=2
+============================================================
+MPI initialized with    17 processes
+Run took 2.562277 seconds
+Process     0 has done          0 tasks
+Process     1 has done          4 tasks
+Process     2 has done          3 tasks
+Process     3 has done          3 tasks
+Process     4 has done          4 tasks
+Process     5 has done          3 tasks
+Process     6 has done          4 tasks
+Process     7 has done          3 tasks
+Process     8 has done          3 tasks
+Process     9 has done          2 tasks
+Process    10 has done          3 tasks
+Process    11 has done          3 tasks
+Process    12 has done          3 tasks
+Process    13 has done          3 tasks
+Process    14 has done          3 tasks
+Process    15 has done          3 tasks
+Process    16 has done          3 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=16, MPI processes=17, nodes used=17, repeat=3
+============================================================
+MPI initialized with    17 processes
+Run took 2.729342 seconds
+Process     0 has done          0 tasks
+Process     1 has done          3 tasks
+Process     2 has done          3 tasks
+Process     3 has done          4 tasks
+Process     4 has done          4 tasks
+Process     5 has done          4 tasks
+Process     6 has done          3 tasks
+Process     7 has done          3 tasks
+Process     8 has done          3 tasks
+Process     9 has done          3 tasks
+Process    10 has done          2 tasks
+Process    11 has done          3 tasks
+Process    12 has done          3 tasks
+Process    13 has done          3 tasks
+Process    14 has done          3 tasks
+Process    15 has done          3 tasks
+Process    16 has done          3 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=32, MPI processes=33, nodes used=33, repeat=1
+============================================================
+MPI initialized with    33 processes
+Run took 2.550662 seconds
+Process     0 has done          0 tasks
+Process     1 has done          2 tasks
+Process     2 has done          2 tasks
+Process     3 has done          2 tasks
+Process     4 has done          2 tasks
+Process     5 has done          2 tasks
+Process     6 has done          2 tasks
+Process     7 has done          2 tasks
+Process     8 has done          2 tasks
+Process     9 has done          2 tasks
+Process    10 has done          2 tasks
+Process    11 has done          2 tasks
+Process    12 has done          2 tasks
+Process    13 has done          2 tasks
+Process    14 has done          2 tasks
+Process    15 has done          2 tasks
+Process    16 has done          2 tasks
+Process    17 has done          1 tasks
+Process    18 has done          2 tasks
+Process    19 has done          1 tasks
+Process    20 has done          2 tasks
+Process    21 has done          1 tasks
+Process    22 has done          1 tasks
+Process    23 has done          1 tasks
+Process    24 has done          1 tasks
+Process    25 has done          1 tasks
+Process    26 has done          1 tasks
+Process    27 has done          1 tasks
+Process    28 has done          1 tasks
+Process    29 has done          1 tasks
+Process    30 has done          1 tasks
+Process    31 has done          1 tasks
+Process    32 has done          1 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=32, MPI processes=33, nodes used=33, repeat=2
+============================================================
+MPI initialized with    33 processes
+Run took 2.530314 seconds
+Process     0 has done          0 tasks
+Process     1 has done          2 tasks
+Process     2 has done          2 tasks
+Process     3 has done          2 tasks
+Process     4 has done          2 tasks
+Process     5 has done          2 tasks
+Process     6 has done          2 tasks
+Process     7 has done          2 tasks
+Process     8 has done          2 tasks
+Process     9 has done          2 tasks
+Process    10 has done          2 tasks
+Process    11 has done          2 tasks
+Process    12 has done          2 tasks
+Process    13 has done          2 tasks
+Process    14 has done          2 tasks
+Process    15 has done          2 tasks
+Process    16 has done          2 tasks
+Process    17 has done          2 tasks
+Process    18 has done          2 tasks
+Process    19 has done          1 tasks
+Process    20 has done          1 tasks
+Process    21 has done          1 tasks
+Process    22 has done          1 tasks
+Process    23 has done          1 tasks
+Process    24 has done          1 tasks
+Process    25 has done          1 tasks
+Process    26 has done          1 tasks
+Process    27 has done          1 tasks
+Process    28 has done          1 tasks
+Process    29 has done          1 tasks
+Process    30 has done          1 tasks
+Process    31 has done          1 tasks
+Process    32 has done          1 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=50, workers=32, MPI processes=33, nodes used=33, repeat=3
+============================================================
+MPI initialized with    33 processes
+Run took 2.565375 seconds
+Process     0 has done          0 tasks
+Process     1 has done          2 tasks
+Process     2 has done          2 tasks
+Process     3 has done          2 tasks
+Process     4 has done          2 tasks
+Process     5 has done          2 tasks
+Process     6 has done          2 tasks
+Process     7 has done          2 tasks
+Process     8 has done          2 tasks
+Process     9 has done          2 tasks
+Process    10 has done          2 tasks
+Process    11 has done          2 tasks
+Process    12 has done          2 tasks
+Process    13 has done          2 tasks
+Process    14 has done          2 tasks
+Process    15 has done          2 tasks
+Process    16 has done          2 tasks
+Process    17 has done          2 tasks
+Process    18 has done          1 tasks
+Process    19 has done          2 tasks
+Process    20 has done          1 tasks
+Process    21 has done          1 tasks
+Process    22 has done          1 tasks
+Process    23 has done          1 tasks
+Process    24 has done          1 tasks
+Process    25 has done          1 tasks
+Process    26 has done          1 tasks
+Process    27 has done          1 tasks
+Process    28 has done          1 tasks
+Process    29 has done          1 tasks
+Process    30 has done          1 tasks
+Process    31 has done          1 tasks
+Process    32 has done          1 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=2, MPI processes=3, nodes used=3, repeat=1
+============================================================
+MPI initialized with     3 processes
+Run took 4.877933 seconds
+Process     0 has done          0 tasks
+Process     1 has done         50 tasks
+Process     2 has done         50 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=2, MPI processes=3, nodes used=3, repeat=2
+============================================================
+MPI initialized with     3 processes
+Run took 6.359286 seconds
+Process     0 has done          0 tasks
+Process     1 has done         50 tasks
+Process     2 has done         50 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=2, MPI processes=3, nodes used=3, repeat=3
+============================================================
+MPI initialized with     3 processes
+Run took 4.845854 seconds
+Process     0 has done          0 tasks
+Process     1 has done         50 tasks
+Process     2 has done         50 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=4, MPI processes=5, nodes used=5, repeat=1
+============================================================
+MPI initialized with     5 processes
+Run took 4.402584 seconds
+Process     0 has done          0 tasks
+Process     1 has done         25 tasks
+Process     2 has done         25 tasks
+Process     3 has done         25 tasks
+Process     4 has done         25 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=4, MPI processes=5, nodes used=5, repeat=2
+============================================================
+MPI initialized with     5 processes
+Run took 3.333973 seconds
+Process     0 has done          0 tasks
+Process     1 has done         25 tasks
+Process     2 has done         26 tasks
+Process     3 has done         25 tasks
+Process     4 has done         24 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=4, MPI processes=5, nodes used=5, repeat=3
+============================================================
+MPI initialized with     5 processes
+Run took 3.358509 seconds
+Process     0 has done          0 tasks
+Process     1 has done         25 tasks
+Process     2 has done         26 tasks
+Process     3 has done         25 tasks
+Process     4 has done         24 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=8, MPI processes=9, nodes used=9, repeat=1
+============================================================
+MPI initialized with     9 processes
+Run took 3.341288 seconds
+Process     0 has done          0 tasks
+Process     1 has done         11 tasks
+Process     2 has done         13 tasks
+Process     3 has done         13 tasks
+Process     4 has done         13 tasks
+Process     5 has done         12 tasks
+Process     6 has done         13 tasks
+Process     7 has done         13 tasks
+Process     8 has done         12 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=8, MPI processes=9, nodes used=9, repeat=2
+============================================================
+MPI initialized with     9 processes
+Run took 3.202317 seconds
+Process     0 has done          0 tasks
+Process     1 has done         14 tasks
+Process     2 has done         13 tasks
+Process     3 has done         13 tasks
+Process     4 has done         11 tasks
+Process     5 has done         11 tasks
+Process     6 has done         13 tasks
+Process     7 has done         13 tasks
+Process     8 has done         12 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=8, MPI processes=9, nodes used=9, repeat=3
+============================================================
+MPI initialized with     9 processes
+Run took 3.215968 seconds
+Process     0 has done          0 tasks
+Process     1 has done         13 tasks
+Process     2 has done         12 tasks
+Process     3 has done         13 tasks
+Process     4 has done         13 tasks
+Process     5 has done         13 tasks
+Process     6 has done         13 tasks
+Process     7 has done         12 tasks
+Process     8 has done         11 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=16, MPI processes=17, nodes used=17, repeat=1
+============================================================
+MPI initialized with    17 processes
+Run took 2.824431 seconds
+Process     0 has done          0 tasks
+Process     1 has done          7 tasks
+Process     2 has done          7 tasks
+Process     3 has done          7 tasks
+Process     4 has done          7 tasks
+Process     5 has done          7 tasks
+Process     6 has done          7 tasks
+Process     7 has done          7 tasks
+Process     8 has done          6 tasks
+Process     9 has done          6 tasks
+Process    10 has done          5 tasks
+Process    11 has done          7 tasks
+Process    12 has done          6 tasks
+Process    13 has done          5 tasks
+Process    14 has done          6 tasks
+Process    15 has done          6 tasks
+Process    16 has done          4 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=16, MPI processes=17, nodes used=17, repeat=2
+============================================================
+MPI initialized with    17 processes
+Run took 2.732524 seconds
+Process     0 has done          0 tasks
+Process     1 has done          7 tasks
+Process     2 has done          7 tasks
+Process     3 has done          7 tasks
+Process     4 has done          5 tasks
+Process     5 has done          6 tasks
+Process     6 has done          6 tasks
+Process     7 has done          6 tasks
+Process     8 has done          7 tasks
+Process     9 has done          5 tasks
+Process    10 has done          7 tasks
+Process    11 has done          7 tasks
+Process    12 has done          6 tasks
+Process    13 has done          6 tasks
+Process    14 has done          6 tasks
+Process    15 has done          6 tasks
+Process    16 has done          6 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=16, MPI processes=17, nodes used=17, repeat=3
+============================================================
+MPI initialized with    17 processes
+Run took 2.803178 seconds
+Process     0 has done          0 tasks
+Process     1 has done          7 tasks
+Process     2 has done          7 tasks
+Process     3 has done          7 tasks
+Process     4 has done          7 tasks
+Process     5 has done          6 tasks
+Process     6 has done          6 tasks
+Process     7 has done          6 tasks
+Process     8 has done          7 tasks
+Process     9 has done          6 tasks
+Process    10 has done          5 tasks
+Process    11 has done          7 tasks
+Process    12 has done          6 tasks
+Process    13 has done          6 tasks
+Process    14 has done          6 tasks
+Process    15 has done          5 tasks
+Process    16 has done          6 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=32, MPI processes=33, nodes used=33, repeat=1
+============================================================
+MPI initialized with    33 processes
+Run took 3.040698 seconds
+Process     0 has done          0 tasks
+Process     1 has done          3 tasks
+Process     2 has done          3 tasks
+Process     3 has done          3 tasks
+Process     4 has done          3 tasks
+Process     5 has done          3 tasks
+Process     6 has done          4 tasks
+Process     7 has done          3 tasks
+Process     8 has done          3 tasks
+Process     9 has done          3 tasks
+Process    10 has done          3 tasks
+Process    11 has done          3 tasks
+Process    12 has done          3 tasks
+Process    13 has done          3 tasks
+Process    14 has done          3 tasks
+Process    15 has done          3 tasks
+Process    16 has done          4 tasks
+Process    17 has done          4 tasks
+Process    18 has done          4 tasks
+Process    19 has done          3 tasks
+Process    20 has done          3 tasks
+Process    21 has done          3 tasks
+Process    22 has done          4 tasks
+Process    23 has done          4 tasks
+Process    24 has done          4 tasks
+Process    25 has done          3 tasks
+Process    26 has done          3 tasks
+Process    27 has done          3 tasks
+Process    28 has done          3 tasks
+Process    29 has done          2 tasks
+Process    30 has done          3 tasks
+Process    31 has done          2 tasks
+Process    32 has done          2 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=32, MPI processes=33, nodes used=33, repeat=2
+============================================================
+MPI initialized with    33 processes
+Run took 2.677051 seconds
+Process     0 has done          0 tasks
+Process     1 has done          3 tasks
+Process     2 has done          3 tasks
+Process     3 has done          3 tasks
+Process     4 has done          3 tasks
+Process     5 has done          3 tasks
+Process     6 has done          3 tasks
+Process     7 has done          4 tasks
+Process     8 has done          3 tasks
+Process     9 has done          3 tasks
+Process    10 has done          3 tasks
+Process    11 has done          3 tasks
+Process    12 has done          3 tasks
+Process    13 has done          3 tasks
+Process    14 has done          3 tasks
+Process    15 has done          3 tasks
+Process    16 has done          3 tasks
+Process    17 has done          4 tasks
+Process    18 has done          3 tasks
+Process    19 has done          4 tasks
+Process    20 has done          3 tasks
+Process    21 has done          3 tasks
+Process    22 has done          4 tasks
+Process    23 has done          3 tasks
+Process    24 has done          4 tasks
+Process    25 has done          3 tasks
+Process    26 has done          3 tasks
+Process    27 has done          3 tasks
+Process    28 has done          3 tasks
+Process    29 has done          3 tasks
+Process    30 has done          2 tasks
+Process    31 has done          3 tasks
+Process    32 has done          3 tasks
+Done.
+============================================================
+Running one rank per node: nx=4001, ny=4001, tasks=100, workers=32, MPI processes=33, nodes used=33, repeat=3
+============================================================
+MPI initialized with    33 processes
+Run took 2.713729 seconds
+Process     0 has done          0 tasks
+Process     1 has done          3 tasks
+Process     2 has done          3 tasks
+Process     3 has done          3 tasks
+Process     4 has done          3 tasks
+Process     5 has done          3 tasks
+Process     6 has done          3 tasks
+Process     7 has done          3 tasks
+Process     8 has done          3 tasks
+Process     9 has done          3 tasks
+Process    10 has done          3 tasks
+Process    11 has done          3 tasks
+Process    12 has done          3 tasks
+Process    13 has done          3 tasks
+Process    14 has done          3 tasks
+Process    15 has done          3 tasks
+Process    16 has done          4 tasks
+Process    17 has done          4 tasks
+Process    18 has done          3 tasks
+Process    19 has done          3 tasks
+Process    20 has done          4 tasks
+Process    21 has done          3 tasks
+Process    22 has done          3 tasks
+Process    23 has done          4 tasks
+Process    24 has done          4 tasks
+Process    25 has done          4 tasks
+Process    26 has done          4 tasks
+Process    27 has done          3 tasks
+Process    28 has done          3 tasks
+Process    29 has done          3 tasks
+Process    30 has done          2 tasks
+Process    31 has done          2 tasks
+Process    32 has done          2 tasks
+Done.
+Wrote summary to figures/scaling_4001x4001_summary.csv
+Wrote figures to figures
+Scaling study complete.
+Raw results: results/scaling_4001x4001_one_rank_per_node.csv
+Figures: figures/runtime_vs_workers.pdf and figures/speedup_vs_workers.pdf

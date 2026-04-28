@@ -1,0 +1,28 @@
+srun: warning: can't run 3 processes on 33 nodes, setting nnodes to 3
+srun: warning: can't run 3 processes on 33 nodes, setting nnodes to 3
+srun: warning: can't run 3 processes on 33 nodes, setting nnodes to 3
+srun: warning: can't run 5 processes on 33 nodes, setting nnodes to 5
+srun: warning: can't run 5 processes on 33 nodes, setting nnodes to 5
+srun: warning: can't run 5 processes on 33 nodes, setting nnodes to 5
+srun: warning: can't run 9 processes on 33 nodes, setting nnodes to 9
+srun: warning: can't run 9 processes on 33 nodes, setting nnodes to 9
+srun: warning: can't run 9 processes on 33 nodes, setting nnodes to 9
+srun: warning: can't run 17 processes on 33 nodes, setting nnodes to 17
+srun: warning: can't run 17 processes on 33 nodes, setting nnodes to 17
+srun: warning: can't run 17 processes on 33 nodes, setting nnodes to 17
+srun: Step created for StepId=65032499.12
+srun: Step created for StepId=65032499.14
+srun: warning: can't run 3 processes on 33 nodes, setting nnodes to 3
+srun: warning: can't run 3 processes on 33 nodes, setting nnodes to 3
+srun: warning: can't run 3 processes on 33 nodes, setting nnodes to 3
+srun: warning: can't run 5 processes on 33 nodes, setting nnodes to 5
+srun: warning: can't run 5 processes on 33 nodes, setting nnodes to 5
+srun: warning: can't run 5 processes on 33 nodes, setting nnodes to 5
+srun: warning: can't run 9 processes on 33 nodes, setting nnodes to 9
+srun: warning: can't run 9 processes on 33 nodes, setting nnodes to 9
+srun: warning: can't run 9 processes on 33 nodes, setting nnodes to 9
+srun: warning: can't run 17 processes on 33 nodes, setting nnodes to 17
+srun: warning: can't run 17 processes on 33 nodes, setting nnodes to 17
+srun: Step created for StepId=65032499.25
+srun: warning: can't run 17 processes on 33 nodes, setting nnodes to 17
+srun: Step created for StepId=65032499.27

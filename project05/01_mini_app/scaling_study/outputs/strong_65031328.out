@@ -1,0 +1,83 @@
+rm -f main walltime.o   stats.o   data.o   operators.o   linalg.o   main.o output.*
+mpicxx -O3 -c walltime.cpp
+mpicxx -O3 -c stats.cpp
+mpicxx -O3 -c data.cpp
+mpicxx -O3 -c operators.cpp
+mpicxx -O3 -c linalg.cpp
+mpicxx -O3 -c main.cpp
+mpicxx -O3 walltime.o   stats.o   data.o   operators.o   linalg.o   main.o -lm -o main
+===== STRONG n=64 p=1 repeat=1/3 =====
+===== STRONG n=64 p=1 repeat=2/3 =====
+===== STRONG n=64 p=1 repeat=3/3 =====
+===== STRONG n=64 p=2 repeat=1/3 =====
+===== STRONG n=64 p=2 repeat=2/3 =====
+===== STRONG n=64 p=2 repeat=3/3 =====
+===== STRONG n=64 p=4 repeat=1/3 =====
+===== STRONG n=64 p=4 repeat=2/3 =====
+===== STRONG n=64 p=4 repeat=3/3 =====
+===== STRONG n=64 p=8 repeat=1/3 =====
+===== STRONG n=64 p=8 repeat=2/3 =====
+===== STRONG n=64 p=8 repeat=3/3 =====
+===== STRONG n=64 p=16 repeat=1/3 =====
+===== STRONG n=64 p=16 repeat=2/3 =====
+===== STRONG n=64 p=16 repeat=3/3 =====
+===== STRONG n=128 p=1 repeat=1/3 =====
+===== STRONG n=128 p=1 repeat=2/3 =====
+===== STRONG n=128 p=1 repeat=3/3 =====
+===== STRONG n=128 p=2 repeat=1/3 =====
+===== STRONG n=128 p=2 repeat=2/3 =====
+===== STRONG n=128 p=2 repeat=3/3 =====
+===== STRONG n=128 p=4 repeat=1/3 =====
+===== STRONG n=128 p=4 repeat=2/3 =====
+===== STRONG n=128 p=4 repeat=3/3 =====
+===== STRONG n=128 p=8 repeat=1/3 =====
+===== STRONG n=128 p=8 repeat=2/3 =====
+===== STRONG n=128 p=8 repeat=3/3 =====
+===== STRONG n=128 p=16 repeat=1/3 =====
+===== STRONG n=128 p=16 repeat=2/3 =====
+===== STRONG n=128 p=16 repeat=3/3 =====
+===== STRONG n=256 p=1 repeat=1/3 =====
+===== STRONG n=256 p=1 repeat=2/3 =====
+===== STRONG n=256 p=1 repeat=3/3 =====
+===== STRONG n=256 p=2 repeat=1/3 =====
+===== STRONG n=256 p=2 repeat=2/3 =====
+===== STRONG n=256 p=2 repeat=3/3 =====
+===== STRONG n=256 p=4 repeat=1/3 =====
+===== STRONG n=256 p=4 repeat=2/3 =====
+===== STRONG n=256 p=4 repeat=3/3 =====
+===== STRONG n=256 p=8 repeat=1/3 =====
+===== STRONG n=256 p=8 repeat=2/3 =====
+===== STRONG n=256 p=8 repeat=3/3 =====
+===== STRONG n=256 p=16 repeat=1/3 =====
+===== STRONG n=256 p=16 repeat=2/3 =====
+===== STRONG n=256 p=16 repeat=3/3 =====
+===== STRONG n=512 p=1 repeat=1/3 =====
+===== STRONG n=512 p=1 repeat=2/3 =====
+===== STRONG n=512 p=1 repeat=3/3 =====
+===== STRONG n=512 p=2 repeat=1/3 =====
+===== STRONG n=512 p=2 repeat=2/3 =====
+===== STRONG n=512 p=2 repeat=3/3 =====
+===== STRONG n=512 p=4 repeat=1/3 =====
+===== STRONG n=512 p=4 repeat=2/3 =====
+===== STRONG n=512 p=4 repeat=3/3 =====
+===== STRONG n=512 p=8 repeat=1/3 =====
+===== STRONG n=512 p=8 repeat=2/3 =====
+===== STRONG n=512 p=8 repeat=3/3 =====
+===== STRONG n=512 p=16 repeat=1/3 =====
+===== STRONG n=512 p=16 repeat=2/3 =====
+===== STRONG n=512 p=16 repeat=3/3 =====
+===== STRONG n=1024 p=1 repeat=1/3 =====
+===== STRONG n=1024 p=1 repeat=2/3 =====
+===== STRONG n=1024 p=1 repeat=3/3 =====
+===== STRONG n=1024 p=2 repeat=1/3 =====
+===== STRONG n=1024 p=2 repeat=2/3 =====
+===== STRONG n=1024 p=2 repeat=3/3 =====
+===== STRONG n=1024 p=4 repeat=1/3 =====
+===== STRONG n=1024 p=4 repeat=2/3 =====
+===== STRONG n=1024 p=4 repeat=3/3 =====
+===== STRONG n=1024 p=8 repeat=1/3 =====
+===== STRONG n=1024 p=8 repeat=2/3 =====
+===== STRONG n=1024 p=8 repeat=3/3 =====
+===== STRONG n=1024 p=16 repeat=1/3 =====
+===== STRONG n=1024 p=16 repeat=2/3 =====
+===== STRONG n=1024 p=16 repeat=3/3 =====

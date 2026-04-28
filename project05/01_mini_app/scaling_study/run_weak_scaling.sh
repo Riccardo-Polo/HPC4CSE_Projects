@@ -3,8 +3,9 @@
 #SBATCH --output=outputs/weak_%j.out
 #SBATCH --error=outputs/weak_%j.err
 #SBATCH --constraint=EPYC_7763
-#SBATCH --nodes=1
+#SBATCH --nodes=64
 #SBATCH --ntasks=64
+#SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
 #SBATCH --time=02:00:00
 #SBATCH --mem-per-cpu=512M
@@ -23,6 +24,7 @@ make clean
 make -j
 
 # Weak scaling: keep local work approximately constant.
+# One MPI process per node: each srun uses p nodes and one task on each node.
 # For a 2D problem, p = 1,4,16,64 and global n = base_n * sqrt(p).
 PROCS=(1 4 16 64)
 BASE_NS=(64 128 256)
@@ -52,7 +54,7 @@ PY
     for r in $(seq 1 "$REPEATS"); do
       echo "===== WEAK base_n=${base_n} global_n=${n} p=${p} repeat=${r}/${REPEATS} ====="
       log="outputs/weak_base${base_n}_n${n}_p${p}_r${r}.out"
-      srun -n "$p" --cpu-bind=cores ./main "$n" "$NT" "$T_FINAL" > "$log" 2>&1
+      srun --nodes="$p" --ntasks="$p" --ntasks-per-node=1 --cpu-bind=cores ./main "$n" "$NT" "$T_FINAL" > "$log" 2>&1
 
       line=$(grep '###' "$log" | tail -n 1 || true)
       if [[ -z "$line" ]]; then

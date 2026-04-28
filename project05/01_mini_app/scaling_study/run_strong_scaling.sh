@@ -3,8 +3,9 @@
 #SBATCH --output=outputs/strong_%j.out
 #SBATCH --error=outputs/strong_%j.err
 #SBATCH --constraint=EPYC_7763
-#SBATCH --nodes=1
+#SBATCH --nodes=16
 #SBATCH --ntasks=16
+#SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
 #SBATCH --time=02:00:00
 #SBATCH --mem-per-cpu=512M
@@ -23,6 +24,7 @@ make clean
 make -j
 
 # Strong scaling: fixed global problem size n x n, increasing MPI processes.
+# One MPI process per node: each srun uses p nodes and one task on each node.
 PROCS=(1 2 4 8 16)
 NS=(64 128 256 512 1024)
 NT=${NT:-100}
@@ -41,7 +43,7 @@ for n in "${NS[@]}"; do
     for r in $(seq 1 "$REPEATS"); do
       echo "===== STRONG n=${n} p=${p} repeat=${r}/${REPEATS} ====="
       log="outputs/strong_n${n}_p${p}_r${r}.out"
-      srun -n "$p" --cpu-bind=cores ./main "$n" "$NT" "$T_FINAL" > "$log" 2>&1
+      srun --nodes="$p" --ntasks="$p" --ntasks-per-node=1 --cpu-bind=cores ./main "$n" "$NT" "$T_FINAL" > "$log" 2>&1
 
       line=$(grep '###' "$log" | tail -n 1 || true)
       if [[ -z "$line" ]]; then

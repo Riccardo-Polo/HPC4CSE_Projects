@@ -362,8 +362,35 @@ for _ in range(size - 1):
 print(f"Sum is {total} on processor {proc}, rank {rank} out of {size} "
       f"processes")
 \end{lstlisting}
-To compute the sum of ranks, we use a ring communication pattern where each process sends its current value to the next process and receives a value from the previous process. Each process starts with its own rank as the initial value, and in each iteration, it adds the received value to its total. After $size - 1$ iterations, each process will have the complete sum of all ranks. The use of \texttt{comm.sendrecv} allows for simultaneous sending and receiving, which can help to reduce communication overhead compared to separate send and receive calls.\\
-The output of this code (on a system with 8 processes on 4 nodes) is given in listing \ref{lst:sum_ranks_output}.
+The implementation follows a ring communication pattern. Each MPI process starts from its own
+rank, stored both in \texttt{total} and in \texttt{current\_value}. The variable \texttt{total}
+is the local accumulator, while \texttt{current\_value} is the value that is forwarded around the
+ring. At each iteration, process \texttt{rank} sends its current value to the process
+\texttt{(rank + 1) \% size} and receives a value from the process
+\texttt{(rank - 1 + size) \% size}. The modulo operation implements the periodicity of the ring:
+the last rank sends to rank zero, and rank zero receives from the last rank.\\
+
+The communication is performed with the lower-case mpi4py routine \texttt{comm.sendrecv}. Lower-case
+mpi4py methods operate on generic Python objects. Therefore, the integer sent by each process is first
+serialized by Python using pickle, transmitted through MPI, and then reconstructed on the receiving
+side. This makes the interface very convenient because no explicit buffer or datatype has to be specified.
+However, this convenience introduces an additional serialization overhead, which can become relevant
+for larger data structures.\\
+
+The use of \texttt{sendrecv} is important for correctness. If the code used separate blocking
+\texttt{send} and \texttt{recv} calls, all processes could potentially wait for a matching receive,
+leading to a deadlock depending on the MPI implementation and message size. The routine
+\texttt{sendrecv} combines the send and receive operations into a single MPI call, allowing all ranks
+to exchange data with their two neighbours safely.\\After one iteration, every process has received the rank value of its left neighbour. After two
+iterations, it has received the rank value two positions away, and so on. Consequently, after
+\texttt{size - 1} iterations, every process has received all other ranks exactly once. Since each
+process also initialized \texttt{total} with its own rank, the final value of \texttt{total} is the
+sum of all ranks,
+\[
+\sum_{r=0}^{\texttt{size}-1} r
+=
+\frac{\texttt{size}(\texttt{size}-1)}{2}.
+\]
 \begin{lstlisting}[style=grayverbatim,label={lst:sum_ranks_output},caption={Output of the sum of ranks using pickle-based collective communication}]
 ripolo@eu-login-14:~/hpc_projects/project05/02_hpc_python/01_sum$ srun python3 sum_pickle.py
 Sum is 28 on processor eu-a2p-301, rank 2 out of 8 processes
@@ -375,6 +402,13 @@ Sum is 28 on processor eu-a2p-299, rank 1 out of 8 processes
 Sum is 28 on processor eu-a2p-344, rank 7 out of 8 processes
 Sum is 28 on processor eu-a2p-335, rank 4 out of 8 processes
 \end{lstlisting}
+The output confirms that all MPI processes compute the same final sum. In this run,
+\texttt{size = 8}, therefore the expected result is
+\[
+0 + 1 + 2 + 3 + 4 + 5 + 6 + 7 = 28.
+\]
+Every rank prints \texttt{Sum is 28}, showing that the ring communication has circulated all rank
+values correctly through the communicator.
 \subsubsection{Direct array data communication}
 In the second case we had to use direct array data communication with the all-uppercase methods, i.e. the MPI methods that directly handle array data without pickling.\\
 In listing \ref{lst:sum_ranks_direct} we can see the implementation of the sum of ranks using direct array data communication.
@@ -408,8 +442,27 @@ for _ in range(size - 1):
 print(f"Sum is {total} on processor {proc}, rank {rank} out of {size} "
       f"processes")
 \end{lstlisting}
-This implementation is similar to the previous one, but instead of using the pickle-based \texttt{comm.sendrecv}, we use \texttt{comm.Sendrecv} which directly sends and receives NumPy arrays. We create NumPy arrays for the total, current value, and received value, and we use the same ring communication pattern to compute the sum of ranks. The use of direct array communication can be more efficient than pickling, especially for larger data, as it avoids the overhead of serialization and deserialization.\\
-The output of this code (on a system with 8 processes on 4 nodes) is given in listing \ref{lst:sum_ranks_direct_output}.
+This second implementation uses the same ring algorithm as the previous one, but it replaces the
+pickle-based communication with direct buffer communication. In mpi4py, methods whose names start
+with an upper-case letter, such as \texttt{Sendrecv}, operate directly on memory buffers. For this
+reason, the communicated values are stored in NumPy arrays with an explicit datatype,
+\texttt{np.int32}. This allows mpi4py to infer the corresponding MPI datatype and send the raw array
+data without serializing a Python object.\\
+
+The variables \texttt{total}, \texttt{current\_value}, and \texttt{received\_value} are zero-dimensional
+NumPy arrays. The array \texttt{current\_value} is sent to the right neighbour, while
+\texttt{received\_value} is used as the receive buffer for the value arriving from the left neighbour.
+After each communication step, the received value is added to the local accumulator
+\texttt{total}. The instruction
+\texttt{current\_value[...] = received\_value} updates the content of the existing NumPy buffer
+in-place. This is preferable to rebinding the variable name, because the MPI routine expects buffer-like
+objects with well-defined memory storage.\\
+
+As in the pickle-based implementation, the neighbour ranks are computed with modulo arithmetic:
+\texttt{(rank + 1) \% size} is the destination rank and
+\texttt{(rank - 1 + size) \% size} is the source rank. The addition of \texttt{size} before the modulo
+operation avoids negative ranks when \texttt{rank = 0}. After \texttt{size - 1} communication steps,
+each process has received all other ranks and has therefore reconstructed the global sum locally.
 \begin{lstlisting}[style=grayverbatim,label={lst:sum_ranks_direct_output},caption={Output of the sum of ranks using direct array data communication}]
 ripolo@eu-login-14:~/hpc_projects/project05/02_hpc_python/01_sum$ srun python3 sum_fast.py
 Sum is 28 on processor eu-a2p-335, rank 4 out of 8 processes
@@ -421,6 +474,8 @@ Sum is 28 on processor eu-a2p-301, rank 3 out of 8 processes
 Sum is 28 on processor eu-a2p-299, rank 1 out of 8 processes
 Sum is 28 on processor eu-a2p-344, rank 7 out of 8 processes
 \end{lstlisting}
+The result is again correct: for eight MPI processes the sum of ranks is equal to 28, and all ranks
+obtain the same value. This shows that the direct-buffer implementation is logically equivalent to the pickle-based version.
 \subsection{Ghost cell exchange between neighboring processes [5 Points]}
 Here we were asked to create a two-dimensional, periodic Cartesian topology and implement ghost cell exchange.\\
 In listing \ref{lst:ghost_exchange_python} we can see the implementation of the ghost cell exchange between neighboring processes in Python using mpi4py.
@@ -500,7 +555,44 @@ cart.Sendrecv(
 data[1:-1, DOMAIN_SIZE-1] = recv_east
 
 \end{lstlisting}
-The output of this code (on a system with 12 processes arranged in a 3x4 grid) is given in listing \ref{lst:ghost_exchange_python_output}.
+Each MPI process owns a local subdomain of size
+\texttt{SUBDOMAIN\_SIZE} by \texttt{SUBDOMAIN\_SIZE}. The full local array \texttt{data} has size
+\texttt{DOMAIN\_SIZE} by \texttt{DOMAIN\_SIZE}, where
+\texttt{DOMAIN\_SIZE = SUBDOMAIN\_SIZE + 2}. The additional two rows and columns are the ghost
+layers. The interior entries \texttt{data[1:-1, 1:-1]} are initialized with the MPI rank of the process,
+while the ghost cells are initialized to \texttt{-1}. After the exchange, the ghost cells should contain
+the rank numbers of the neighbouring processes.\\
+
+The Cartesian topology is created with \texttt{comm.Create\_cart}. In this implementation, the process
+grid is fixed to \texttt{dims = [3, 4]}, meaning that the 12 MPI processes are arranged in a
+two-dimensional grid with 3 processes in one direction and 4 processes in the other. The array
+\texttt{periods = [True, True]} makes the topology periodic in both directions. Therefore, processes
+on the boundary of the process grid still have neighbours: for example, the process at the right
+boundary has as east neighbour the corresponding process at the left boundary.\\
+The neighbours are obtained using \texttt{cart.Shift}. The call
+\texttt{cart.Shift(1, 1)} returns the neighbours in the second Cartesian direction, which are used here
+as the south and north neighbours. Similarly, \texttt{cart.Shift(0, 1)} returns the neighbours in the
+first Cartesian direction, used here as the west and east neighbours. This avoids manually computing
+neighbour ranks and makes the code independent of the rank ordering inside the Cartesian communicator.\\
+
+The north/south exchange communicates rows. Since NumPy arrays are stored in row-major order, slices
+such as \texttt{data[DOMAIN\_SIZE-2, 1:-1]} and \texttt{data[1, 1:-1]} are contiguous in memory.
+Therefore, they can be passed directly to \texttt{Sendrecv}. The last interior row is sent to the north
+neighbour and the first ghost row is filled with data received from the south neighbour. Conversely, the
+first interior row is sent to the south neighbour and the last ghost row is filled with data received from
+the north neighbour.\\
+The west/east exchange communicates columns. In row-major storage, columns are not contiguous in
+memory. For this reason, the code first creates contiguous temporary send buffers using
+\texttt{np.ascontiguousarray}. The east interior column is copied into \texttt{send\_east}, and the west
+interior column is copied into \texttt{send\_west}. The received columns are stored in the temporary
+arrays \texttt{recv\_west} and \texttt{recv\_east}, and then copied into the corresponding ghost columns
+of \texttt{data}. This avoids problems associated with sending non-contiguous NumPy views directly.
+
+The use of \texttt{Sendrecv} again prevents deadlocks. All processes participate in the same pairwise
+exchange pattern, and each call simultaneously sends one boundary buffer and receives the corresponding
+ghost buffer. Different message tags are used for the two directions of each exchange. This makes the
+matching of messages unambiguous and prevents a message from one exchange direction from being
+incorrectly matched with another one.
 \begin{lstlisting}[style=grayverbatim,label={lst:ghost_exchange_python_output},caption={Output of the ghost cell exchange between neighboring processes in Python using mpi4py}]
 ripolo@eu-login-14:~/hpc_projects/project05/02_hpc_python/02_ghost$ srun python3 ghost.py
 North rank 6, South rank 4, West rank 1, East rank 9
@@ -517,7 +609,21 @@ j
 | -1.0  4.0  4.0  4.0  4.0  4.0  4.0 -1.0
 ------------------------------------------> i
 \end{lstlisting}
+The printed array corresponds to the local subdomain of rank 5 after the ghost-cell exchange. The
+interior of the array is filled with the value 5, because those entries belong to rank 5 itself. The ghost
+layers contain the ranks of the neighbouring processes in the Cartesian topology.
+
+The top ghost row contains the value 6, which corresponds to the north neighbour of rank 5. The bottom
+ghost row contains the value 4, corresponding to the south neighbour. Similarly, the left ghost column
+contains the value 1, and the right ghost column contains the value 9. This confirms that each process
+has correctly exchanged its boundary data with the four neighbouring processes.
+
+The corner entries remain equal to \texttt{-1}. This is expected because the implemented exchange only
+communicates the north, south, east, and west neighbours required by a standard five-point stencil.
+Corner values would only be needed for a stencil involving diagonal neighbours, which is not the case
+here.
 \subsection{A self-scheduling example: Parallel Mandelbrot [30 Points]}
+\subsubsection{Implementation}
 Here we were asked to implement the manager-worker pattern to compute the Mandelbrot set in parallel. The manager process is responsible for distributing the work and collecting the results, while the worker processes perform the actual computation of the Mandelbrot set for assigned tasks.\\
 The implementation of the manager-worker pattern for computing the Mandelbrot set is provided in the listing \ref{lst:mandelbrot_manager_worker}.
 \begin{lstlisting}[style=grayverbatim,label={lst:mandelbrot_manager_worker},caption={Manager-worker pattern for computing the Mandelbrot set in parallel}]
@@ -671,10 +777,61 @@ if __name__ == "__main__":
     else:
         worker(comm)
 \end{lstlisting}
+This listing implements a dynamic manager-worker algorithm. The process with rank zero is assigned
+the role of manager, while all other MPI processes are workers. The manager is responsible for creating
+the Mandelbrot tasks, distributing them to the workers, collecting the completed tasks, and finally
+assembling the global image. The workers do not communicate with each other; they only receive tasks
+from the manager and send completed results back to it.\\
 
-\begin{lstlisting}
+The constants \texttt{TAG\_TASK}, \texttt{TAG\_TASK\_DONE}, and \texttt{TAG\_DONE} define the message
+types used in the program. Tags are important because the same pair of processes can exchange
+different kinds of messages. A message with tag \texttt{TAG\_TASK} contains a new task to compute,
+a message with tag \texttt{TAG\_TASK\_DONE} contains a completed task returned by a worker, and a
+message with tag \texttt{TAG\_DONE} tells a worker that no more tasks are available and that it can
+terminate.\\
+
+Inside the \texttt{manager} function, the variable \texttt{next\_task} stores the index of the next
+unassigned task. The variable \texttt{active\_workers} counts how many workers are currently working
+on a task. At the beginning, the manager sends one task to each worker, as long as tasks are available.
+If there are more workers than tasks, the extra workers immediately receive a \texttt{TAG\_DONE}
+message. This initialization phase fills the available workers with work and starts the computation.\\
+After the initial distribution, the manager enters a loop that continues while at least one worker is
+active. The manager receives completed tasks using
+\texttt{comm.recv(source=MPI.ANY\_SOURCE, tag=TAG\_TASK\_DONE, status=status)}. The use of
+\texttt{MPI.ANY\_SOURCE} is essential for dynamic scheduling: the manager does not wait for a
+particular worker, but accepts the result from whichever worker finishes first. This allows faster workers
+or workers assigned easier Mandelbrot patches to immediately receive more work, improving load
+balance.\\
+The received message contains both the \texttt{task\_id} and the completed task object. The task
+identifier is needed because tasks may return in a different order from the one in which they were sent.
+The manager therefore uses \texttt{tasks[task\_id] = completed\_task} to put the result back into the
+correct position in the task list. This guarantees that the final call to \texttt{combine\_tasks} can
+reconstruct the Mandelbrot image correctly.\\
+
+Once a worker returns a result, the manager checks whether more tasks are available. If
+\texttt{next\_task < len(tasks)}, the same worker immediately receives a new task. Otherwise, the
+worker receives a termination message with tag \texttt{TAG\_DONE}, and the number of active workers is
+decreased. When all workers have received \texttt{TAG\_DONE}, \texttt{active\_workers} becomes zero and
+the manager loop terminates.\\
+
+The \texttt{worker} function is a simple infinite loop. Each worker waits for a message from the
+manager using \texttt{comm.recv}. The tag of the received message is inspected through the
+\texttt{MPI.Status} object. If the tag is \texttt{TAG\_DONE}, the worker exits the loop and terminates.
+Otherwise, the message contains a Mandelbrot task. The worker calls \texttt{task.do\_work()}, which
+computes the Mandelbrot patch locally, and then sends the completed task back to the manager with tag
+\texttt{TAG\_TASK\_DONE}.\\
+
+In the main part of the program, all MPI processes first obtain the communicator, the total number of
+processes, and their rank. The manager prints the number of MPI processes and creates the global
+Mandelbrot object. The call \texttt{M.get\_tasks()} decomposes the global image into independent
+patches. If the program is run with only one MPI process, there are no workers. In this special case,
+the manager computes all tasks sequentially by directly calling \texttt{task.do\_work()} for every task.
+This makes the code valid also for \texttt{size = 1} and provides a useful serial reference.\\
+For \texttt{size > 1}, the manager calls the \texttt{manager} function to perform the dynamic parallel
+scheduling. After all tasks have been completed, \texttt{M.combine\_tasks(tasks)} assembles the full
+Mandelbrot image from the computed patches.
+\begin{lstlisting}[style=grayverbatim,label={lst:mandelbrot_manager_worker_output},caption={Output of the manager-worker pattern for computing the Mandelbrot set in parallel}]
 ripolo@eu-login-14:~/hpc_projects/project05/02_hpc_python/03_ManagerWorker$ srun python3 manager_worker.py 4001 4001 100
-srun: warning: can't honor --ntasks-per-node set to 3 which doesn't match the requested tasks 4 with the maximum number of requested nodes 1. Ignoring --ntasks-per-node.
 MPI initialized with     4 processes
 Run took 3.746471 seconds
 Process     0 has done          0 tasks
@@ -683,6 +840,20 @@ Process     2 has done         34 tasks
 Process     3 has done         33 tasks
 Done.
 \end{lstlisting}
+The output shows a run with four MPI processes. Rank zero acts as the manager, while ranks one, two,
+and three are workers. The Mandelbrot domain has resolution \texttt{4001 x 4001} and is split into
+100 tasks. Since the manager only schedules work and assembles the final result, process zero performs
+zero Mandelbrot tasks in this parallel run.\\
+The tasks are distributed almost uniformly among the three workers: process 1 completes 33 tasks,
+process 2 completes 34 tasks, and process 3 completes 33 tasks. This indicates that the dynamic
+self-scheduling mechanism is working as intended. Workers request new work implicitly by returning
+completed tasks, and the manager assigns the next available task to whichever worker finishes first.\\
 
+The near-equal number of completed tasks does not necessarily mean that all workers performed exactly
+the same amount of computational work, because different Mandelbrot patches may have different
+computational costs. Nevertheless, the dynamic scheduling strategy helps reduce idle time compared
+with a purely static assignment. The total runtime printed by the manager includes the computation of
+the Mandelbrot patches, the communication of task objects between manager and workers, the
+collection of the completed patches, and the final assembly and output of the image.
 \printbibliography
 \end{document}

@@ -11566,3 +11566,15 @@ simulation took 1629.91 seconds
 --------------------------------------------------------------------------------
 ### 1, 2048, 100, 23750, 389, 1629.91 ###
 Goodbye!
+--------------------------------------------------------------------------------
+simulation took 1688.86 seconds
+23750 conjugate gradient iterations, at rate of 14.0628 iters/second
+389 Newton iterations
+--------------------------------------------------------------------------------
+### 1, 2048, 100, 23750, 389, 1688.86 ###
+Goodbye!
+Weak scaling study completed.
+Raw data          : results/weak_scaling_1ppn_raw.csv
+Summary data      : results/weak_scaling_1ppn_summary.csv
+NCPU plot         : figures/weak_time_to_solution_1ppn.pdf
+Problem-size plot : figures/weak_time_to_solution_problem_size_1ppn.pdf

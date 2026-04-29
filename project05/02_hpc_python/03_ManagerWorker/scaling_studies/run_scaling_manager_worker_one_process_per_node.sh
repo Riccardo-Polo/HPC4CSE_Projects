@@ -65,5 +65,5 @@ for ntasks in "${TASKS_LIST[@]}"; do
 done
 
 echo "Scaling data written to ${RESULTS}"
-echo "To plot this file, run:"
-echo "python3 plot_scaling_manager_worker.py outputs/results_manager_worker_scaling_one_process_per_node.dat figures/manager_worker_time_log10_one_process_per_node.pdf"
+python3 plot_scaling_manager_worker.py outputs/results_manager_worker_scaling_one_process_per_node.dat figures/manager_worker_time_log10_one_process_per_node.pdf
+

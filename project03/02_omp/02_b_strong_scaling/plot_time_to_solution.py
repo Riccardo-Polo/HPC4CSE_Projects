@@ -1,34 +1,30 @@
 #!/usr/bin/env python3
 import argparse
 import csv
+import os
 from collections import defaultdict
 from statistics import mean, stdev
 
-import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 
 
 def read_raw_data(path):
     rows = []
     with open(path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
-        required = {"repeat", "ncpu", "n", "nt", "tfinal", "cg_iters", "newton_iters", "time_s"}
-        missing = required.difference(reader.fieldnames or [])
-        if missing:
-            raise SystemExit(f"Input CSV is missing columns: {sorted(missing)}")
-
         for row in reader:
+            # The raw file produced by the run script uses the column name "threads".
+            # In the plot/report we label this quantity as NCPU.
+            ncpu = int(row.get("ncpu", row.get("threads")))
             rows.append(
                 {
                     "repeat": int(row["repeat"]),
-                    "ncpu": int(row["ncpu"]),
+                    "ncpu": ncpu,
                     "n": int(row["n"]),
                     "nt": int(row["nt"]),
                     "tfinal": float(row["tfinal"]),
-                    "cg_iters": int(float(row["cg_iters"])),
-                    "newton_iters": int(float(row["newton_iters"])),
+                    "cg_iters": int(row["cg_iters"]),
+                    "newton_iters": int(row["newton_iters"]),
                     "time_s": float(row["time_s"]),
                 }
             )
@@ -57,6 +53,7 @@ def summarize(rows):
 
 
 def write_summary(path, summary):
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     fieldnames = [
         "n",
         "ncpu",
@@ -69,52 +66,46 @@ def write_summary(path, summary):
     with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
-        writer.writerows(summary)
+        for row in summary:
+            writer.writerow(row)
 
 
-def plot_time(summary, outpath):
-    fig, ax = plt.subplots(figsize=(8, 5))
+def plot_time_to_solution(summary, outpath):
+    os.makedirs(os.path.dirname(outpath) or ".", exist_ok=True)
+
+    plt.figure(figsize=(8, 5))
     resolutions = sorted({row["n"] for row in summary})
     all_ncpu = sorted({row["ncpu"] for row in summary})
 
     for n in resolutions:
-        subset = sorted(
-            [row for row in summary if row["n"] == n],
-            key=lambda row: row["ncpu"],
-        )
+        subset = [row for row in summary if row["n"] == n]
+        subset.sort(key=lambda row: row["ncpu"])
+
         x = [row["ncpu"] for row in subset]
         y = [row["time_mean_s"] for row in subset]
         yerr = [row["time_std_s"] for row in subset]
-        ax.errorbar(x, y, yerr=yerr, marker="o", capsize=3, linewidth=1.8, label=f"n={n}")
 
-    ax.set_xscale("log", base=2)
-    ax.set_yscale("log", base=10)
-    ax.set_xticks(all_ncpu)
-    ax.xaxis.set_major_formatter(ticker.ScalarFormatter())
-    ax.xaxis.set_minor_formatter(ticker.NullFormatter())
-    ax.yaxis.set_major_locator(ticker.LogLocator(base=10))
-    ax.yaxis.set_major_formatter(ticker.LogFormatterMathtext(base=10))
+        plt.errorbar(x, y, yerr=yerr, marker="o", capsize=3, label=rf"$n={n}$")
 
-    ax.set_xlabel("NCPU")
-    ax.set_ylabel("Time to solution [s]")
-    ax.set_title("Strong scaling: time to solution")
-    ax.grid(True, which="both", linestyle=":", linewidth=0.7, alpha=0.8)
-    ax.legend(title="Resolution")
-    fig.tight_layout()
-
-    fig.savefig(outpath, bbox_inches="tight")
-    if not outpath.lower().endswith(".png"):
-        fig.savefig(outpath.rsplit(".", 1)[0] + ".png", dpi=300, bbox_inches="tight")
-    plt.close(fig)
+    plt.yscale("log", base=10)
+    plt.xticks(all_ncpu, [str(p) for p in all_ncpu])
+    plt.xlabel("NCPU")
+    plt.ylabel("Time to solution [s]")
+    plt.title(r"Time to solution for $n \times n$ resolutions")
+    plt.grid(True, which="both", alpha=0.3)
+    plt.legend(title="Resolution")
+    plt.tight_layout()
+    plt.savefig(outpath, dpi=300)
+    plt.close()
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Plot strong-scaling time to solution for one MPI process per node."
+        description="Create a time-to-solution plot with log10 y-axis. No speedup plot is produced."
     )
-    parser.add_argument("--input", required=True, help="Raw CSV produced by the strong-scaling script")
+    parser.add_argument("--input", required=True, help="Raw CSV produced by the scaling run")
     parser.add_argument("--summary", required=True, help="Output CSV with averaged timings")
-    parser.add_argument("--time-plot", required=True, help="Output PDF/PNG path for the time-to-solution plot")
+    parser.add_argument("--time-plot", required=True, help="Output figure path, e.g. figures/time_to_solution.pdf")
     args = parser.parse_args()
 
     rows = read_raw_data(args.input)
@@ -123,7 +114,7 @@ def main():
 
     summary = summarize(rows)
     write_summary(args.summary, summary)
-    plot_time(summary, args.time_plot)
+    plot_time_to_solution(summary, args.time_plot)
 
 
 if __name__ == "__main__":

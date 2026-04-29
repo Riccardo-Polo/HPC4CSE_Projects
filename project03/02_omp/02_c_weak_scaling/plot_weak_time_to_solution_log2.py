@@ -4,10 +4,7 @@ import csv
 from collections import defaultdict
 from statistics import mean, stdev
 
-import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 
 
 def read_raw_data(path):
@@ -43,6 +40,7 @@ def summarize(rows):
         times = [entry["time_s"] for entry in entries]
         cg_iters = [entry["cg_iters"] for entry in entries]
         newton_iters = [entry["newton_iters"] for entry in entries]
+
         summary.append(
             {
                 "base_n": base_n,
@@ -58,6 +56,7 @@ def summarize(rows):
                 "newton_iters_mean": mean(newton_iters),
             }
         )
+
     return summary
 
 
@@ -82,73 +81,94 @@ def write_summary(path, summary):
             writer.writerow(row)
 
 
-def configure_time_to_solution_axes(ax, x_values):
-    # Match the reference weak_time_to_solution style:
-    # x-axis logarithmic in base 2, y-axis logarithmic in base 2.
-    ax.set_xscale("log", base=2)
-    ax.set_yscale("log", base=2)
-    ax.set_xticks(sorted(x_values))
-    ax.xaxis.set_major_formatter(ticker.ScalarFormatter())
-    ax.yaxis.set_major_locator(ticker.LogLocator(base=2))
-    ax.yaxis.set_major_formatter(ticker.LogFormatterMathtext(base=2))
-    ax.grid(True, which="both", linestyle=":", linewidth=0.7, alpha=0.8)
-
-
-def save_pdf_and_png(fig, outpath):
-    fig.tight_layout()
-    fig.savefig(outpath, bbox_inches="tight")
-    if outpath.lower().endswith(".pdf"):
-        fig.savefig(outpath[:-4] + ".png", dpi=300, bbox_inches="tight")
+def set_log2_y_axis():
+    # Time-to-solution is the quantity of interest, so the y-axis is log base 2.
+    plt.yscale("log", base=2)
 
 
 def plot_time_vs_ncpu(summary, outpath):
-    fig, ax = plt.subplots(figsize=(8, 5))
+    plt.figure(figsize=(8, 5))
     base_resolutions = sorted({row["base_n"] for row in summary})
 
     for base_n in base_resolutions:
         subset = [row for row in summary if row["base_n"] == base_n]
         subset.sort(key=lambda row: row["ncpu"])
+
         x = [row["ncpu"] for row in subset]
         y = [row["time_mean_s"] for row in subset]
         yerr = [row["time_std_s"] for row in subset]
-        ax.errorbar(x, y, yerr=yerr, marker="o", capsize=3, label=f"base n={base_n}")
 
-    configure_time_to_solution_axes(ax, {row["ncpu"] for row in summary})
-    ax.set_xlabel("MPI processes")
-    ax.set_ylabel("Time to solution [s]")
-    ax.set_title("Weak scaling")
-    ax.legend(title="Local base resolution")
-    save_pdf_and_png(fig, outpath)
-    plt.close(fig)
+        plt.errorbar(x, y, yerr=yerr, marker="o", capsize=3, label=rf"base $n={base_n}$")
+
+        for row in subset:
+            plt.annotate(
+                rf"$n={row['scaled_n']}$",
+                (row["ncpu"], row["time_mean_s"]),
+                textcoords="offset points",
+                xytext=(0, 6),
+                ha="center",
+                fontsize=8,
+            )
+
+    plt.xscale("log", base=2)
+    set_log2_y_axis()
+    ncpu_values = sorted({row["ncpu"] for row in summary})
+    plt.xticks(ncpu_values, [str(v) for v in ncpu_values])
+    plt.xlabel("NCPU")
+    plt.ylabel("Time to solution [s]")
+    plt.title("Weak scaling: time to solution vs NCPU")
+    plt.grid(True, which="both", alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(outpath)
+    plt.close()
 
 
 def plot_time_vs_problem_size(summary, outpath):
-    fig, ax = plt.subplots(figsize=(8, 5))
+    plt.figure(figsize=(8, 5))
     base_resolutions = sorted({row["base_n"] for row in summary})
 
     for base_n in base_resolutions:
         subset = [row for row in summary if row["base_n"] == base_n]
         subset.sort(key=lambda row: row["problem_size"])
+
         x = [row["problem_size"] for row in subset]
         y = [row["time_mean_s"] for row in subset]
         yerr = [row["time_std_s"] for row in subset]
-        ax.errorbar(x, y, yerr=yerr, marker="o", capsize=3, label=f"base n={base_n}")
 
-    configure_time_to_solution_axes(ax, {row["problem_size"] for row in summary})
-    ax.set_xlabel(r"Total problem size $n^2$ grid points")
-    ax.set_ylabel("Time to solution [s]")
-    ax.set_title("Weak scaling")
-    ax.legend(title="Local base resolution")
-    save_pdf_and_png(fig, outpath)
-    plt.close(fig)
+        plt.errorbar(x, y, yerr=yerr, marker="o", capsize=3, label=rf"base $n={base_n}$")
+
+        for row in subset:
+            label = rf"${row['scaled_n']}^2$, {row['ncpu']} CPU"
+            plt.annotate(
+                label,
+                (row["problem_size"], row["time_mean_s"]),
+                textcoords="offset points",
+                xytext=(0, 6),
+                ha="center",
+                fontsize=8,
+            )
+
+    plt.xscale("log", base=2)
+    set_log2_y_axis()
+    problem_sizes = sorted({row["problem_size"] for row in summary})
+    plt.xticks(problem_sizes, [str(v) for v in problem_sizes], rotation=35, ha="right")
+    plt.xlabel(r"Total problem size $n^2$ grid points")
+    plt.ylabel("Time to solution [s]")
+    plt.title("Weak scaling: time to solution vs total problem size")
+    plt.grid(True, which="both", alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(outpath)
+    plt.close()
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Plot weak scaling time-to-solution results.")
-    parser.add_argument("--input", required=True, help="Raw CSV produced by the weak-scaling Slurm script")
+    parser = argparse.ArgumentParser(description="Plot weak-scaling time-to-solution results using log2 scale.")
+    parser.add_argument("--input", required=True, help="Raw CSV produced by run_weak_time_to_solution_log2.sh")
     parser.add_argument("--summary", required=True, help="Output CSV with averaged timings")
-    parser.add_argument("--ncpu-plot", required=True, help="Output PDF for time-vs-NCPU plot")
-    parser.add_argument("--problem-size-plot", required=True, help="Output PDF for time-vs-problem-size plot")
+    parser.add_argument("--ncpu-plot", required=True, help="Output PDF for time-to-solution vs NCPU")
+    parser.add_argument("--problem-size-plot", required=True, help="Output PDF for time-to-solution vs total problem size")
     args = parser.parse_args()
 
     rows = read_raw_data(args.input)

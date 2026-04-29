@@ -27,7 +27,7 @@ NX=4001
 NY=4001
 WORKERS_LIST=(2 4 8 16 32)
 TASKS_LIST=(50 100)
-REPEATS=1
+REPEATS=3
 
 RESULTS="outputs/results_manager_worker_scaling_one_process_per_node.dat"
 echo "# ntasks workers nprocs nx ny repeat time_seconds" > "${RESULTS}"

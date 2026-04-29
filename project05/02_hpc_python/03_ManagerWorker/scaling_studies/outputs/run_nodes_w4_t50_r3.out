@@ -1,0 +1,8 @@
+MPI initialized with     5 processes
+Run took 3.667882 seconds
+Process     0 has done          0 tasks
+Process     1 has done         12 tasks
+Process     2 has done         14 tasks
+Process     3 has done         13 tasks
+Process     4 has done         11 tasks
+Done.

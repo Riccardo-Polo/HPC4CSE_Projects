@@ -1,0 +1,615 @@
+============================================================
+Running one process per node: workers=2, nprocs=3, ntasks=50, repeat=1
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     3 processes
+Run took 5.296684 seconds
+Process     0 has done          0 tasks
+Process     1 has done         27 tasks
+Process     2 has done         23 tasks
+Done.
+============================================================
+Running one process per node: workers=2, nprocs=3, ntasks=50, repeat=2
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     3 processes
+Run took 5.036929 seconds
+Process     0 has done          0 tasks
+Process     1 has done         25 tasks
+Process     2 has done         25 tasks
+Done.
+============================================================
+Running one process per node: workers=2, nprocs=3, ntasks=50, repeat=3
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     3 processes
+Run took 4.757050 seconds
+Process     0 has done          0 tasks
+Process     1 has done         27 tasks
+Process     2 has done         23 tasks
+Done.
+============================================================
+Running one process per node: workers=4, nprocs=5, ntasks=50, repeat=1
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     5 processes
+Run took 3.860567 seconds
+Process     0 has done          0 tasks
+Process     1 has done         11 tasks
+Process     2 has done          8 tasks
+Process     3 has done         16 tasks
+Process     4 has done         15 tasks
+Done.
+============================================================
+Running one process per node: workers=4, nprocs=5, ntasks=50, repeat=2
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     5 processes
+Run took 3.920564 seconds
+Process     0 has done          0 tasks
+Process     1 has done         13 tasks
+Process     2 has done         13 tasks
+Process     3 has done         11 tasks
+Process     4 has done         13 tasks
+Done.
+============================================================
+Running one process per node: workers=4, nprocs=5, ntasks=50, repeat=3
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     5 processes
+Run took 3.667882 seconds
+Process     0 has done          0 tasks
+Process     1 has done         12 tasks
+Process     2 has done         14 tasks
+Process     3 has done         13 tasks
+Process     4 has done         11 tasks
+Done.
+============================================================
+Running one process per node: workers=8, nprocs=9, ntasks=50, repeat=1
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     9 processes
+Run took 2.915013 seconds
+Process     0 has done          0 tasks
+Process     1 has done          6 tasks
+Process     2 has done          5 tasks
+Process     3 has done          7 tasks
+Process     4 has done          8 tasks
+Process     5 has done          5 tasks
+Process     6 has done          5 tasks
+Process     7 has done          7 tasks
+Process     8 has done          7 tasks
+Done.
+============================================================
+Running one process per node: workers=8, nprocs=9, ntasks=50, repeat=2
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     9 processes
+Run took 3.480382 seconds
+Process     0 has done          0 tasks
+Process     1 has done          6 tasks
+Process     2 has done          4 tasks
+Process     3 has done          7 tasks
+Process     4 has done          7 tasks
+Process     5 has done          7 tasks
+Process     6 has done          6 tasks
+Process     7 has done          7 tasks
+Process     8 has done          6 tasks
+Done.
+============================================================
+Running one process per node: workers=8, nprocs=9, ntasks=50, repeat=3
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     9 processes
+Run took 2.805788 seconds
+Process     0 has done          0 tasks
+Process     1 has done          6 tasks
+Process     2 has done          5 tasks
+Process     3 has done          7 tasks
+Process     4 has done          7 tasks
+Process     5 has done          6 tasks
+Process     6 has done          7 tasks
+Process     7 has done          6 tasks
+Process     8 has done          6 tasks
+Done.
+============================================================
+Running one process per node: workers=16, nprocs=17, ntasks=50, repeat=1
+Domain: 4001 x 4001
+============================================================
+MPI initialized with    17 processes
+Run took 3.114975 seconds
+Process     0 has done          0 tasks
+Process     1 has done          3 tasks
+Process     2 has done          4 tasks
+Process     3 has done          4 tasks
+Process     4 has done          4 tasks
+Process     5 has done          4 tasks
+Process     6 has done          3 tasks
+Process     7 has done          3 tasks
+Process     8 has done          4 tasks
+Process     9 has done          2 tasks
+Process    10 has done          4 tasks
+Process    11 has done          2 tasks
+Process    12 has done          3 tasks
+Process    13 has done          2 tasks
+Process    14 has done          2 tasks
+Process    15 has done          3 tasks
+Process    16 has done          3 tasks
+Done.
+============================================================
+Running one process per node: workers=16, nprocs=17, ntasks=50, repeat=2
+Domain: 4001 x 4001
+============================================================
+MPI initialized with    17 processes
+Run took 2.979787 seconds
+Process     0 has done          0 tasks
+Process     1 has done          4 tasks
+Process     2 has done          2 tasks
+Process     3 has done          4 tasks
+Process     4 has done          4 tasks
+Process     5 has done          4 tasks
+Process     6 has done          4 tasks
+Process     7 has done          4 tasks
+Process     8 has done          3 tasks
+Process     9 has done          3 tasks
+Process    10 has done          2 tasks
+Process    11 has done          2 tasks
+Process    12 has done          3 tasks
+Process    13 has done          3 tasks
+Process    14 has done          2 tasks
+Process    15 has done          3 tasks
+Process    16 has done          3 tasks
+Done.
+============================================================
+Running one process per node: workers=16, nprocs=17, ntasks=50, repeat=3
+Domain: 4001 x 4001
+============================================================
+MPI initialized with    17 processes
+Run took 3.501670 seconds
+Process     0 has done          0 tasks
+Process     1 has done          3 tasks
+Process     2 has done          3 tasks
+Process     3 has done          4 tasks
+Process     4 has done          3 tasks
+Process     5 has done          4 tasks
+Process     6 has done          4 tasks
+Process     7 has done          3 tasks
+Process     8 has done          4 tasks
+Process     9 has done          3 tasks
+Process    10 has done          3 tasks
+Process    11 has done          3 tasks
+Process    12 has done          3 tasks
+Process    13 has done          2 tasks
+Process    14 has done          2 tasks
+Process    15 has done          3 tasks
+Process    16 has done          3 tasks
+Done.
+============================================================
+Running one process per node: workers=32, nprocs=33, ntasks=50, repeat=1
+Domain: 4001 x 4001
+============================================================
+MPI initialized with    33 processes
+Run took 3.477418 seconds
+Process     0 has done          0 tasks
+Process     1 has done          2 tasks
+Process     2 has done          2 tasks
+Process     3 has done          2 tasks
+Process     4 has done          2 tasks
+Process     5 has done          2 tasks
+Process     6 has done          2 tasks
+Process     7 has done          2 tasks
+Process     8 has done          2 tasks
+Process     9 has done          2 tasks
+Process    10 has done          2 tasks
+Process    11 has done          1 tasks
+Process    12 has done          2 tasks
+Process    13 has done          2 tasks
+Process    14 has done          2 tasks
+Process    15 has done          2 tasks
+Process    16 has done          2 tasks
+Process    17 has done          2 tasks
+Process    18 has done          1 tasks
+Process    19 has done          2 tasks
+Process    20 has done          1 tasks
+Process    21 has done          2 tasks
+Process    22 has done          1 tasks
+Process    23 has done          1 tasks
+Process    24 has done          1 tasks
+Process    25 has done          1 tasks
+Process    26 has done          1 tasks
+Process    27 has done          1 tasks
+Process    28 has done          1 tasks
+Process    29 has done          1 tasks
+Process    30 has done          1 tasks
+Process    31 has done          1 tasks
+Process    32 has done          1 tasks
+Done.
+============================================================
+Running one process per node: workers=32, nprocs=33, ntasks=50, repeat=2
+Domain: 4001 x 4001
+============================================================
+MPI initialized with    33 processes
+Run took 2.659224 seconds
+Process     0 has done          0 tasks
+Process     1 has done          2 tasks
+Process     2 has done          2 tasks
+Process     3 has done          2 tasks
+Process     4 has done          2 tasks
+Process     5 has done          2 tasks
+Process     6 has done          2 tasks
+Process     7 has done          2 tasks
+Process     8 has done          2 tasks
+Process     9 has done          2 tasks
+Process    10 has done          2 tasks
+Process    11 has done          2 tasks
+Process    12 has done          2 tasks
+Process    13 has done          2 tasks
+Process    14 has done          2 tasks
+Process    15 has done          2 tasks
+Process    16 has done          2 tasks
+Process    17 has done          2 tasks
+Process    18 has done          1 tasks
+Process    19 has done          2 tasks
+Process    20 has done          1 tasks
+Process    21 has done          1 tasks
+Process    22 has done          1 tasks
+Process    23 has done          1 tasks
+Process    24 has done          1 tasks
+Process    25 has done          1 tasks
+Process    26 has done          1 tasks
+Process    27 has done          1 tasks
+Process    28 has done          1 tasks
+Process    29 has done          1 tasks
+Process    30 has done          1 tasks
+Process    31 has done          1 tasks
+Process    32 has done          1 tasks
+Done.
+============================================================
+Running one process per node: workers=32, nprocs=33, ntasks=50, repeat=3
+Domain: 4001 x 4001
+============================================================
+MPI initialized with    33 processes
+Run took 3.425381 seconds
+Process     0 has done          0 tasks
+Process     1 has done          2 tasks
+Process     2 has done          2 tasks
+Process     3 has done          2 tasks
+Process     4 has done          2 tasks
+Process     5 has done          2 tasks
+Process     6 has done          2 tasks
+Process     7 has done          2 tasks
+Process     8 has done          2 tasks
+Process     9 has done          2 tasks
+Process    10 has done          2 tasks
+Process    11 has done          2 tasks
+Process    12 has done          2 tasks
+Process    13 has done          2 tasks
+Process    14 has done          2 tasks
+Process    15 has done          2 tasks
+Process    16 has done          2 tasks
+Process    17 has done          1 tasks
+Process    18 has done          1 tasks
+Process    19 has done          2 tasks
+Process    20 has done          1 tasks
+Process    21 has done          2 tasks
+Process    22 has done          1 tasks
+Process    23 has done          1 tasks
+Process    24 has done          1 tasks
+Process    25 has done          1 tasks
+Process    26 has done          1 tasks
+Process    27 has done          1 tasks
+Process    28 has done          1 tasks
+Process    29 has done          1 tasks
+Process    30 has done          1 tasks
+Process    31 has done          1 tasks
+Process    32 has done          1 tasks
+Done.
+============================================================
+Running one process per node: workers=2, nprocs=3, ntasks=100, repeat=1
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     3 processes
+Run took 5.672342 seconds
+Process     0 has done          0 tasks
+Process     1 has done         55 tasks
+Process     2 has done         45 tasks
+Done.
+============================================================
+Running one process per node: workers=2, nprocs=3, ntasks=100, repeat=2
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     3 processes
+Run took 5.192717 seconds
+Process     0 has done          0 tasks
+Process     1 has done         51 tasks
+Process     2 has done         49 tasks
+Done.
+============================================================
+Running one process per node: workers=2, nprocs=3, ntasks=100, repeat=3
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     3 processes
+Run took 4.650546 seconds
+Process     0 has done          0 tasks
+Process     1 has done         52 tasks
+Process     2 has done         48 tasks
+Done.
+============================================================
+Running one process per node: workers=4, nprocs=5, ntasks=100, repeat=1
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     5 processes
+Run took 3.622866 seconds
+Process     0 has done          0 tasks
+Process     1 has done         23 tasks
+Process     2 has done         27 tasks
+Process     3 has done         25 tasks
+Process     4 has done         25 tasks
+Done.
+============================================================
+Running one process per node: workers=4, nprocs=5, ntasks=100, repeat=2
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     5 processes
+Run took 4.378436 seconds
+Process     0 has done          0 tasks
+Process     1 has done         24 tasks
+Process     2 has done         25 tasks
+Process     3 has done         25 tasks
+Process     4 has done         26 tasks
+Done.
+============================================================
+Running one process per node: workers=4, nprocs=5, ntasks=100, repeat=3
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     5 processes
+Run took 3.478882 seconds
+Process     0 has done          0 tasks
+Process     1 has done         22 tasks
+Process     2 has done         26 tasks
+Process     3 has done         25 tasks
+Process     4 has done         27 tasks
+Done.
+============================================================
+Running one process per node: workers=8, nprocs=9, ntasks=100, repeat=1
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     9 processes
+Run took 2.772427 seconds
+Process     0 has done          0 tasks
+Process     1 has done         10 tasks
+Process     2 has done         13 tasks
+Process     3 has done         15 tasks
+Process     4 has done         10 tasks
+Process     5 has done         15 tasks
+Process     6 has done         10 tasks
+Process     7 has done         14 tasks
+Process     8 has done         13 tasks
+Done.
+============================================================
+Running one process per node: workers=8, nprocs=9, ntasks=100, repeat=2
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     9 processes
+Run took 3.330511 seconds
+Process     0 has done          0 tasks
+Process     1 has done         14 tasks
+Process     2 has done         12 tasks
+Process     3 has done         14 tasks
+Process     4 has done         14 tasks
+Process     5 has done         13 tasks
+Process     6 has done          9 tasks
+Process     7 has done         15 tasks
+Process     8 has done          9 tasks
+Done.
+============================================================
+Running one process per node: workers=8, nprocs=9, ntasks=100, repeat=3
+Domain: 4001 x 4001
+============================================================
+MPI initialized with     9 processes
+Run took 2.851002 seconds
+Process     0 has done          0 tasks
+Process     1 has done         13 tasks
+Process     2 has done         11 tasks
+Process     3 has done         10 tasks
+Process     4 has done         14 tasks
+Process     5 has done         14 tasks
+Process     6 has done         14 tasks
+Process     7 has done         14 tasks
+Process     8 has done         10 tasks
+Done.
+============================================================
+Running one process per node: workers=16, nprocs=17, ntasks=100, repeat=1
+Domain: 4001 x 4001
+============================================================
+MPI initialized with    17 processes
+Run took 2.491173 seconds
+Process     0 has done          0 tasks
+Process     1 has done          8 tasks
+Process     2 has done          6 tasks
+Process     3 has done          8 tasks
+Process     4 has done          7 tasks
+Process     5 has done          8 tasks
+Process     6 has done          6 tasks
+Process     7 has done          5 tasks
+Process     8 has done          8 tasks
+Process     9 has done          5 tasks
+Process    10 has done          5 tasks
+Process    11 has done          5 tasks
+Process    12 has done          7 tasks
+Process    13 has done          6 tasks
+Process    14 has done          5 tasks
+Process    15 has done          7 tasks
+Process    16 has done          4 tasks
+Done.
+============================================================
+Running one process per node: workers=16, nprocs=17, ntasks=100, repeat=2
+Domain: 4001 x 4001
+============================================================
+MPI initialized with    17 processes
+Run took 3.118107 seconds
+Process     0 has done          0 tasks
+Process     1 has done          8 tasks
+Process     2 has done          5 tasks
+Process     3 has done          7 tasks
+Process     4 has done          7 tasks
+Process     5 has done          5 tasks
+Process     6 has done          6 tasks
+Process     7 has done          8 tasks
+Process     8 has done          6 tasks
+Process     9 has done          8 tasks
+Process    10 has done          5 tasks
+Process    11 has done          5 tasks
+Process    12 has done          5 tasks
+Process    13 has done          6 tasks
+Process    14 has done          7 tasks
+Process    15 has done          6 tasks
+Process    16 has done          6 tasks
+Done.
+============================================================
+Running one process per node: workers=16, nprocs=17, ntasks=100, repeat=3
+Domain: 4001 x 4001
+============================================================
+MPI initialized with    17 processes
+Run took 2.631823 seconds
+Process     0 has done          0 tasks
+Process     1 has done          7 tasks
+Process     2 has done          6 tasks
+Process     3 has done          8 tasks
+Process     4 has done          8 tasks
+Process     5 has done          8 tasks
+Process     6 has done          5 tasks
+Process     7 has done          5 tasks
+Process     8 has done          8 tasks
+Process     9 has done          5 tasks
+Process    10 has done          5 tasks
+Process    11 has done          8 tasks
+Process    12 has done          5 tasks
+Process    13 has done          5 tasks
+Process    14 has done          5 tasks
+Process    15 has done          8 tasks
+Process    16 has done          4 tasks
+Done.
+============================================================
+Running one process per node: workers=32, nprocs=33, ntasks=100, repeat=1
+Domain: 4001 x 4001
+============================================================
+MPI initialized with    33 processes
+Run took 2.838054 seconds
+Process     0 has done          0 tasks
+Process     1 has done          4 tasks
+Process     2 has done          3 tasks
+Process     3 has done          4 tasks
+Process     4 has done          4 tasks
+Process     5 has done          4 tasks
+Process     6 has done          3 tasks
+Process     7 has done          4 tasks
+Process     8 has done          3 tasks
+Process     9 has done          4 tasks
+Process    10 has done          4 tasks
+Process    11 has done          3 tasks
+Process    12 has done          3 tasks
+Process    13 has done          3 tasks
+Process    14 has done          4 tasks
+Process    15 has done          3 tasks
+Process    16 has done          3 tasks
+Process    17 has done          3 tasks
+Process    18 has done          3 tasks
+Process    19 has done          3 tasks
+Process    20 has done          3 tasks
+Process    21 has done          3 tasks
+Process    22 has done          3 tasks
+Process    23 has done          3 tasks
+Process    24 has done          3 tasks
+Process    25 has done          3 tasks
+Process    26 has done          2 tasks
+Process    27 has done          3 tasks
+Process    28 has done          3 tasks
+Process    29 has done          2 tasks
+Process    30 has done          2 tasks
+Process    31 has done          3 tasks
+Process    32 has done          2 tasks
+Done.
+============================================================
+Running one process per node: workers=32, nprocs=33, ntasks=100, repeat=2
+Domain: 4001 x 4001
+============================================================
+MPI initialized with    33 processes
+Run took 2.561349 seconds
+Process     0 has done          0 tasks
+Process     1 has done          4 tasks
+Process     2 has done          3 tasks
+Process     3 has done          4 tasks
+Process     4 has done          4 tasks
+Process     5 has done          4 tasks
+Process     6 has done          3 tasks
+Process     7 has done          4 tasks
+Process     8 has done          3 tasks
+Process     9 has done          4 tasks
+Process    10 has done          3 tasks
+Process    11 has done          3 tasks
+Process    12 has done          3 tasks
+Process    13 has done          3 tasks
+Process    14 has done          3 tasks
+Process    15 has done          3 tasks
+Process    16 has done          3 tasks
+Process    17 has done          3 tasks
+Process    18 has done          3 tasks
+Process    19 has done          3 tasks
+Process    20 has done          3 tasks
+Process    21 has done          4 tasks
+Process    22 has done          3 tasks
+Process    23 has done          3 tasks
+Process    24 has done          4 tasks
+Process    25 has done          3 tasks
+Process    26 has done          3 tasks
+Process    27 has done          3 tasks
+Process    28 has done          2 tasks
+Process    29 has done          2 tasks
+Process    30 has done          2 tasks
+Process    31 has done          3 tasks
+Process    32 has done          2 tasks
+Done.
+============================================================
+Running one process per node: workers=32, nprocs=33, ntasks=100, repeat=3
+Domain: 4001 x 4001
+============================================================
+MPI initialized with    33 processes
+Run took 3.385256 seconds
+Process     0 has done          0 tasks
+Process     1 has done          4 tasks
+Process     2 has done          3 tasks
+Process     3 has done          3 tasks
+Process     4 has done          4 tasks
+Process     5 has done          3 tasks
+Process     6 has done          3 tasks
+Process     7 has done          4 tasks
+Process     8 has done          3 tasks
+Process     9 has done          4 tasks
+Process    10 has done          3 tasks
+Process    11 has done          3 tasks
+Process    12 has done          3 tasks
+Process    13 has done          3 tasks
+Process    14 has done          4 tasks
+Process    15 has done          3 tasks
+Process    16 has done          3 tasks
+Process    17 has done          3 tasks
+Process    18 has done          3 tasks
+Process    19 has done          4 tasks
+Process    20 has done          3 tasks
+Process    21 has done          3 tasks
+Process    22 has done          3 tasks
+Process    23 has done          3 tasks
+Process    24 has done          4 tasks
+Process    25 has done          3 tasks
+Process    26 has done          2 tasks
+Process    27 has done          3 tasks
+Process    28 has done          3 tasks
+Process    29 has done          3 tasks
+Process    30 has done          2 tasks
+Process    31 has done          3 tasks
+Process    32 has done          2 tasks
+Done.
+Scaling data written to outputs/results_manager_worker_scaling_one_process_per_node.dat
+To plot this file, run:
+python3 plot_scaling_manager_worker.py outputs/results_manager_worker_scaling_one_process_per_node.dat figures/manager_worker_time_log10_one_process_per_node.pdf

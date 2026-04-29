@@ -322,24 +322,60 @@ void write_binary(std::string fname, Field &u, SubDomain &domain,
 \end{lstlisting}
 The implementation uses MPI-IO to write the distributed field data into a single binary file. Each process defines a subarray datatype that describes its local portion of the global grid, and then collectively writes its data using \texttt{MPI\_File\_write\_all}. The use of \texttt{MPI\_Type\_create\_subarray} allows each process to specify its unique offset and size within the global array, enabling a seamless parallel output without the need for gathering data on a single rank.
 \subsection{Strong scaling [10 Points]}
-Here we are asked to plot the time to solution for $\text{NCPU} = 1, 2, 4, 8, 16$ processes across resolutions of $n\times n$, where $n = 64, 128, 256, 512, 1024$.\\
-In figure \ref{fig:strong_scaling} we can see the strong scaling results for the time to solution. 
+Here we are asked to plot the time to solution for $\text{NCPU} = 1, 2, 4, 8, 16$ processes across resolutions of $n\times n$, where $n = 64, 128, 256, 512, 1024$. 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.8\textwidth]{../01_mini_app/scaling_study/figures/strong_time_to_solution.pdf}
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../01_mini_app/scaling_study/figures/strong_time_to_solution.pdf}
+        \caption{Strong scaling results for the time to solution in the MPI implementation.}
+        \label{fig:strong_scaling_mpi}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{time_to_solution_log10.pdf}
+        \caption{Strong scaling results for the time to solution in the OpenMP implementation.}
+        \label{fig:strong_scaling_openmp}
+    \end{subfigure}
     \caption{Strong scaling results for the time to solution.}
     \label{fig:strong_scaling}
 \end{figure}
-In the Openmp implementaiton
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{strong_time_to_solution_1ppn.pdf}
-    \caption{Strong scaling results for the time to solution in the OpenMP implementation.}
-    \label{fig:strong_scaling_openmp}
-\end{figure}
+Figure~\ref{fig:strong_scaling} shows the strong scaling behaviour of the MPI implementation and compares it with the OpenMP implementation from Project 3. For the larger resolutions, especially $n=512$ and $n=1024$, the MPI implementation shows a clear reduction of the time to solution when increasing the number of processes. This is the expected behaviour in a strong scaling experiment: the global problem size is fixed, but the work is distributed among more processes. The improvement is particularly visible for the largest grid, where the computational work per process is still large enough to compensate for the cost of MPI communication.\\
 
+For small resolutions, for example $n=64$ and partly $n=128$, the scaling is much weaker and can even become non-monotonic. This is expected because the amount of computation per process is very small. In this regime, the overhead due to MPI initialization, halo exchanges, global reductions in the conjugate-gradient solver, and synchronization becomes comparable to the actual stencil computation. Therefore, adding more processes does not necessarily reduce the runtime. For $n=64$, the runtime even increases when many processes are used, which indicates that the problem is too small to benefit from parallelization.\\
+
+Compared with the OpenMP implementation, the qualitative behaviour is similar: large resolutions scale better, while small resolutions are dominated by parallel overhead. However, the reason for the overhead is different. In OpenMP, all threads run in shared memory, so there is no explicit halo exchange between processes, but the code can suffer from thread-management overhead, synchronization, cache effects, and memory-bandwidth contention. In the MPI version, each process owns only a subdomain and communicates explicitly with neighbouring processes, so the main overhead comes from halo exchanges and global reductions. For large enough problems, the MPI implementation scales well because the local computation dominates the communication cost. For small problems, both implementations are limited by overhead rather than by floating-point work.\\
+
+Overall, the strong scaling results confirm that the MPI implementation is effective for sufficiently large grids, while small grids are not suitable for strong scaling because the local workload becomes too small.
 \subsection{Weak scaling [10 Points]}
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../01_mini_app/scaling_study/figures/weak_time_to_solution.pdf}
+        \caption{Weak scaling results for the time to solution.}
+        \label{fig:weak_scaling_main}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{weak_time_to_solution_vs_ncpu_log2.pdf}
+        \caption{Weak scaling results for the time to solution vs. number of processes.}
+        \label{fig:weak_scaling_vs_ncpu}
+    \end{subfigure}
+    \caption{Weak scaling results for the time to solution.}
+    \label{fig:weak_scaling}
+\end{figure}
+Figure~\ref{fig:weak_scaling} shows the weak scaling behaviour. In a weak scaling experiment, the problem size is increased together with the number of processes in such a way that the amount of work per process should remain approximately constant. Ideally, the time to solution would therefore remain constant as the number of MPI processes increases.\\
 
+The measured results show that the time to solution increases with the number of processes for all base resolutions. This means that the weak scaling is not ideal. The increase is caused by the fact that, although the local computational work per process is kept approximately constant, the communication and synchronization costs grow when more processes are used. In particular, the halo exchange involves more subdomain boundaries, and the conjugate-gradient method requires global reductions, whose cost increases with the number of MPI ranks. These global reductions are especially important because they introduce synchronization across all processes.\\
+
+The weak scaling behaviour is better for smaller base resolutions in absolute time, but the relative increase is still visible. For larger base resolutions, such as base $n=256$, the runtime is higher because each process has a larger local problem. The growth of the runtime with $NCPU$ shows that communication and synchronization become increasingly important as the global problem size and the number of processes increase.\\
+
+Compared with the OpenMP implementation of Project 3, the MPI implementation again shows the same general trend: weak scaling is not perfectly flat. However, the source of the loss of efficiency is different. In OpenMP, the threads share the same memory space, so there is no explicit message passing, but the performance can be limited by memory bandwidth, cache/NUMA effects, and synchronization inside the iterative solver. In MPI, the memory is distributed, which improves memory locality, but this comes at the price of explicit communication between neighbouring subdomains and collective reductions. Therefore, the MPI weak scaling is mainly limited by communication and global synchronization, while the OpenMP weak scaling is mainly limited by shared-memory contention and thread synchronization.\\
+
+Overall, the weak scaling results are reasonable for a distributed-memory stencil code. The runtime does not remain perfectly constant, but the increase is expected because the PDE solver is not purely local: every timestep and every conjugate-gradient iteration require communication between subdomains and global reductions.
 \subsection{Bonus [20 Points]: Overlapping computation/computation details}
 
 \newpage
@@ -870,5 +906,27 @@ computational costs. Nevertheless, the dynamic scheduling strategy helps reduce 
 with a purely static assignment. The total runtime printed by the manager includes the computation of
 the Mandelbrot patches, the communication of task objects between manager and workers, the
 collection of the completed patches, and the final assembly and output of the image.
+
+\subsubsection{Scaling study}
+We were asked to perform a scaling study using 2-32 workers for a 4001x4001 domain and split the workload into 50 and 100 tasks.\\
+The scaling results for the manager-worker implementation of the Mandelbrot set are shown in figure \ref{fig:mandelbrot_scaling}.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../02_hpc_python/03_ManagerWorker/scaling_studies/figures/manager_worker_time_log10_one_process_per_node.pdf}
+    \caption{Scaling results for the manager-worker implementation of the Mandelbrot set.}
+    \label{fig:mandelbrot_scaling}
+\end{figure}
+
+Figure~\ref{fig:mandelbrot_scaling} shows the time to solution of the manager-worker Mandelbrot implementation for a fixed $4001 \times 4001$ domain, using 2, 4, 8, 16, and 32 workers. The workload is split into either 50 or 100 tasks.\\
+
+The runtime decreases significantly when going from 2 to 4 workers. This shows that the manager-worker implementation is effective when the number of workers is still small: the Mandelbrot patches can be computed independently, and distributing them among more workers reduces the amount of work per worker. The improvement is also visible when going from 4 to 8 workers, although the gain is already smaller than in the previous step.\\
+
+For larger worker counts, the scaling saturates. In particular, going from 8 to 16 and 32 workers does not lead to a clear additional reduction in runtime. For 50 tasks, the runtime even increases slightly after 8 workers. This indicates that the computation is no longer dominated only by the Mandelbrot calculation itself. The manager has to distribute tasks, receive completed patches, send termination messages, and finally assemble the global image. As the number of workers increases, the manager becomes a synchronization and communication bottleneck. Moreover, the number of tasks per worker becomes small, so the overhead of sending task objects and collecting results becomes comparable to the useful computation.\\
+
+The comparison between 50 and 100 tasks shows the effect of task granularity. With 50 tasks, each task is larger, so the communication overhead per unit of computation is smaller. However, there are fewer tasks available for dynamic load balancing. This can limit scalability when many workers are used, because some workers may become idle while others are still working on expensive Mandelbrot patches. With 100 tasks, each task is smaller, so the manager has more flexibility to distribute work dynamically. This generally improves load balance, especially for higher worker counts, but it also increases the number of messages exchanged between the manager and the workers.\\
+
+The results show that using 100 tasks gives slightly better performance at larger worker counts. In particular, for 16 and 32 workers the 100-task case is faster than the 50-task case. This suggests that, for this problem size, the improved load balancing obtained with finer tasks compensates for the additional communication overhead. On the other hand, the difference between 50 and 100 tasks is not very large, which means that both decompositions are reasonably effective.\\
+
+The error bars indicate the variability between repeated measurements. The variability is especially visible for larger worker counts. This is expected on a shared cluster system, where communication latency, node placement, and temporary load on the machine can affect the runtime. Since the measurements were performed with one process per node, the computation avoids intra-node resource contention, but it also makes the communication between manager and workers more expensive than a single-node run.
 \printbibliography
 \end{document}

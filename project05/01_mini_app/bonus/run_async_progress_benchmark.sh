@@ -3,6 +3,7 @@
 #SBATCH --ntasks=2
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
+#SBATCH --constraint=EPYC_7763
 #SBATCH --time=00:10:00
 #SBATCH --mem-per-cpu=2G
 #SBATCH --output=outputs/async_progress_%j.out

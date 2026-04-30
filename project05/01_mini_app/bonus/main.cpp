@@ -124,7 +124,6 @@ void readcmdline(Discretization& options, int argc, char* argv[]) {
 // =============================================================================
 
 int main(int argc, char* argv[]) {
-    // read command line arguments
     MPI_Init(&argc, &argv);
 
     int size = 1, rank = 0;
@@ -134,6 +133,7 @@ int main(int argc, char* argv[]) {
     domain.rank = rank;
     domain.size = size;
 
+    // read command line arguments
     readcmdline(options, argc, argv);
 
     // set iteration parameters
@@ -342,4 +342,5 @@ int main(int argc, char* argv[]) {
     // TODO: finalize MPI
     MPI_Comm_free(&domain.comm_cart);
     MPI_Finalize();
+    return 0;
 }

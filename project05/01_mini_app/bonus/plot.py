@@ -30,7 +30,7 @@ def read_bov_data(header):
     else:
         raise ValueError(f"Unknown data format: {header[3]}")
     data = np.fromfile(header[1], dtype=dtype)
-    data = data.reshape(header[2])
+    data = data.reshape((header[2][1], header[2][0], header[2][2]))
     return data
 
 
@@ -55,7 +55,7 @@ def plot_data(fname, save=True):
     ax.set_title(f"Time: {time}")
     ax.set_xlabel(r"$x$")
     ax.set_ylabel(r"$y$")
-    C = ax.pcolor(X, Y, data[:, :, 0], cmap="jet")
+    C = ax.pcolor(X, Y, data[:, :, 0].T, cmap="jet")
     cbar = fig.colorbar(C, ax=ax)
     cbar.minorticks_on()
     if save:

@@ -26,7 +26,7 @@ function spectral_part(A)
     L = D - A;
 
     # 2. Compute its eigendecomposition.
-    eigvals, eigvecs = eigen(L);
+    eigvals, eigvecs = eigs(L);
     idx_min = argmin(eigvals[2:end]) + 1; # skip the first eigenvalue (which is zero)
     fiedler_vec = eigvecs[:, idx_min];
 

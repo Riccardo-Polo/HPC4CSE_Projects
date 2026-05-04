@@ -29,7 +29,7 @@ function inertial_part(A, coords)
          -Sxy Sxx];
 
     # 3. Compute the eigenvector associated with the smallest eigenvalue of M.
-    eigvals, eigvecs = eigen(M);
+    eigvals, eigvecs = eigs(M);
     idx_min = argmin(eigvals);
     eigv = eigvecs[:, idx_min];
 

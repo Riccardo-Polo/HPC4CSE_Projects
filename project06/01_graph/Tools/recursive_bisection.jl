@@ -26,26 +26,27 @@ function rec_bisection(method, levels, A, coords=zeros(0), vn=zeros(0))
     n = size(A, 1)
 
     # Final partition vector.
+    # p[i] is the final part assigned to vertex i.
     p = zeros(Int, n)
 
     function recursion(vertices, level, index)
 
-        # Stop if no more levels are required.
+        # Stop if no more bisections are required.
         if level == 0
             p[vertices] .= index
             return
         end
 
-        # Safety stop: cannot bisect zero or one vertex.
+        # Cannot further bisect a subgraph with 0 or 1 vertices.
         if length(vertices) <= 1
             p[vertices] .= index
             return
         end
 
-        # Extract current subgraph.
+        # Extract induced subgraph.
         A_sub = A[vertices, vertices]
 
-        # Apply the selected bisection method.
+        # Apply chosen bisection method.
         if method == "spectral_part"
             local_p = spectral_part(A_sub)
 
@@ -67,21 +68,26 @@ function rec_bisection(method, levels, A, coords=zeros(0), vn=zeros(0))
             error("Unknown partitioning method: $method")
         end
 
-        # Do not assume labels are 1/2. They may be 0/1.
+        # Extract the two labels returned by the bisection method.
         labels = sort(unique(local_p))
 
         if length(labels) != 2
-            error("Bisection failed: expected 2 parts, got labels = $labels")
+            # This should not happen if the bisection routines are correct,
+            # but it avoids crashing on pathological small subgraphs.
+            p[vertices] .= index
+            return
         end
 
         vertices_1 = vertices[findall(local_p .== labels[1])]
         vertices_2 = vertices[findall(local_p .== labels[2])]
 
+        # Safety check.
         if isempty(vertices_1) || isempty(vertices_2)
-            error("Bisection failed: one of the two parts is empty.")
+            p[vertices] .= index
+            return
         end
 
-        # Number of final parts contained in one recursive branch.
+        # Each child branch contains 2^(level-1) final labels.
         offset = 2^(level - 1)
 
         recursion(vertices_1, level - 1, index)

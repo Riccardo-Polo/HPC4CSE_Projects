@@ -18,26 +18,29 @@ function spectral_part(A)
 
     n = size(A, 1)
 
-    D = Diagonal(vec(sum(A, dims=2)))
-    L = Symmetric(D - A)
-
-    if n <= 2000
-        eig = eigen(Symmetric(Matrix(L)))
-        fiedler_vec = eig.vectors[:, 2]
-    else
-        eigvals, eigvecs = eigs(L; nev=2, which=:SR, maxiter=10000, tol=1e-8)
-        perm = sortperm(real.(eigvals))
-        fiedler_vec = real.(eigvecs[:, perm[2]])
+    if n == 1
+        return ones(Int, 1)
     end
 
-    threshold = median(fiedler_vec)
+    # 1. Construct the Laplacian matrix.
+    D = Diagonal(vec(sum(A, dims=2)))
+    L = Symmetric(Matrix(D - A))
 
-    p1 = findall(fiedler_vec .< threshold)
-    p2 = findall(fiedler_vec .>= threshold)
+    # 2. Compute eigendecomposition.
+    eig = eigen(L)
+
+    # 3. Take eigenvector associated with second smallest eigenvalue.
+    perm = sortperm(eig.values)
+    fiedler_vec = eig.vectors[:, perm[2]]
+
+    # 4. Balanced partition by sorting the Fiedler vector.
+    order = sortperm(fiedler_vec)
 
     p = ones(Int, n)
-    p[p1] .= 1
-    p[p2] .= 2
+
+    n1 = div(n, 2)
+    p[order[1:n1]] .= 1
+    p[order[n1+1:end]] .= 2
 
     return p
 

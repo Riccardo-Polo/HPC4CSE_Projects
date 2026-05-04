@@ -278,11 +278,7 @@ because the corresponding rows are contiguous in memory, while the west and
 east boundaries require temporary buffers since the columns of the local field
 are not stored contiguously. For this reason, first we pack the left and
 right interior columns into \texttt{sendW} and \texttt{sendE}, and then posts
-non-blocking receives and sends for all available neighbors. Using
-\texttt{MPI\_Irecv} and \texttt{MPI\_Isend} allows the communication to
-progress while the interior part of the stencil can still be computed, which is
-the main mechanism for overlapping communication and computation. The tags
-\texttt{0} and \texttt{1} distinguish row and column messages, and the checks
+non-blocking receives and sends for all available neighbors. Although the exchange uses non-blocking MPI calls, in the current implementation the code waits immediately after posting the sends and receives. Therefore, the implementation avoids deadlock and prepares the code structure for overlap, but it does not yet realize a true overlap between communication and stencil computation. The tags \texttt{0} and \texttt{1} distinguish row and column messages, and the checks
 against \texttt{MPI\_PROC\_NULL} ensure that boundary processes simply skip
 the missing neighbors. Finally, \texttt{MPI\_Waitall} guarantees that all
 halo exchanges are complete before the updated ghost layers are used in the
@@ -376,7 +372,7 @@ The weak scaling behaviour is better for smaller base resolutions in absolute ti
 Compared with the OpenMP implementation of Project 3, the MPI implementation again shows the same general trend: weak scaling is not perfectly flat. However, the source of the loss of efficiency is different. In OpenMP, the threads share the same memory space, so there is no explicit message passing, but the performance can be limited by memory bandwidth, cache/NUMA effects, and synchronization inside the iterative solver. In MPI, the memory is distributed, which improves memory locality, but this comes at the price of explicit communication between neighbouring subdomains and collective reductions. Therefore, the MPI weak scaling is mainly limited by communication and global synchronization, while the OpenMP weak scaling is mainly limited by shared-memory contention and thread synchronization.\\
 
 Overall, the weak scaling results are reasonable for a distributed-memory stencil code. The runtime does not remain perfectly constant, but the increase is expected because the PDE solver is not purely local: every timestep and every conjugate-gradient iteration require communication between subdomains and global reductions.
-\subsection{Bonus [20 Points]: Overlapping computation/computation details}
+\subsection{Bonus [20 Points]: Overlapping communication/computation details}
 
 \newpage
 
@@ -396,52 +392,22 @@ size = comm.Get_size()
 rank = comm.Get_rank()
 proc = MPI.Get_processor_name()
 
-total = rank
-current_value = rank
+# pickle-based 
+total = comm.allreduce(rank, op=MPI.SUM)
 
-for _ in range(size - 1):
-    received_value = comm.sendrecv(
-        current_value,
-        dest=(rank + 1) % size,
-        sendtag=0,
-        source=(rank - 1 + size) % size,
-        recvtag=0,
-    )
-    total += received_value
-    current_value = received_value
-
-print(f"Sum is {total} on processor {proc}, rank {rank} out of {size} "
-      f"processes")
+print(
+    f"Sum is {total} on processor {proc}, "
+    f"rank {rank} out of {size} processes"
+)
 \end{lstlisting}
-The implementation follows a ring communication pattern. Each MPI process starts from its own
-rank, stored both in \texttt{total} and in \texttt{current\_value}. The variable \texttt{total}
-is the local accumulator, while \texttt{current\_value} is the value that is forwarded around the
-ring. At each iteration, process \texttt{rank} sends its current value to the process
-\texttt{(rank + 1) \% size} and receives a value from the process
-\texttt{(rank - 1 + size) \% size}. The modulo operation implements the periodicity of the ring:
-the last rank sends to rank zero, and rank zero receives from the last rank.\\
-
-The communication is performed with the lower-case mpi4py routine \texttt{comm.sendrecv}. Lower-case
-mpi4py methods operate on generic Python objects. Therefore, the integer sent by each process is first
-serialized by Python using pickle, transmitted through MPI, and then reconstructed on the receiving
-side. This makes the interface very convenient because no explicit buffer or datatype has to be specified.
-However, this convenience introduces an additional serialization overhead, which can become relevant
-for larger data structures.\\
-
-The use of \texttt{sendrecv} is important for correctness. If the code used separate blocking
-\texttt{send} and \texttt{recv} calls, all processes could potentially wait for a matching receive,
-leading to a deadlock depending on the MPI implementation and message size. The routine
-\texttt{sendrecv} combines the send and receive operations into a single MPI call, allowing all ranks
-to exchange data with their two neighbours safely.\\After one iteration, every process has received the rank value of its left neighbour. After two
-iterations, it has received the rank value two positions away, and so on. Consequently, after
-\texttt{size - 1} iterations, every process has received all other ranks exactly once. Since each
-process also initialized \texttt{total} with its own rank, the final value of \texttt{total} is the
-sum of all ranks,
-\[
-\sum_{r=0}^{\texttt{size}-1} r
-=
-\frac{\texttt{size}(\texttt{size}-1)}{2}.
-\]
+The pickle-based implementation uses the lower-case collective routine
+\texttt{comm.allreduce}. Each process contributes its local Python integer
+\texttt{rank}, and the operation \texttt{MPI.SUM} combines all contributions
+into the global sum. Since \texttt{allreduce} is a collective operation, the
+result is returned to every MPI process. The lower-case mpi4py interface works
+with generic Python objects and therefore uses pickle serialization internally.
+This makes the implementation very compact, although it may introduce more
+overhead than direct buffer communication for large data objects.
 \begin{lstlisting}[style=grayverbatim,label={lst:sum_ranks_output},caption={Output of the sum of ranks using pickle-based collective communication}]
 ripolo@eu-login-14:~/hpc_projects/project05/02_hpc_python/01_sum$ srun python3 sum_pickle.py
 Sum is 28 on processor eu-a2p-301, rank 2 out of 8 processes
@@ -473,47 +439,25 @@ size = comm.Get_size()
 rank = comm.Get_rank()
 proc = MPI.Get_processor_name()
 
+# direct-buffer collective communication
+sendbuf = np.array(rank, dtype=np.int32)
+recvbuf = np.array(0, dtype=np.int32)
 
-total = np.array(rank,dtype=np.int32)
-current_value = np.array(rank,dtype=np.int32)
-received_value = np.array(0,dtype=np.int32)
-for _ in range(size - 1):
-    comm.Sendrecv(
-        current_value,
-        dest=(rank + 1) % size,
-        sendtag=0,
-        recvbuf=received_value,
-        source=(rank - 1 + size) % size,
-        recvtag=0,
-    )
+comm.Allreduce(sendbuf, recvbuf, op=MPI.SUM)
 
-    total += received_value
-    current_value[...] = received_value
-
-print(f"Sum is {total} on processor {proc}, rank {rank} out of {size} "
-      f"processes")
+print(
+    f"Sum is {recvbuf.item()} on processor {proc}, "
+    f"rank {rank} out of {size} processes"
+)
 \end{lstlisting}
-This second implementation uses the same ring algorithm as the previous one, but it replaces the
-pickle-based communication with direct buffer communication. In mpi4py, methods whose names start
-with an upper-case letter, such as \texttt{Sendrecv}, operate directly on memory buffers. For this
-reason, the communicated values are stored in NumPy arrays with an explicit datatype,
-\texttt{np.int32}. This allows mpi4py to infer the corresponding MPI datatype and send the raw array
-data without serializing a Python object.\\
-
-The variables \texttt{total}, \texttt{current\_value}, and \texttt{received\_value} are zero-dimensional
-NumPy arrays. The array \texttt{current\_value} is sent to the right neighbour, while
-\texttt{received\_value} is used as the receive buffer for the value arriving from the left neighbour.
-After each communication step, the received value is added to the local accumulator
-\texttt{total}. The instruction
-\texttt{current\_value[...] = received\_value} updates the content of the existing NumPy buffer
-in-place. This is preferable to rebinding the variable name, because the MPI routine expects buffer-like
-objects with well-defined memory storage.\\
-
-As in the pickle-based implementation, the neighbour ranks are computed with modulo arithmetic:
-\texttt{(rank + 1) \% size} is the destination rank and
-\texttt{(rank - 1 + size) \% size} is the source rank. The addition of \texttt{size} before the modulo
-operation avoids negative ranks when \texttt{rank = 0}. After \texttt{size - 1} communication steps,
-each process has received all other ranks and has therefore reconstructed the global sum locally.
+The direct-buffer implementation uses the upper-case collective routine
+\texttt{comm.Allreduce}. In contrast to the lower-case \texttt{allreduce},
+this routine operates directly on buffer-provider objects, here NumPy arrays.
+Each process stores its local contribution in the array \texttt{sendbuf}, while
+the global sum is written into \texttt{recvbuf}. Since the data are communicated
+as raw memory buffers with an explicit NumPy datatype, mpi4py can avoid Python
+object serialization and use a communication path closer to the underlying C MPI
+interface.
 \begin{lstlisting}[style=grayverbatim,label={lst:sum_ranks_direct_output},caption={Output of the sum of ranks using direct array data communication}]
 ripolo@eu-login-14:~/hpc_projects/project05/02_hpc_python/01_sum$ srun python3 sum_fast.py
 Sum is 28 on processor eu-a2p-335, rank 4 out of 8 processes

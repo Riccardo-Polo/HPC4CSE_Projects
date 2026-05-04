@@ -20,12 +20,71 @@ julia> rec_bisection("coordinatePart", 3, A, coords)
  8
 ```
 """
+
 function rec_bisection(method, levels, A, coords=zeros(0), vn=zeros(0))
 
-    # RANDOM PARTITIONING - REMOVE AFTER COMPLETION OF THE EXERCISE
-    n = size(A)[1];
-    rng = MersenneTwister(1234);
-    p = Int.(rand(rng, 1:2^levels, n));
+    n = size(A, 1)
+
+    # Final partition vector.
+    # p[i] is the final part assigned to vertex i.
+    p = zeros(Int, n)
+
+    # vertices: indices of the original graph currently being partitioned
+    # level: number of remaining bisection levels
+    # index: label of the first final part in this recursive branch
+    function recursion(vertices, level, index)
+
+        # No more bisection: assign all vertices to the current final part.
+        if level == 0
+            p[vertices] .= index
+            return
+        end
+
+        # Extract the subgraph induced by the current vertices.
+        A_sub = A[vertices, vertices]
+
+        # Apply the requested bisection method on the subgraph.
+        if method == "spectralPart"
+            local_p = part_spectral(A_sub)
+
+        elseif method == "coordinatePart"
+            if length(coords) == 0
+                error("Coordinates are required for coordinate bisection.")
+            end
+            coords_sub = coords[vertices, :]
+            local_p = part_coordinate(A_sub, coords_sub)
+
+        elseif method == "inertialPart"
+            if length(coords) == 0
+                error("Coordinates are required for inertial bisection.")
+            end
+            coords_sub = coords[vertices, :]
+            local_p = part_inertial(A_sub, coords_sub)
+
+        else
+            error("Unknown partitioning method: $method")
+        end
+
+        # Convert the local bisection labels back to original vertex indices.
+        vertices_1 = vertices[findall(local_p .== 1)]
+        vertices_2 = vertices[findall(local_p .== 2)]
+
+        # Each branch below this level contains 2^(level-1) final parts.
+        offset = 2^(level - 1)
+
+        # Recurse on both halves.
+        recursion(vertices_1, level - 1, index)
+        recursion(vertices_2, level - 1, index + offset)
+
+    end
+
+    # Start from the whole graph.
+    recursion(collect(1:n), levels, 1)
+
     return p
 
 end
+
+    
+
+

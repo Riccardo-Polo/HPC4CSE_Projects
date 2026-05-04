@@ -26,24 +26,26 @@ function rec_bisection(method, levels, A, coords=zeros(0), vn=zeros(0))
     n = size(A, 1)
 
     # Final partition vector.
-    # p[i] is the final part assigned to vertex i.
     p = zeros(Int, n)
 
-    # vertices: indices of the original graph currently being partitioned
-    # level: number of remaining bisection levels
-    # index: label of the first final part in this recursive branch
     function recursion(vertices, level, index)
 
-        # No more bisection: assign all vertices to the current final part.
+        # Stop if no more levels are required.
         if level == 0
             p[vertices] .= index
             return
         end
 
-        # Extract the subgraph induced by the current vertices.
+        # Safety stop: cannot bisect zero or one vertex.
+        if length(vertices) <= 1
+            p[vertices] .= index
+            return
+        end
+
+        # Extract current subgraph.
         A_sub = A[vertices, vertices]
 
-        # Apply the requested bisection method on the subgraph.
+        # Apply the selected bisection method.
         if method == "spectral_part"
             local_p = spectral_part(A_sub)
 
@@ -65,26 +67,30 @@ function rec_bisection(method, levels, A, coords=zeros(0), vn=zeros(0))
             error("Unknown partitioning method: $method")
         end
 
-        # Convert the local bisection labels back to original vertex indices.
-        vertices_1 = vertices[findall(local_p .== 1)]
-        vertices_2 = vertices[findall(local_p .== 2)]
+        # Do not assume labels are 1/2. They may be 0/1.
+        labels = sort(unique(local_p))
 
-        # Each branch below this level contains 2^(level-1) final parts.
+        if length(labels) != 2
+            error("Bisection failed: expected 2 parts, got labels = $labels")
+        end
+
+        vertices_1 = vertices[findall(local_p .== labels[1])]
+        vertices_2 = vertices[findall(local_p .== labels[2])]
+
+        if isempty(vertices_1) || isempty(vertices_2)
+            error("Bisection failed: one of the two parts is empty.")
+        end
+
+        # Number of final parts contained in one recursive branch.
         offset = 2^(level - 1)
 
-        # Recurse on both halves.
         recursion(vertices_1, level - 1, index)
         recursion(vertices_2, level - 1, index + offset)
 
     end
 
-    # Start from the whole graph.
     recursion(collect(1:n), levels, 1)
 
     return p
 
 end
-
-    
-
-

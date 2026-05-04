@@ -45,21 +45,21 @@ function rec_bisection(method, levels, A, coords=zeros(0), vn=zeros(0))
 
         # Apply the requested bisection method on the subgraph.
         if method == "spectral_part"
-            local_p = part_spectral(A_sub)
+            local_p = spectral_part(A_sub)
 
         elseif method == "coordinate_part"
             if length(coords) == 0
                 error("Coordinates are required for coordinate bisection.")
             end
             coords_sub = coords[vertices, :]
-            local_p = part_coordinate(A_sub, coords_sub)
+            local_p = coordinate_part(A_sub, coords_sub)
 
         elseif method == "inertial_part"
             if length(coords) == 0
                 error("Coordinates are required for inertial bisection.")
             end
             coords_sub = coords[vertices, :]
-            local_p = part_inertial(A_sub, coords_sub)
+            local_p = inertial_part(A_sub, coords_sub)
 
         else
             error("Unknown partitioning method: $method")

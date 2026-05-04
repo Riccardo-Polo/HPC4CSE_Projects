@@ -15,30 +15,30 @@ julia> spectral_part(A)
 ```
 """
 function spectral_part(A)
-    n = size(A)[1]
+
+    n = size(A, 1)
 
     if n > 4*10^4
         @warn "graph is large. Computing eigen values may take too long."
     end
 
-    # 1. Construct the Laplacian matrix.
-    D = Diagonal(sum(A, dims=2)[:]);
-    L = D - A;
+    D = Diagonal(vec(sum(A, dims=2)))
+    L = Symmetric(D - A)
 
-    # 2. Compute its eigendecomposition.
-    eigvals, eigvecs = eigs(L);
-    idx_min = argmin(eigvals[2:end]) + 1; # skip the first eigenvalue (which is zero)
-    fiedler_vec = eigvecs[:, idx_min];
+    eigvals, eigvecs = eigs(L; nev=2, which=:SM)
 
-    # 3. Partition them around their median value, or 0.
-    p1 = findall(fiedler_vec .<= 0);
-    p2 = findall(fiedler_vec .> 0);
+    perm = sortperm(real.(eigvals))
+    fiedler_vec = real.(eigvecs[:, perm[2]])
 
-    # 4. Return the indicator vector
-    p = ones(Int, n);
+    threshold = median(fiedler_vec)
+    # alternatively: threshold = 0.0
+
+    p1 = findall(fiedler_vec .< threshold)
+    p2 = findall(fiedler_vec .>= threshold)
+
+    p = ones(Int, n)
     p[p1] .= 1
     p[p2] .= 2
 
     return p
-
 end

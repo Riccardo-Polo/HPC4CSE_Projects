@@ -15,31 +15,25 @@ julia> inertial_part(A, coords)
 """
 function inertial_part(A, coords)
 
-    p = ones(Int, size(coords)[1])
+    p = ones(Int, size(coords, 1))
 
-    # 1. Compute the center of mass.
-    xbar = mean(coords[:, 1]);
-    ybar = mean(coords[:, 2]);
+    xbar = mean(coords[:, 1])
+    ybar = mean(coords[:, 2])
 
-    # 2. Construct the matrix M. (see pdf of the assignment)
-    Sxx = sum((coords[:, 1] .- xbar) .^ 2);
-    Syy = sum((coords[:, 2] .- ybar) .^ 2);
-    Sxy = sum((coords[:, 1] .- xbar) .* (coords[:, 2] .- ybar));
-    M = [Syy -Sxy;
-         -Sxy Sxx];
+    Sxx = sum((coords[:, 1] .- xbar) .^ 2)
+    Syy = sum((coords[:, 2] .- ybar) .^ 2)
+    Sxy = sum((coords[:, 1] .- xbar) .* (coords[:, 2] .- ybar))
 
-    # 3. Compute the eigenvector associated with the smallest eigenvalue of M.
-    eigvals, eigvecs = eigs(M);
-    idx_min = argmin(eigvals);
-    eigv = eigvecs[:, idx_min];
+    M = Symmetric([Syy -Sxy;
+                   -Sxy Sxx])
 
-    # 4. Partition the nodes around line L
-    #    (use the function partition(coords, eigv))
-    p1, p2 = partition(coords, eigv);
+    eigvals, eigvecs = eigs(M; nev=1, which=:SM)
+    eigv = real.(eigvecs[:, 1])
+
+    p1, p2 = partition(coords, eigv)
+
     p[p1] .= 1
     p[p2] .= 2
 
-    # 5. Return the indicator vector
     return p
-
 end

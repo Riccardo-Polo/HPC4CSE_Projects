@@ -18,20 +18,19 @@ function spectral_part(A)
 
     n = size(A, 1)
 
-    if n > 4*10^4
-        @warn "graph is large. Computing eigen values may take too long."
-    end
-
     D = Diagonal(vec(sum(A, dims=2)))
     L = Symmetric(D - A)
 
-    eigvals, eigvecs = eigs(L; nev=2, which=:SM)
-
-    perm = sortperm(real.(eigvals))
-    fiedler_vec = real.(eigvecs[:, perm[2]])
+    if n <= 2000
+        eig = eigen(Symmetric(Matrix(L)))
+        fiedler_vec = eig.vectors[:, 2]
+    else
+        eigvals, eigvecs = eigs(L; nev=2, which=:SR, maxiter=10000, tol=1e-8)
+        perm = sortperm(real.(eigvals))
+        fiedler_vec = real.(eigvecs[:, perm[2]])
+    end
 
     threshold = median(fiedler_vec)
-    # alternatively: threshold = 0.0
 
     p1 = findall(fiedler_vec .< threshold)
     p2 = findall(fiedler_vec .>= threshold)
@@ -41,4 +40,5 @@ function spectral_part(A)
     p[p2] .= 2
 
     return p
+
 end

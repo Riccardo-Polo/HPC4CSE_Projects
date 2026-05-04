@@ -44,17 +44,17 @@ function rec_bisection(method, levels, A, coords=zeros(0), vn=zeros(0))
         A_sub = A[vertices, vertices]
 
         # Apply the requested bisection method on the subgraph.
-        if method == "spectralPart"
+        if method == "spectral_part"
             local_p = part_spectral(A_sub)
 
-        elseif method == "coordinatePart"
+        elseif method == "coordinate_part"
             if length(coords) == 0
                 error("Coordinates are required for coordinate bisection.")
             end
             coords_sub = coords[vertices, :]
             local_p = part_coordinate(A_sub, coords_sub)
 
-        elseif method == "inertialPart"
+        elseif method == "inertial_part"
             if length(coords) == 0
                 error("Coordinates are required for inertial bisection.")
             end

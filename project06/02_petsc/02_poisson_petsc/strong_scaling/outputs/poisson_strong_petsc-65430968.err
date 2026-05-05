@@ -1,0 +1,109 @@
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+Failed to open '//lib/pkgconfig/petsc.pc': No such file or directory
+No package '//lib/pkgconfig/petsc.pc' found
+make: Wall: No such file or directory
+make: [Makefile:24: poisson2d_benchmark.o] Error 127 (ignored)
+make: o: No such file or directory
+make: [Makefile:21: poisson2d_benchmark] Error 127 (ignored)
+Run failed or no RESULT line: n=256 p=1 rep=1
+Run failed or no RESULT line: n=256 p=1 rep=2
+Run failed or no RESULT line: n=256 p=1 rep=3
+Run failed or no RESULT line: n=256 p=2 rep=1
+Run failed or no RESULT line: n=256 p=2 rep=2
+Run failed or no RESULT line: n=256 p=2 rep=3
+Run failed or no RESULT line: n=256 p=4 rep=1
+Run failed or no RESULT line: n=256 p=4 rep=2
+Run failed or no RESULT line: n=256 p=4 rep=3
+Run failed or no RESULT line: n=256 p=8 rep=1
+Run failed or no RESULT line: n=256 p=8 rep=2
+Run failed or no RESULT line: n=256 p=8 rep=3
+Run failed or no RESULT line: n=256 p=16 rep=1
+Run failed or no RESULT line: n=256 p=16 rep=2
+Run failed or no RESULT line: n=256 p=16 rep=3
+Run failed or no RESULT line: n=256 p=32 rep=1
+Run failed or no RESULT line: n=256 p=32 rep=2
+Run failed or no RESULT line: n=256 p=32 rep=3
+Run failed or no RESULT line: n=512 p=1 rep=1
+Run failed or no RESULT line: n=512 p=1 rep=2
+Run failed or no RESULT line: n=512 p=1 rep=3
+Run failed or no RESULT line: n=512 p=2 rep=1
+Run failed or no RESULT line: n=512 p=2 rep=2
+Run failed or no RESULT line: n=512 p=2 rep=3
+Run failed or no RESULT line: n=512 p=4 rep=1
+Run failed or no RESULT line: n=512 p=4 rep=2
+Run failed or no RESULT line: n=512 p=4 rep=3
+Run failed or no RESULT line: n=512 p=8 rep=1
+Run failed or no RESULT line: n=512 p=8 rep=2
+Run failed or no RESULT line: n=512 p=8 rep=3
+Run failed or no RESULT line: n=512 p=16 rep=1
+Run failed or no RESULT line: n=512 p=16 rep=2
+Run failed or no RESULT line: n=512 p=16 rep=3
+Run failed or no RESULT line: n=512 p=32 rep=1
+Run failed or no RESULT line: n=512 p=32 rep=2
+Run failed or no RESULT line: n=512 p=32 rep=3
+Run failed or no RESULT line: n=1024 p=1 rep=1
+Run failed or no RESULT line: n=1024 p=1 rep=2
+Run failed or no RESULT line: n=1024 p=1 rep=3
+Run failed or no RESULT line: n=1024 p=2 rep=1
+Run failed or no RESULT line: n=1024 p=2 rep=2
+Run failed or no RESULT line: n=1024 p=2 rep=3
+Run failed or no RESULT line: n=1024 p=4 rep=1
+Run failed or no RESULT line: n=1024 p=4 rep=2
+Run failed or no RESULT line: n=1024 p=4 rep=3
+Run failed or no RESULT line: n=1024 p=8 rep=1
+Run failed or no RESULT line: n=1024 p=8 rep=2
+Run failed or no RESULT line: n=1024 p=8 rep=3
+Run failed or no RESULT line: n=1024 p=16 rep=1
+Run failed or no RESULT line: n=1024 p=16 rep=2
+Run failed or no RESULT line: n=1024 p=16 rep=3
+Run failed or no RESULT line: n=1024 p=32 rep=1
+Run failed or no RESULT line: n=1024 p=32 rep=2
+Run failed or no RESULT line: n=1024 p=32 rep=3
+Run failed or no RESULT line: n=2048 p=1 rep=1
+Run failed or no RESULT line: n=2048 p=1 rep=2
+Run failed or no RESULT line: n=2048 p=1 rep=3
+Run failed or no RESULT line: n=2048 p=2 rep=1
+Run failed or no RESULT line: n=2048 p=2 rep=2
+Run failed or no RESULT line: n=2048 p=2 rep=3
+Run failed or no RESULT line: n=2048 p=4 rep=1
+Run failed or no RESULT line: n=2048 p=4 rep=2
+Run failed or no RESULT line: n=2048 p=4 rep=3
+Run failed or no RESULT line: n=2048 p=8 rep=1
+Run failed or no RESULT line: n=2048 p=8 rep=2
+Run failed or no RESULT line: n=2048 p=8 rep=3
+Run failed or no RESULT line: n=2048 p=16 rep=1
+Run failed or no RESULT line: n=2048 p=16 rep=2
+Run failed or no RESULT line: n=2048 p=16 rep=3
+Run failed or no RESULT line: n=2048 p=32 rep=1
+Run failed or no RESULT line: n=2048 p=32 rep=2
+Run failed or no RESULT line: n=2048 p=32 rep=3
+The raw CSV is empty. Check the SLURM output logs.

@@ -17,8 +17,8 @@ mkdir -p outputs results figures
 module load stack gcc openmpi 2>/dev/null || true
 module load petsc 2>/dev/null || true
 
-make -f Makefile_benchmark clean
-make -f Makefile_benchmark poisson2d_benchmark
+make clean
+make poisson2d_benchmark
 
 # Representative resolutions: small, medium, large, very large.
 # For final runs, 512/1024/2048 are usually the most meaningful.

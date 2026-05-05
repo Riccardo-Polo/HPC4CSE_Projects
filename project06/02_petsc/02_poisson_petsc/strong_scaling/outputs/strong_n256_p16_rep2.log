@@ -1,0 +1,32 @@
+[2026-05-05T11:37:53.389+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+[2026-05-05T11:37:53.394+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+[2026-05-05T11:37:53.399+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+[2026-05-05T11:37:53.396+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+[2026-05-05T11:37:53.403+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+srun: error: eu-a2p-352: task 7: Exited with exit code 2
+[2026-05-05T11:37:53.409+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+srun: error: eu-a2p-397: task 15: Exited with exit code 2
+[2026-05-05T11:37:53.415+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+srun: error: eu-a2p-345: task 4: Exited with exit code 2
+[2026-05-05T11:37:53.417+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+[2026-05-05T11:37:53.421+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+[2026-05-05T11:37:53.423+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+srun: error: eu-a2p-391: task 13: Exited with exit code 2
+srun: error: eu-a2p-348: task 5: Exited with exit code 2
+srun: error: eu-a2p-283: task 0: Exited with exit code 2
+srun: error: eu-a2p-284: task 1: Exited with exit code 2
+srun: error: eu-a2p-349: task 6: Exited with exit code 2
+srun: error: eu-a2p-341: task 2: Exited with exit code 2
+srun: error: eu-a2p-395: task 14: Exited with exit code 2
+[2026-05-05T11:37:53.451+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+[2026-05-05T11:37:53.454+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+[2026-05-05T11:37:53.476+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+srun: error: eu-a2p-382: task 10: Exited with exit code 2
+srun: error: eu-a2p-386: task 11: Exited with exit code 2
+[2026-05-05T11:37:53.494+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+[2026-05-05T11:37:53.507+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+srun: error: eu-a2p-388: task 12: Exited with exit code 2
+srun: error: eu-a2p-380: task 8: Exited with exit code 2
+[2026-05-05T11:37:53.533+02:00] error: execve(): /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling/./poisson2d_benchmark: No such file or directory
+srun: error: eu-a2p-343: task 3: Exited with exit code 2
+srun: error: eu-a2p-381: task 9: Exited with exit code 2

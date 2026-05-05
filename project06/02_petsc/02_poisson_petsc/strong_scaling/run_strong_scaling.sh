@@ -12,31 +12,43 @@ set -euo pipefail
 
 mkdir -p outputs results figures
 
-# Load the same PETSc/OpenMPI environment you used for compiling interactively.
-# If your Euler environment already sets PETSC_ROOT correctly, these can be left unchanged.
-module load stack gcc openmpi 2>/dev/null || true
-module load petsc 2>/dev/null || true
+echo "Running on nodes: ${SLURM_JOB_NODELIST:-unknown}"
+echo "Working directory: $PWD"
 
-make clean
-make poisson2d_benchmark
+# Load the same environment used for your successful interactive compilation.
+# Do NOT hide module errors: if PETSc is not loaded, the job should stop here.
+module purge
+module load stack gcc openmpi
 
-# Representative resolutions: small, medium, large, very large.
-# For final runs, 512/1024/2048 are usually the most meaningful.
+# On Euler the exact PETSc module name can vary. If this generic command fails,
+# replace it by the exact module printed by: module spider petsc
+module load petsc
+
+echo "Loaded modules:"
+module list
+
+echo "PETSc-related environment:"
+echo "PETSC_ROOT=${PETSC_ROOT:-}"
+echo "PETSC_DIR=${PETSC_DIR:-}"
+echo "PETSC_ARCH=${PETSC_ARCH:-}"
+echo "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}"
+
+# Compile. The print target is useful because it shows exactly which PETSc
+# installation and compiler are used.
+make  clean
+make  print
+make  all
+
 RESOLUTIONS=(256 512 1024 2048)
 PROCS=(1 2 4 8 16 32)
 REPS=3
 
-# Solver options: CG is appropriate because the assembled matrix is symmetric positive definite.
-# GAMG makes the problem scalable enough for larger grids. You can override with:
-#   sbatch --export=ALL,PETSC_OPTS="-ksp_type cg -pc_type jacobi -ksp_rtol 1e-8" run_strong_scaling_petsc.sh
 PETSC_OPTS=${PETSC_OPTS:-"-ksp_type cg -pc_type gamg -ksp_rtol 1e-8 -ksp_converged_reason"}
 
 RAW=results/strong_scaling_raw.csv
 SUMMARY=results/strong_scaling_summary.csv
 
 echo "resolution,nprocs,rep,total_time,setup_time,solve_time,iterations" > "$RAW"
-
-echo "Running on nodes: $SLURM_JOB_NODELIST"
 echo "PETSC_OPTS=$PETSC_OPTS"
 
 for n in "${RESOLUTIONS[@]}"; do
@@ -59,7 +71,6 @@ for n in "${RESOLUTIONS[@]}"; do
         echo "Run failed or no RESULT line: n=$n p=$p rep=$rep" >&2
         continue
       fi
-      # RESULT,nprocs,mx,my,total,setup,solve,its
       IFS=',' read -r _ np mx my total setup solve its <<< "$line"
       echo "$n,$np,$rep,$total,$setup,$solve,$its" >> "$RAW"
     done

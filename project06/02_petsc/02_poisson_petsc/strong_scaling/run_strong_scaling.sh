@@ -58,12 +58,15 @@ for n in "${RESOLUTIONS[@]}"; do
       echo "n=$n p=$p rep=$rep"
 
       LOG="outputs/strong_n${n}_p${p}_rep${rep}.log"
+
       set +e
       mpirun -np "$p" --map-by ppr:1:node --bind-to core \
-      ./poisson2d_benchmark \
-      -da_grid_x "$n" -da_grid_y "$n" \
-      $PETSC_OPTS \
-      > "$LOG" 2>&1
+        ./poisson2d_benchmark \
+        -da_grid_x "$n" -da_grid_y "$n" \
+        $PETSC_OPTS \
+        > "$LOG" 2>&1
+      status=$?
+      set -e
 
       line=$(grep '^RESULT,' "$LOG" | tail -n 1 || true)
 
@@ -79,18 +82,6 @@ for n in "${RESOLUTIONS[@]}"; do
         continue
       fi
 
-      echo "$n,$np,$rep,$total,$setup,$solve,$its" >> "$RAW"
-
-      status=$?
-      set -e
-
-      line=$(grep '^RESULT,' "$LOG" | tail -n 1 || true)
-      if (( status != 0 )) || [[ -z "${line:-}" ]]; then
-        echo "Run failed or no RESULT line: n=$n p=$p rep=$rep. See $LOG" >&2
-        continue
-      fi
-
-      IFS=',' read -r _ np mx my total setup solve its <<< "$line"
       echo "$n,$np,$rep,$total,$setup,$solve,$its" >> "$RAW"
     done
   done

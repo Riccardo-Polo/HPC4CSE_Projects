@@ -1,0 +1,24 @@
+rm -f poisson2d *.o
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/openmpi-4.1.7-36whkvewb4peyjrtmhtb5e5s3ufpvumy/bin/mpicc  -fPIC -Wall -Wwrite-strings -Wno-unknown-pragmas -Wno-lto-type-mismatch -Wno-stringop-overflow -fstack-protector -fvisibility=hidden -Wall -Wwrite-strings -Wno-unknown-pragmas -Wno-lto-type-mismatch -Wno-stringop-overflow -fstack-protector -fvisibility=hidden -g -O  -fopenmp -fopenmp -Wall -c -o poisson2d.o poisson2d.c
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/openmpi-4.1.7-36whkvewb4peyjrtmhtb5e5s3ufpvumy/bin/mpicc -L/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/petsc-3.22.1-crueolwlnsrmsscppkooctzzmj2dlky5/lib  -Wl,-rpath,/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/petsc-3.22.1-crueolwlnsrmsscppkooctzzmj2dlky5/lib -o poisson2d poisson2d.o -lpetsc -lm
+  0 KSP Residual norm 69.4449
+  1 KSP Residual norm 2.22349
+  2 KSP Residual norm 0.286566
+  3 KSP Residual norm 0.0715111
+  4 KSP Residual norm 0.00948931
+  5 KSP Residual norm 0.00119242
+  6 KSP Residual norm 0.000176118
+  7 KSP Residual norm 3.00455e-05
+  8 KSP Residual norm 5.1191e-06
+  9 KSP Residual norm 7.84162e-07
+ 10 KSP Residual norm 1.14737e-07
+ 11 KSP Residual norm 1.30974e-08
+ 12 KSP Residual norm 1.77962e-09
+  Linear solve converged due to CONVERGED_RTOL iterations 12
+Created:
+  solution_heatmap.pdf
+  solution_surface.pdf
+
+Grid size: 129 x 129
+Minimum solution value: -8.63862966e-12
+Maximum solution value: 1.47335621e+00

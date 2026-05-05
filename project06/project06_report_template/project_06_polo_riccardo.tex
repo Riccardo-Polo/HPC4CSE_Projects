@@ -269,7 +269,7 @@ because they exploit the graph structure directly, but the resulting partitions 
 geometrically and, in some cases, should be inspected to ensure that the balance constraint has
 been respected.
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \begin{subfigure}[b]{0.24\textwidth}
     \centering
@@ -295,7 +295,7 @@ been respected.
 \label{fig:3elt_bisections}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \begin{subfigure}[b]{0.24\textwidth}
     \centering
@@ -321,7 +321,7 @@ been respected.
 \label{fig:airfoil1_bisections}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \begin{subfigure}[b]{0.24\textwidth}
     \centering
@@ -347,7 +347,7 @@ been respected.
 \label{fig:barth4_bisections}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \begin{subfigure}[b]{0.24\textwidth}
     \centering
@@ -373,7 +373,7 @@ been respected.
 \label{fig:crack_bisections}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \begin{subfigure}[b]{0.24\textwidth}
     \centering
@@ -399,7 +399,7 @@ been respected.
 \label{fig:mesh1e1_bisections}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \begin{subfigure}[b]{0.24\textwidth}
     \centering
@@ -425,7 +425,7 @@ been respected.
 \label{fig:mesh2e1_bisections}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \begin{subfigure}[b]{0.24\textwidth}
     \centering
@@ -451,7 +451,7 @@ been respected.
 \label{fig:mesh3e1_bisections}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \begin{subfigure}[b]{0.24\textwidth}
     \centering
@@ -477,7 +477,7 @@ been respected.
 \label{fig:netz4504_dual_bisections}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \begin{subfigure}[b]{0.24\textwidth}
     \centering
@@ -503,7 +503,7 @@ been respected.
 \label{fig:stufe_bisections}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \begin{subfigure}[b]{0.24\textwidth}
     \centering
@@ -529,9 +529,764 @@ been respected.
 \label{fig:ukerbe1_bisections}
 \end{figure}
 
+\newpage
 \subsection{Recursive Bisection Algorithm}
 \subsubsection{Implementation}
-In lis
+\begin{lstlisting}[style=grayverbatim, caption={Recursive Bisection algorithm}, label={lst:recursive_bisection}]
+function rec_bisection(method, levels, A, coords=zeros(0), vn=zeros(0))
+
+    n = size(A, 1)
+
+    # Final partition vector.
+    # p[i] is the final part assigned to vertex i.
+    p = zeros(Int, n)
+
+    function recursion(vertices, level, index)
+
+        # Stop if no more bisections are required.
+        if level == 0
+            p[vertices] .= index
+            return
+        end
+
+        # Cannot further bisect a subgraph with one vertex.
+        if length(vertices) <= 1
+            p[vertices] .= index
+            return
+        end
+
+        # Extract induced subgraph.
+        A_sub = A[vertices, vertices]
+
+        # Apply chosen bisection method.
+        if method == "spectral_part"
+            local_p = spectral_part(A_sub)
+
+        elseif method == "coordinate_part"
+            if length(coords) == 0
+                error("Coordinates are required for coordinate bisection.")
+            end
+            coords_sub = coords[vertices, :]
+            local_p = coordinate_part(A_sub, coords_sub)
+
+        elseif method == "inertial_part"
+            if length(coords) == 0
+                error("Coordinates are required for inertial bisection.")
+            end
+            coords_sub = coords[vertices, :]
+            local_p = inertial_part(A_sub, coords_sub)
+
+        else
+            error("Unknown partitioning method: $method")
+        end
+
+        # Extract the two labels returned by the bisection method.
+        labels = sort(unique(local_p))
+
+        if length(labels) != 2
+            # This should not happen if the bisection routines are correct,
+            # but it avoids crashing on pathological small subgraphs.
+            p[vertices] .= index
+            return
+        end
+
+        vertices_1 = vertices[findall(local_p .== labels[1])]
+        vertices_2 = vertices[findall(local_p .== labels[2])]
+
+        # Safety check.
+        if isempty(vertices_1) || isempty(vertices_2)
+            p[vertices] .= index
+            return
+        end
+
+        # Each child branch contains 2^(level-1) final labels.
+        offset = 2^(level - 1)
+
+        recursion(vertices_1, level - 1, index)
+        recursion(vertices_2, level - 1, index + offset)
+
+    end
+
+    recursion(collect(1:n), levels, 1)
+
+    return p
+
+end
+\end{lstlisting}
+The recursive bisection routine in Listing~\ref{lst:recursive_bisection} generalizes the previous
+two-way partitioning methods to a \(p=2^\ell\)-way partition. Instead of computing all parts at once,
+the graph is repeatedly split into two subgraphs. After the first bisection, each of the two parts is
+bisected again, and this process is repeated until the prescribed number of recursion levels has been
+reached. Therefore, after \(\ell\) levels, the algorithm produces \(2^\ell\) final subdomains.\\
+
+The function takes as input the name of the bisection method, the number of recursive levels, the
+adjacency matrix \texttt{A}, and, when needed, the vertex coordinates \texttt{coords}. The vector
+\texttt{p} stores the final partition labels. Initially all entries are set to zero. The actual recursive
+work is performed by the inner function \texttt{recursion(vertices, level, index)}, where
+\texttt{vertices} contains the indices of the current subgraph, \texttt{level} is the number of
+remaining bisections, and \texttt{index} is the first label assigned to the current branch of the
+recursion tree.\\
+
+The stopping criterion is reached when \texttt{level == 0}. In this case, no further bisection is
+required, and all vertices of the current subgraph are assigned the current final label
+\texttt{index}. A second stopping condition is included for subgraphs with zero or one vertex. Such
+subgraphs cannot be meaningfully bisected, so they are also assigned directly to the current part.
+This makes the implementation robust when recursive bisection reaches very small subgraphs.\\
+
+If further splitting is required, the induced subgraph is extracted as
+\texttt{A\_sub = A[vertices, vertices]}. The chosen bisection method is then applied to this
+subgraph. For \texttt{spectral\_part}, only the adjacency matrix is needed. For \texttt{coordinate\_part}
+and \texttt{inertial\_part}, the corresponding coordinates of the selected vertices are also extracted
+as \texttt{coords\_sub}. The routine therefore uses the same local numbering inside the bisection
+method, but maps the result back to the original vertex indices through the array \texttt{vertices}.\\
+
+After the local bisection has been computed, the algorithm extracts the two labels returned by the
+bisection method. If two valid labels are not found, or if one of the two parts is empty, the current
+subgraph is assigned directly to the current label. This is a safeguard against pathological cases
+or very small subgraphs. Otherwise, the vertices are separated into \texttt{vertices\_1} and
+\texttt{vertices\_2}, corresponding to the two children of the recursion tree.\\
+The label offset is computed as
+\[
+    \texttt{offset} = 2^{\texttt{level}-1}.
+\]
+This is necessary because each child branch will generate \(2^{\texttt{level}-1}\) final labels. The
+first child therefore keeps the current starting label \texttt{index}, while the second child starts at
+\texttt{index + offset}. For example, with \(\ell=2\), the first bisection creates two branches:
+the first branch eventually receives labels \(1\) and \(2\), while the second branch receives labels
+\(3\) and \(4\). This indexing convention guarantees that the final partition labels are consecutive
+and consistent with the recursion tree.\\
+
+Finally, the recursion is initialized on the full vertex set \texttt{collect(1:n)} with the prescribed
+number of levels and initial label \(1\). The returned vector \texttt{p} contains the final
+\(2^\ell\)-way partition of the graph.
+
+\subsubsection{Results}
+The recursive bisection procedure was tested by generating \(p=8\) and \(p=16\) partitions.
+For the recursive algorithms, this corresponds respectively to three and four levels of recursive
+bisection. In addition to the recursive versions of coordinate, inertial, spectral, and METIS
+bisection, we also compare against the direct \(k\)-way partitioning routine of METIS. The latter
+does not build the partition by repeatedly bisecting the graph, but computes the \(p\)-way
+partition directly.
+
+As in the two-way case, the quality of the partition can be assessed through the total edge-cut,
+i.e. the number of graph edges connecting vertices assigned to different parts. For recursive
+partitioning, this quantity is especially important because each bisection step creates an
+interface, and the final edge-cut is the cumulative result of all these recursive splits.
+
+The corresponding partitions are shown in Figures~\ref{fig:3elt_recursive_partitions}--\ref{fig:ukerbe1_recursive_partitions}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llccccc}
+\hline
+\textbf{Mesh} & \textbf{Parts} & \textbf{Coordinate} & \textbf{Inertial} & \textbf{Spectral} & \textbf{METIS rec.} & \textbf{METIS k-way} \\
+\hline
+\multirow{2}{*}{\texttt{3elt}}
+    & \(p=8\)  & -- & -- & -- & -- & -- \\
+    & \(p=16\) & -- & -- & -- & -- & -- \\
+\hline
+\multirow{2}{*}{\texttt{airfoil1}}
+    & \(p=8\)  & -- & -- & -- & -- & -- \\
+    & \(p=16\) & -- & -- & -- & -- & -- \\
+\hline
+\multirow{2}{*}{\texttt{barth4}}
+    & \(p=8\)  & -- & -- & -- & -- & -- \\
+    & \(p=16\) & -- & -- & -- & -- & -- \\
+\hline
+\multirow{2}{*}{\texttt{crack}}
+    & \(p=8\)  & -- & -- & -- & -- & -- \\
+    & \(p=16\) & -- & -- & -- & -- & -- \\
+\hline
+\multirow{2}{*}{\texttt{mesh3e1}}
+    & \(p=8\)  & -- & -- & -- & -- & -- \\
+    & \(p=16\) & -- & -- & -- & -- & -- \\
+\hline
+\multirow{2}{*}{\texttt{netz4504\_dual}}
+    & \(p=8\)  & -- & -- & -- & -- & -- \\
+    & \(p=16\) & -- & -- & -- & -- & -- \\
+\hline
+\multirow{2}{*}{\texttt{stufe}}
+    & \(p=8\)  & -- & -- & -- & -- & -- \\
+    & \(p=16\) & -- & -- & -- & -- & -- \\
+\hline
+\multirow{2}{*}{\texttt{ukerbe1}}
+    & \(p=8\)  & -- & -- & -- & -- & -- \\
+    & \(p=16\) & -- & -- & -- & -- & -- \\
+\hline
+\end{tabular}
+\caption{Recursive partitioning edge-cuts for the considered meshes.}
+\label{tab:recursive_edgecuts_first}
+\end{table}
+
+The first qualitative difference is visible when comparing the recursive geometrical methods with
+the graph-based methods. Coordinate and inertial recursive bisection tend to preserve the
+structure of the first geometrical cuts: the final subdomains are mostly obtained by repeatedly
+splitting the mesh along approximately straight directions. This gives partitions that are easy to
+interpret geometrically, but it may also create long interfaces when the mesh density is non-uniform.
+
+For the \texttt{3elt} mesh, the recursive coordinate and inertial methods generate partitions that
+follow the global shape of the point cloud. However, for \(p=16\), several subdomains become very
+small and are concentrated near the highly refined central region. This is a consequence of applying
+balanced bisections recursively to a mesh with strongly non-uniform element sizes. The spectral and
+METIS recursive partitions are more strongly influenced by the graph connectivity. In some of the
+plots, especially for \texttt{3elt}, this leads to partitions that appear visually unbalanced, with many
+labels concentrated close to the central refinement. This should be checked carefully against the
+actual number of vertices per part, because a low visual area does not necessarily imply a low
+number of vertices in a highly refined mesh.
+
+For the \texttt{airfoil1} mesh, the effect of the airfoil geometry and the refined wake region is more
+pronounced. The recursive coordinate and inertial partitions divide the domain into large geometric
+sectors. These partitions are regular and visually clear, but they do not necessarily follow the
+weakest graph connections. The spectral and METIS recursive partitions adapt more to the refined
+regions around the airfoil and the wake. In particular, several parts are placed around the leading
+edge, trailing edge, and wake, where the mesh is much denser. This behaviour is expected, since
+these regions contain many vertices and therefore require more subdomains if the partition is to
+remain balanced in terms of graph vertices rather than physical area.
+
+For the \texttt{barth4} and \texttt{crack} meshes, the same qualitative behaviour can be observed,
+but the effect of the geometry is different. The \texttt{barth4} mesh has a strongly non-uniform
+vertex distribution, with many vertices concentrated around the central region. As a consequence,
+some recursive partitions appear to occupy a very small physical area near the centre of the mesh.
+This does not necessarily imply that the partition is unbalanced in terms of graph vertices, since
+the central region is much more densely discretized than the outer part of the domain. Nevertheless,
+these plots show a limitation of interpreting graph partitions only from their geometrical area.
+
+The \texttt{crack} mesh is instead characterized by a localized internal feature around the centre.
+The recursive coordinate and inertial methods generate partitions that remain mostly aligned with
+successive geometrical cuts. For \(p=8\) and \(p=16\), this creates large block-like regions away
+from the crack and much smaller regions around the refined centre. The spectral and METIS-based
+methods are more sensitive to the graph connectivity near the crack and tend to isolate the refined
+central region more strongly. This is expected, because the high local mesh density around the crack
+contains many graph vertices and therefore receives several subdomains when the partition is balanced
+by vertex count.
+
+The \texttt{mesh3e1} mesh is useful as a reference case because it is much more regular than the
+previous unstructured examples. In this case, the recursive coordinate and inertial methods produce
+partitions that are mostly block-like and aligned with the geometry of the square domain. Since the
+mesh is close to structured, these geometrical cuts are already quite reasonable. The spectral and
+METIS-based methods also produce compact subdomains, but their interfaces are less constrained by
+coordinate directions and can adapt to the graph connectivity. For this mesh, the visual difference
+between the methods is less dramatic than for highly non-uniform meshes such as \texttt{airfoil1},
+\texttt{barth4}, or \texttt{crack}.
+
+The \texttt{netz4504\_dual} mesh has a more complex geometry, with large coarse cells in the upper
+part and a much finer structured region near the bottom boundary. This makes the recursive
+partitioning behaviour particularly interesting. The coordinate and inertial methods tend to split
+the domain according to its global geometric extent, producing long vertical or horizontal regions.
+By contrast, the spectral and METIS partitions allocate several smaller parts close to the refined
+bottom region. This is consistent with the fact that graph partitioning balances the number of
+vertices rather than the physical area of the subdomains. Therefore, regions that are geometrically
+small but highly discretized may receive several partition labels.
+
+The \texttt{stufe} mesh contains a step-like geometry, with two refined diagonal regions and
+a relatively coarse outer rectangular structure. The recursive coordinate and inertial methods
+again produce partitions that are strongly driven by the global geometry. As a consequence,
+the parts tend to form vertical or horizontal blocks, with smaller subdomains appearing around
+the refined regions. The graph-based methods produce more irregular partitions, especially for
+\(p=16\), because the separator is allowed to follow the local mesh connectivity rather than a
+global coordinate direction. This gives a less visually regular decomposition, but it can reduce
+the number of edges crossing between parts.
+
+The \texttt{ukerbe1} mesh is one of the most challenging examples, because it combines a large
+structured geometry, several circular holes, and a pronounced notch-like feature near the centre.
+For this mesh, the recursive coordinate and inertial methods split the domain mostly into large
+upper and lower or left and right regions, with additional refinement around the notch in later
+levels of the recursion. The spectral and METIS-based methods instead place several separators
+close to the central notch, which acts as a natural bottleneck of the graph. This is a reasonable
+behaviour for graph partitioning: cutting through a narrow, highly connected transition region can
+reduce the final edge-cut. However, as in the previous non-uniform meshes, some partitions appear
+to occupy a small physical area. This should not immediately be interpreted as poor load balance,
+since the local mesh density is much higher near the notch.
+
+The comparison with METIS \(k\)-way partitioning is useful because it shows the difference between
+recursively applying a two-way partitioner and computing the final \(p\)-way partition directly.
+The \(k\)-way METIS partitions are generally more globally optimized: the algorithm can account for
+all \(p\) parts simultaneously, rather than committing to early bisection decisions that cannot be
+changed later. Therefore, one expects METIS \(k\)-way partitioning to give lower edge-cuts than
+recursive partitioning, especially for \(p=16\), where early suboptimal splits are amplified by the
+additional recursion levels.
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/3elt_coordinate_recursive08.pdf}
+    \caption{Coordinate, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/3elt_inertial_recursive08.pdf}
+    \caption{Inertial, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/3elt_spectral_recursive08.pdf}
+    \caption{Spectral, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/3elt_metis_recursive08.pdf}
+    \caption{METIS rec., \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/3elt_metis_kway08.pdf}
+    \caption{METIS k-way, \(p=8\)}
+\end{subfigure}
+
+\vspace{0.4cm}
+
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/3elt_coordinate_recursive16.pdf}
+    \caption{Coordinate, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/3elt_inertial_recursive16.pdf}
+    \caption{Inertial, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/3elt_spectral_recursive16.pdf}
+    \caption{Spectral, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/3elt_metis_recursive16.pdf}
+    \caption{METIS rec., \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/3elt_metis_kway16.pdf}
+    \caption{METIS k-way, \(p=16\)}
+\end{subfigure}
+
+\caption{Recursive and \(k\)-way partitions obtained for the \texttt{3elt} mesh with \(p=8\) and \(p=16\) parts.}
+\label{fig:3elt_recursive_partitions}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/airfoil1_coordinate_recursive08.pdf}
+    \caption{Coordinate, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/airfoil1_inertial_recursive08.pdf}
+    \caption{Inertial, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/airfoil1_spectral_recursive08.pdf}
+    \caption{Spectral, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/airfoil1_metis_recursive08.pdf}
+    \caption{METIS rec., \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/airfoil1_metis_kway08.pdf}
+    \caption{METIS k-way, \(p=8\)}
+\end{subfigure}
+
+\vspace{0.4cm}
+
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/airfoil1_coordinate_recursive16.pdf}
+    \caption{Coordinate, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/airfoil1_inertial_recursive16.pdf}
+    \caption{Inertial, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/airfoil1_spectral_recursive16.pdf}
+    \caption{Spectral, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/airfoil1_metis_recursive16.pdf}
+    \caption{METIS rec., \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/airfoil1_metis_kway16.pdf}
+    \caption{METIS k-way, \(p=16\)}
+\end{subfigure}
+
+\caption{Recursive and \(k\)-way partitions obtained for the \texttt{airfoil1} mesh with \(p=8\) and \(p=16\) parts.}
+\label{fig:airfoil1_recursive_partitions}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/barth4_coordinate_recursive08.pdf}
+    \caption{Coordinate, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/barth4_inertial_recursive08.pdf}
+    \caption{Inertial, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/barth4_spectral_recursive08.pdf}
+    \caption{Spectral, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/barth4_metis_recursive08.pdf}
+    \caption{METIS rec., \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/barth4_metis_kway08.pdf}
+    \caption{METIS k-way, \(p=8\)}
+\end{subfigure}
+
+\vspace{0.4cm}
+
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/barth4_coordinate_recursive16.pdf}
+    \caption{Coordinate, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/barth4_inertial_recursive16.pdf}
+    \caption{Inertial, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/barth4_spectral_recursive16.pdf}
+    \caption{Spectral, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/barth4_metis_recursive16.pdf}
+    \caption{METIS rec., \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/barth4_metis_kway16.pdf}
+    \caption{METIS k-way, \(p=16\)}
+\end{subfigure}
+
+\caption{Recursive and \(k\)-way partitions obtained for the \texttt{barth4} mesh with \(p=8\) and \(p=16\) parts.}
+\label{fig:barth4_recursive_partitions}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/crack_coordinate_recursive08.pdf}
+    \caption{Coordinate, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/crack_inertial_recursive08.pdf}
+    \caption{Inertial, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/crack_spectral_recursive08.pdf}
+    \caption{Spectral, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/crack_metis_recursive08.pdf}
+    \caption{METIS rec., \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/crack_metis_kway08.pdf}
+    \caption{METIS k-way, \(p=8\)}
+\end{subfigure}
+
+\vspace{0.4cm}
+
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/crack_coordinate_recursive16.pdf}
+    \caption{Coordinate, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/crack_inertial_recursive16.pdf}
+    \caption{Inertial, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/crack_spectral_recursive16.pdf}
+    \caption{Spectral, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/crack_metis_recursive16.pdf}
+    \caption{METIS rec., \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/crack_metis_kway16.pdf}
+    \caption{METIS k-way, \(p=16\)}
+\end{subfigure}
+
+\caption{Recursive and \(k\)-way partitions obtained for the \texttt{crack} mesh with \(p=8\) and \(p=16\) parts.}
+\label{fig:crack_recursive_partitions}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/mesh3e1_coordinate_recursive08.pdf}
+    \caption{Coordinate, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/mesh3e1_inertial_recursive08.pdf}
+    \caption{Inertial, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/mesh3e1_spectral_recursive08.pdf}
+    \caption{Spectral, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/mesh3e1_metis_recursive08.pdf}
+    \caption{METIS rec., \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/mesh3e1_metis_kway08.pdf}
+    \caption{METIS k-way, \(p=8\)}
+\end{subfigure}
+
+\vspace{0.4cm}
+
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/mesh3e1_coordinate_recursive16.pdf}
+    \caption{Coordinate, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/mesh3e1_inertial_recursive16.pdf}
+    \caption{Inertial, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/mesh3e1_spectral_recursive16.pdf}
+    \caption{Spectral, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/mesh3e1_metis_recursive16.pdf}
+    \caption{METIS rec., \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/mesh3e1_metis_kway16.pdf}
+    \caption{METIS k-way, \(p=16\)}
+\end{subfigure}
+
+\caption{Recursive and \(k\)-way partitions obtained for the \texttt{mesh3e1} mesh with \(p=8\) and \(p=16\) parts.}
+\label{fig:mesh3e1_recursive_partitions}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/netz4504_dual_coordinate_recursive08.pdf}
+    \caption{Coordinate, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/netz4504_dual_inertial_recursive08.pdf}
+    \caption{Inertial, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/netz4504_dual_spectral_recursive08.pdf}
+    \caption{Spectral, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/netz4504_dual_metis_recursive08.pdf}
+    \caption{METIS rec., \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/netz4504_dual_metis_kway08.pdf}
+    \caption{METIS k-way, \(p=8\)}
+\end{subfigure}
+
+\vspace{0.4cm}
+
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/netz4504_dual_coordinate_recursive16.pdf}
+    \caption{Coordinate, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/netz4504_dual_inertial_recursive16.pdf}
+    \caption{Inertial, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/netz4504_dual_spectral_recursive16.pdf}
+    \caption{Spectral, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/netz4504_dual_metis_recursive16.pdf}
+    \caption{METIS rec., \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/netz4504_dual_metis_kway16.pdf}
+    \caption{METIS k-way, \(p=16\)}
+\end{subfigure}
+
+\caption{Recursive and \(k\)-way partitions obtained for the \texttt{netz4504\_dual} mesh with \(p=8\) and \(p=16\) parts.}
+\label{fig:netz4504_dual_recursive_partitions}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/stufe_coordinate_recursive08.pdf}
+    \caption{Coordinate, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/stufe_inertial_recursive08.pdf}
+    \caption{Inertial, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/stufe_spectral_recursive08.pdf}
+    \caption{Spectral, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/stufe_metis_recursive08.pdf}
+    \caption{METIS rec., \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/stufe_metis_kway08.pdf}
+    \caption{METIS k-way, \(p=8\)}
+\end{subfigure}
+
+\vspace{0.4cm}
+
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/stufe_coordinate_recursive16.pdf}
+    \caption{Coordinate, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/stufe_inertial_recursive16.pdf}
+    \caption{Inertial, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/stufe_spectral_recursive16.pdf}
+    \caption{Spectral, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/stufe_metis_recursive16.pdf}
+    \caption{METIS rec., \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/stufe_metis_kway16.pdf}
+    \caption{METIS k-way, \(p=16\)}
+\end{subfigure}
+
+\caption{Recursive and \(k\)-way partitions obtained for the \texttt{stufe} mesh with \(p=8\) and \(p=16\) parts.}
+\label{fig:stufe_recursive_partitions}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/ukerbe1_coordinate_recursive08.pdf}
+    \caption{Coordinate, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/ukerbe1_inertial_recursive08.pdf}
+    \caption{Inertial, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/ukerbe1_spectral_recursive08.pdf}
+    \caption{Spectral, \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/ukerbe1_metis_recursive08.pdf}
+    \caption{METIS rec., \(p=8\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/ukerbe1_metis_kway08.pdf}
+    \caption{METIS k-way, \(p=8\)}
+\end{subfigure}
+
+\vspace{0.4cm}
+
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/ukerbe1_coordinate_recursive16.pdf}
+    \caption{Coordinate, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/ukerbe1_inertial_recursive16.pdf}
+    \caption{Inertial, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/ukerbe1_spectral_recursive16.pdf}
+    \caption{Spectral, \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/ukerbe1_metis_recursive16.pdf}
+    \caption{METIS rec., \(p=16\)}
+\end{subfigure}
+\begin{subfigure}[b]{0.19\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../01_graph/images/recursive/ukerbe1_metis_kway16.pdf}
+    \caption{METIS k-way, \(p=16\)}
+\end{subfigure}
+
+\caption{Recursive and \(k\)-way partitions obtained for the \texttt{ukerbe1} mesh with \(p=8\) and \(p=16\) parts.}
+\label{fig:ukerbe1_recursive_partitions}
+\end{figure}
+
+
 \newpage
 \section{HPC software frameworks [50 points]}
 \subsection{Mathematical Formulation}

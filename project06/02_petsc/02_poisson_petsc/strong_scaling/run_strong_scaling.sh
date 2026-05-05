@@ -35,7 +35,7 @@ echo "mpicc=$(which mpicc)"
 make clean
 make print
 make all
-RESOLUTIONS=(256 512 1024 2048)
+RESOLUTIONS=(256 512 1024)
 PROCS=(1 2 4 8 16 32)
 REPS=3
 
@@ -59,11 +59,28 @@ for n in "${RESOLUTIONS[@]}"; do
 
       LOG="outputs/strong_n${n}_p${p}_rep${rep}.log"
       set +e
-      srun -N "$p" -n "$p" --ntasks-per-node=1 --cpu-bind=cores \
-        ./poisson2d_benchmark \
-        -da_grid_x "$n" -da_grid_y "$n" \
-        $PETSC_OPTS \
-        > "$LOG" 2>&1
+      mpirun -np "$p" --map-by ppr:1:node --bind-to core \
+      ./poisson2d_benchmark \
+      -da_grid_x "$n" -da_grid_y "$n" \
+      $PETSC_OPTS \
+      > "$LOG" 2>&1
+
+      line=$(grep '^RESULT,' "$LOG" | tail -n 1 || true)
+
+      if (( status != 0 )) || [[ -z "${line:-}" ]]; then
+        echo "Run failed or no RESULT line: n=$n p=$p rep=$rep. See $LOG" >&2
+        continue
+      fi
+
+      IFS=',' read -r _ np mx my total setup solve its <<< "$line"
+
+      if [[ "$np" -ne "$p" ]]; then
+        echo "Wrong MPI size: requested p=$p but program reported np=$np. See $LOG" >&2
+        continue
+      fi
+
+      echo "$n,$np,$rep,$total,$setup,$solve,$its" >> "$RAW"
+
       status=$?
       set -e
 

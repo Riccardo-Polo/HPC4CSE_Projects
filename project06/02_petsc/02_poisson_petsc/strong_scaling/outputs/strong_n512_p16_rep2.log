@@ -1,0 +1,34 @@
+No PMIx server was reachable, but a PMI1/2 was detected.
+If srun is being used to launch application,  16 singletons will be started.
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,7.7651995500e-01,5.3380056000e-01,2.4184748800e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,7.7630364100e-01,5.3304352400e-01,2.4244966400e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,8.3819388900e-01,5.7035654500e-01,2.6687959900e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,8.6418946200e-01,5.9296834100e-01,2.7032264000e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,8.6229180000e-01,5.9425298100e-01,2.6718044700e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,9.2778551800e-01,6.3771334800e-01,2.8921319700e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,9.8322560700e-01,6.5684933600e-01,3.2537384000e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,1.0519119720e+00,7.1110752700e-01,3.3981651200e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,1.1169753030e+00,7.8475436600e-01,3.3117209400e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,1.1565056460e+00,7.4263057700e-01,4.1284944600e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,1.2228721040e+00,8.1782843300e-01,4.0396132200e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,1.3788421140e+00,9.9132341900e-01,3.8181061200e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,1.3543396470e+00,9.2679079800e-01,4.2626265700e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,1.4514177430e+00,9.0485675500e-01,5.4547422900e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,2.3243930970e+00,1.4316746910e+00,8.9131326000e-01,11
+  Linear solve converged due to CONVERGED_RTOL iterations 11
+RESULT,1,512,512,1.6424702850e+00,1.1071792880e+00,5.3334307600e-01,11

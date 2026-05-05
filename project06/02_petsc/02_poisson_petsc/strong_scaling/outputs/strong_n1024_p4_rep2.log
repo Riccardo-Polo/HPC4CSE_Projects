@@ -1,0 +1,10 @@
+No PMIx server was reachable, but a PMI1/2 was detected.
+If srun is being used to launch application,  4 singletons will be started.
+  Linear solve converged due to CONVERGED_RTOL iterations 12
+RESULT,1,1024,1024,3.2625939900e+00,2.3931954240e+00,8.6822001600e-01,12
+  Linear solve converged due to CONVERGED_RTOL iterations 12
+RESULT,1,1024,1024,3.2517696770e+00,2.3756153350e+00,8.7497598500e-01,12
+  Linear solve converged due to CONVERGED_RTOL iterations 12
+RESULT,1,1024,1024,3.8364423100e+00,2.5902206640e+00,1.2452274380e+00,12
+  Linear solve converged due to CONVERGED_RTOL iterations 12
+RESULT,1,1024,1024,6.4177622610e+00,3.7796455750e+00,2.6371254110e+00,12

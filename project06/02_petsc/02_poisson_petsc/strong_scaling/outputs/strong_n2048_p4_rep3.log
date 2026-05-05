@@ -1,0 +1,7 @@
+No PMIx server was reachable, but a PMI1/2 was detected.
+If srun is being used to launch application,  4 singletons will be started.
+[2026-05-05T13:35:59.428+02:00] error: Detected 1 oom_kill event in StepId=65434833.62. Some of the step tasks have been OOM Killed.
+srun: error: eu-a2p-345: task 3: Out Of Memory
+[2026-05-05T13:36:00.944+02:00] error: Detected 1 oom_kill event in StepId=65434833.62. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:01.208+02:00] error: Detected 1 oom_kill event in StepId=65434833.62. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:03.422+02:00] error: Detected 1 oom_kill event in StepId=65434833.62. Some of the step tasks have been OOM Killed.

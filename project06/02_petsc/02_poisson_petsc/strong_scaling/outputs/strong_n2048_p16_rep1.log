@@ -1,0 +1,19 @@
+No PMIx server was reachable, but a PMI1/2 was detected.
+If srun is being used to launch application,  16 singletons will be started.
+[2026-05-05T13:36:34.858+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+srun: error: eu-a2p-352: task 14: Out Of Memory
+[2026-05-05T13:36:35.178+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:35.443+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:35.565+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:35.613+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:35.902+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:36.205+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:36.356+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:36.444+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:36.451+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:36.527+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:36.841+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:37.359+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:37.921+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:38.707+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.
+[2026-05-05T13:36:40.262+02:00] error: Detected 1 oom_kill event in StepId=65434833.66. Some of the step tasks have been OOM Killed.

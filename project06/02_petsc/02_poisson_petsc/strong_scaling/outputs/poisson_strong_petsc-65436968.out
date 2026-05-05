@@ -1,4 +1,4 @@
-Running on nodes: eu-a2p-[279,281-285,287-288,298,306,308,316,318,321,325,327,335-336,341,343,345,349,352-354,356,359-360,363-364,366-367]
+Running on nodes: eu-a2p-[282-285,288-289,343,347,349-350,352-353,355-356,359,361,365,367-373,376-377,381,385-386,389,391,396]
 Working directory: /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling
 Loaded modules:
 
@@ -82,25 +82,3 @@ n=1024 p=16 rep=3
 n=1024 p=32 rep=1
 n=1024 p=32 rep=2
 n=1024 p=32 rep=3
-n=2048 p=1 rep=1
-n=2048 p=1 rep=2
-n=2048 p=1 rep=3
-n=2048 p=2 rep=1
-n=2048 p=2 rep=2
-n=2048 p=2 rep=3
-n=2048 p=4 rep=1
-n=2048 p=4 rep=2
-n=2048 p=4 rep=3
-n=2048 p=8 rep=1
-n=2048 p=8 rep=2
-n=2048 p=8 rep=3
-n=2048 p=16 rep=1
-n=2048 p=16 rep=2
-n=2048 p=16 rep=3
-n=2048 p=32 rep=1
-n=2048 p=32 rep=2
-n=2048 p=32 rep=3
-Wrote results/strong_scaling_summary.csv
-Wrote figures/strong_scaling_time_to_solution.pdf
-Wrote figures/strong_scaling_solve_time.pdf
-Wrote figures/strong_scaling_efficiency.pdf

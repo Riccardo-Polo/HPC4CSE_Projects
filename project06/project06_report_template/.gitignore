@@ -1,0 +1,6 @@
+*.aux
+*.bcd
+*.log
+*.xml
+*.gz
+*.synctex

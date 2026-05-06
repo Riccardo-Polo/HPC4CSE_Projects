@@ -200,21 +200,39 @@ parallel graph-distributed computation.
 \hline
 \textbf{Mesh} & \textbf{Coordinate} & \textbf{Inertial} & \textbf{Spectral} & \textbf{METIS} \\
 \hline
-\texttt{3elt}          & -- & -- & -- & -- \\
-\texttt{airfoil1}      & -- & -- & -- & -- \\
-\texttt{barth4}        & -- & -- & -- & -- \\
-\texttt{crack}         & -- & -- & -- & -- \\
-\texttt{mesh1e1}       & -- & -- & -- & -- \\
-\texttt{mesh2e1}       & -- & -- & -- & -- \\
-\texttt{mesh3e1}       & -- & -- & -- & -- \\
-\texttt{netz4504\_dual} & -- & -- & -- & -- \\
-\texttt{stufe}         & -- & -- & -- & -- \\
-\texttt{ukerbe1}       & -- & -- & -- & -- \\
+\texttt{3elt}           & 172 & 209 & 117 & 90  \\
+\texttt{airfoil1}       & 94  & 94  & 132 & 73  \\
+\texttt{barth4}         & 206 & 194 & 127 & 100 \\
+\texttt{crack}          & 353 & 377 & 233 & 200 \\
+\texttt{mesh1e1}        & 18  & 19  & 18  & 17  \\
+\texttt{mesh2e1}        & 37  & 47  & 35  & 34  \\
+\texttt{mesh3e1}        & 19  & 24  & 22  & 18  \\
+\texttt{netz4504\_dual} & 25  & 30  & 23  & 20  \\
+\texttt{stufe}          & 16  & 16  & 16  & 17  \\
+\texttt{ukerbe1}        & 32  & 28  & 28  & 30  \\
 \hline
 \end{tabular}
 \caption{Bisection edge-cut obtained on the toy meshes loaded by \texttt{bench\_bisection.jl}.}
 \label{tab:bisection_edgecuts}
 \end{table}
+
+From Table~\ref{tab:bisection_edgecuts}, METIS gives the lowest edge-cut for most of the
+meshes. This is particularly clear for the largest and most irregular examples:
+for \texttt{3elt}, the edge-cut is reduced from \(172\) with coordinate bisection and \(209\)
+with inertial bisection to \(90\) with METIS; for \texttt{barth4}, METIS reduces the edge-cut
+to \(100\), compared with \(206\), \(194\), and \(127\) for coordinate, inertial, and spectral
+bisection, respectively; and for \texttt{crack}, METIS gives \(200\), compared with \(353\),
+\(377\), and \(233\). These results confirm that a graph-based multilevel method is generally
+more effective at finding separators with small communication interfaces.\\
+
+However, the table also shows that the best method is not always the same for every mesh.
+For \texttt{stufe}, coordinate, inertial, and spectral bisection all give the same edge-cut
+\(16\), slightly better than METIS, which gives \(17\). For \texttt{ukerbe1}, inertial and
+spectral bisection give the best value \(28\), while METIS gives \(30\). Moreover, spectral
+bisection is not uniformly better than the geometrical methods: on \texttt{airfoil1}, it gives
+an edge-cut of \(132\), which is worse than both coordinate and inertial bisection. Therefore,
+although graph-based methods are usually preferable, the final quality still depends on the
+specific mesh geometry, the refinement pattern, and the connectivity structure.
 
 The corresponding partitions are shown in Figures~\ref{fig:3elt_bisections}--\ref{fig:crack_bisections} for the first four meshes, in Figures~\ref{fig:mesh1e1_bisections}--\ref{fig:stufe_bisections} for the additional structured meshes, and in Figure~\ref{fig:ukerbe1_bisections} for the \texttt{ukerbe1} mesh.
 The coordinate and inertial methods are purely geometrical: they only use the position of the
@@ -270,11 +288,14 @@ partitions may occupy a small physical area, this is not necessarily a sign of p
 the local mesh density near the notch is much higher than in the coarser parts of the domain.\\
 
 Overall, the results confirm the expected trade-off between geometrical and graph-based
-partitioning. Coordinate and inertial bisection are cheap and produce simple cuts, but they may
-ignore important connectivity features. Spectral bisection and METIS can produce lower edge-cuts
-because they exploit the graph structure directly, but the resulting partitions may be less regular
-geometrically and, in some cases, should be inspected to ensure that the balance constraint has
-been respected.
+partitioning. Coordinate and inertial bisection are simple and produce regular cuts, but they may
+ignore important connectivity features and can therefore lead to large edge-cuts on non-uniform
+meshes. Spectral bisection uses the graph Laplacian and can adapt better to the connectivity, but
+its performance is not uniformly superior, as shown for example by the \texttt{airfoil1} case.
+METIS gives the lowest edge-cut in most examples, especially for the most irregular meshes, because
+it is specifically designed to optimize graph separators. Nevertheless, the exceptions
+\texttt{stufe} and \texttt{ukerbe1} show that visual inspection and numerical edge-cut values should
+both be considered when evaluating the quality of a partition.
 
 \begin{figure}[!h]
 \centering
@@ -696,41 +717,62 @@ The corresponding partitions are shown in Figures~\ref{fig:3elt_recursive_partit
 \textbf{Mesh} & \textbf{Parts} & \textbf{Coordinate} & \textbf{Inertial} & \textbf{Spectral} & \textbf{METIS rec.} & \textbf{METIS k-way} \\
 \hline
 \multirow{2}{*}{\texttt{3elt}}
-    & \(p=8\)  & -- & -- & -- & -- & -- \\
-    & \(p=16\) & -- & -- & -- & -- & -- \\
+    & \(p=8\)  & 733  & 880  & 469  & 402  & 383  \\
+    & \(p=16\) & 1168 & 1342 & 752  & 645  & 636  \\
 \hline
 \multirow{2}{*}{\texttt{airfoil1}}
-    & \(p=8\)  & -- & -- & -- & -- & -- \\
-    & \(p=16\) & -- & -- & -- & -- & -- \\
+    & \(p=8\)  & 516 & 577 & 398 & 324 & 321 \\
+    & \(p=16\) & 819 & 902 & 631 & 566 & 545 \\
 \hline
 \multirow{2}{*}{\texttt{barth4}}
-    & \(p=8\)  & -- & -- & -- & -- & -- \\
-    & \(p=16\) & -- & -- & -- & -- & -- \\
+    & \(p=8\)  & 875  & 888  & 549  & 409  & 419  \\
+    & \(p=16\) & 1306 & 1349 & 835  & 716  & 683  \\
 \hline
 \multirow{2}{*}{\texttt{crack}}
-    & \(p=8\)  & -- & -- & -- & -- & -- \\
-    & \(p=16\) & -- & -- & -- & -- & -- \\
+    & \(p=8\)  & 1344 & 1061 & 883  & 736  & 776  \\
+    & \(p=16\) & 1861 & 1618 & 1419 & 1238 & 1186 \\
 \hline
 \multirow{2}{*}{\texttt{mesh3e1}}
-    & \(p=8\)  & -- & -- & -- & -- & -- \\
-    & \(p=16\) & -- & -- & -- & -- & -- \\
+    & \(p=8\)  & 75  & 75  & 76  & 74  & 71  \\
+    & \(p=16\) & 118 & 117 & 123 & 112 & 217 \\
 \hline
 \multirow{2}{*}{\texttt{netz4504\_dual}}
-    & \(p=8\)  & -- & -- & -- & -- & -- \\
-    & \(p=16\) & -- & -- & -- & -- & -- \\
+    & \(p=8\)  & 127 & 122 & 113 & 101 & 99  \\
+    & \(p=16\) & 198 & 202 & 182 & 159 & 160 \\
 \hline
 \multirow{2}{*}{\texttt{stufe}}
-    & \(p=8\)  & -- & -- & -- & -- & -- \\
-    & \(p=16\) & -- & -- & -- & -- & -- \\
+    & \(p=8\)  & 123 & 135 & 129 & 110 & 113 \\
+    & \(p=16\) & 228 & 269 & 248 & 196 & 193 \\
 \hline
 \multirow{2}{*}{\texttt{ukerbe1}}
-    & \(p=8\)  & -- & -- & -- & -- & -- \\
-    & \(p=16\) & -- & -- & -- & -- & -- \\
+    & \(p=8\)  & 225 & 280 & 127 & 140 & 119 \\
+    & \(p=16\) & 374 & 467 & 237 & 237 & 230 \\
 \hline
 \end{tabular}
 \caption{Recursive partitioning edge-cuts for the considered meshes.}
 \label{tab:recursive_edgecuts_first}
 \end{table}
+
+The numerical values in Table~\ref{tab:recursive_edgecuts_first} show that the edge-cut
+increases when going from \(p=8\) to \(p=16\). This is expected, because increasing the number
+of parts creates more interfaces between subdomains. The increase is particularly large for the
+irregular and highly refined meshes, such as \texttt{3elt}, \texttt{barth4}, and \texttt{crack}. For
+example, for \texttt{crack}, the METIS \(k\)-way edge-cut increases from \(776\) for \(p=8\) to
+\(1186\) for \(p=16\), while the coordinate edge-cut increases from \(1344\) to \(1861\).\\
+
+The table also confirms that the graph-based methods generally outperform the purely
+geometrical recursive methods. In most cases, METIS recursive and METIS \(k\)-way give the
+lowest edge-cuts, followed by spectral bisection. The coordinate and inertial methods are often
+worse, especially for non-uniform meshes, because they do not directly use the graph connectivity
+when choosing the separator. This is particularly evident for \texttt{3elt}, where for \(p=16\)
+the inertial method gives an edge-cut of \(1342\), while METIS \(k\)-way gives \(636\).\\
+
+However, METIS \(k\)-way is not always strictly better than recursive METIS. For \texttt{barth4}
+with \(p=8\), recursive METIS gives \(409\), slightly better than METIS \(k\)-way with \(419\).
+Similarly, for \texttt{crack} with \(p=8\), recursive METIS gives \(736\), while METIS \(k\)-way gives
+\(776\). Nevertheless, for \(p=16\), METIS \(k\)-way usually becomes competitive or better, because
+it can optimize the final \(p\)-way partition globally instead of committing to a sequence of
+two-way decisions.\\
 
 In the plots, small physical subdomains should not automatically be interpreted as unbalanced
 partitions. The load-balancing criterion is based on the number of graph vertices assigned to each
@@ -822,9 +864,13 @@ The comparison with METIS \(k\)-way partitioning is useful because it shows the 
 recursively applying a two-way partitioner and computing the final \(p\)-way partition directly.
 The \(k\)-way METIS partitions are generally more globally optimized: the algorithm can account for
 all \(p\) parts simultaneously, rather than committing to early bisection decisions that cannot be
-changed later. Therefore, one expects METIS \(k\)-way partitioning to give lower edge-cuts than
-recursive partitioning, especially for \(p=16\), where early suboptimal splits are amplified by the
-additional recursion levels.
+changed later. Therefore, one often expects METIS \(k\)-way partitioning to give lower edge-cuts than
+recursive partitioning, especially for larger \(p\). The numerical results mostly support this trend,
+although not in every case. For example, recursive METIS is slightly better than METIS \(k\)-way for
+\texttt{barth4} and \texttt{crack} when \(p=8\). This shows that the advantage of \(k\)-way partitioning
+is not absolute, but it is generally competitive and becomes particularly relevant as the number of
+parts increases.\\
+One notable exception is the mesh3e1 case with p=16, where METIS \(k\)-way gives a substantially larger edge-cut than recursive METIS and the other recursive methods. Since this mesh is rather regular, this behaviour is somewhat surprising and may be due to the particular objective, random choices, or balance constraints used internally by METIS. It also illustrates that the direct k-way formulation is not guaranteed to dominate recursive bisection for every small test case.
 
 \begin{figure}[htbp]
 \centering
@@ -1664,7 +1710,8 @@ Boundary neighbours are not inserted in the matrix for interior rows. This is
 consistent with the homogeneous Dirichlet condition, because boundary values are
 known and equal to zero. If the boundary condition were non-homogeneous, the
 contribution of neighbouring boundary values would instead have to be moved to
-the right-hand side.
+the right-hand side.\\
+Since the Dirichlet value is homogeneous, the coefficients coupling an interior node to a boundary neighbour are omitted. This is equivalent to moving the known boundary contribution to the right-hand side; here that contribution is zero. Together with identity rows for boundary nodes, this produces the same interior solution while preserving a symmetric constrained operator.\\
 
 The implementation does not hard-code a specific Krylov method or
 preconditioner. Instead, it calls
@@ -1774,55 +1821,10 @@ implementation.
 
 The final part of the PETSc study consists of a strong scaling experiment for
 the two-dimensional Poisson solver.\\
-For a fixed grid resolution \(n \times n\), let
-\[
-    T_p
-\]
-denote the median runtime obtained with \(p\) MPI processes. The strong scaling
-speedup is defined as
-\begin{equation*}
-    S_p = \frac{T_1}{T_p},
-    \label{eq:strong_speedup}
-\end{equation*}
-where \(T_1\) is the runtime of the corresponding serial run. The ideal strong
-scaling behaviour is
-\begin{equation*}
-    S_p^{\mathrm{ideal}} = p,
-\end{equation*}
-which is equivalent to
-\begin{equation*}
-    T_p^{\mathrm{ideal}} = \frac{T_1}{p}.
-\end{equation*}
-The corresponding parallel efficiency is
-\begin{equation*}
-    E_p = \frac{S_p}{p}
-        = \frac{T_1}{pT_p}.
-    %\label{eq:parallel_efficiency}
-\end{equation*}
-In the plots, this quantity is reported in percent as \(100E_p\). A value close
-to \(100\%\) means that doubling the number of processes almost halves the
-runtime, while a lower value indicates that communication, synchronization, and
-parallel overheads are becoming significant compared with the local computation.
-
 The strong scaling experiment was performed on the Euler cluster using one MPI
 process per node. This choice makes the scaling study a genuine multi-node MPI
 experiment and avoids mixing the effects of intra-node and inter-node
-parallelism.
-
-\begin{lstlisting}[style=grayverbatim, caption={SLURM configuration used for the strong scaling study}, label={lst:strong_scaling_slurm}]
-#SBATCH --job-name=poisson_strong_petsc
-#SBATCH --nodes=32
-#SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=1
-#SBATCH --time=02:00:00
-#SBATCH --constraint=EPYC_7763
-
-module purge
-module load stack/2025-06
-module load gcc/12.2.0
-module load openmpi/5.0.5
-module load petsc/3.22.1
-\end{lstlisting}
+parallelism.\\
 
 The benchmark was run for the two representative grid resolutions
 \[
@@ -1834,41 +1836,11 @@ and for
 \[
     p = 1,2,4,8,16,32
 \]
-MPI processes. Although the benchmark script was initially prepared to also
-allow a run with \(n=2048\), this case was not included in the final strong
-scaling campaign and is therefore not shown in the plots. The final discussion
-is thus based only on the completed and plotted measurements for
-\(n=512\) and \(n=1024\).
-
+MPI processes.\\
 For each pair \((n,p)\), three repetitions were performed and the median value
 was used in the plots. This reduces the influence of occasional runtime
 fluctuations caused by system noise, network contention, or temporary load
-variations on the cluster.
-
-\begin{lstlisting}[style=grayverbatim, caption={Representative benchmark loop for the strong scaling experiment}, label={lst:strong_scaling_loop}]
-RESOLUTIONS=(512 1024)
-PROCS=(1 2 4 8 16 32)
-REPS=3
-
-PETSC_OPTS="-ksp_type cg -pc_type gamg -ksp_rtol 1e-8 -ksp_converged_reason"
-
-for n in "${RESOLUTIONS[@]}"; do
-  for p in "${PROCS[@]}"; do
-    for rep in $(seq 1 "$REPS"); do
-
-      mpirun \
-        --hostfile "$HOSTFILE" \
-        -np "$p" \
-        --map-by ppr:1:node \
-        --bind-to core \
-        ./poisson2d_benchmark \
-        -da_grid_x "$n" -da_grid_y "$n" \
-        $PETSC_OPTS
-
-    done
-  done
-done
-\end{lstlisting}
+variations on the cluster.\\
 
 The PETSc linear solver was configured at runtime as
 \[
@@ -1881,7 +1853,7 @@ finite-difference discretization of the negative Laplacian with homogeneous
 Dirichlet boundary conditions gives a symmetric positive definite linear
 system. Moreover, multigrid-type preconditioners are well suited for elliptic
 operators such as the Poisson operator, since they are designed to reduce errors
-over several length scales efficiently.
+over several length scales efficiently.\\
 
 Figure~\ref{fig:strong_scaling_total_time} shows the median time to solution as
 a function of the number of MPI processes. The runtime decreases when increasing
@@ -1906,7 +1878,7 @@ linear-solve time. The total time includes not only the Krylov solve, but also
 the PETSc setup, creation of the distributed grid, matrix and vector assembly,
 and other initialization costs. By contrast, the solve time isolates the
 \texttt{KSPSolve} phase, which is the most relevant part for assessing the
-parallel performance of the iterative linear solver itself.
+parallel performance of the iterative linear solver itself.\\
 
 Figure~\ref{fig:strong_scaling_solve_time} shows the strong scaling behaviour
 of the \texttt{KSPSolve} phase. The solve time decreases more clearly than the
@@ -1954,21 +1926,14 @@ roughly with the number of local grid points, while communication is associated
 with the interfaces between neighbouring subdomains. When the local subdomains
 become small, the ratio between interface size and subdomain area increases.
 Consequently, communication and synchronization represent a larger fraction of
-the total runtime.
+the total runtime.\\
 
 For the larger grid \(n=1024\), the scaling is better because each process has
 more local work to perform. This delays the onset of the overhead-dominated
 regime. In other words, the larger problem size provides enough computation to
 make the use of additional nodes more effective. This is the standard behaviour
-expected from a strong scaling study of a domain-decomposed PDE solver.
+expected from a strong scaling study of a domain-decomposed PDE solver.\\
 
-Overall, the results show that the PETSc implementation successfully solves the
-Poisson problem in parallel and benefits from increasing the number of MPI
-processes. The best scaling is observed for the larger grid, while the smaller
-grid reaches the strong-scaling limit earlier. This is consistent with the
-structure of the finite-difference discretization and with the expected
-communication-to-computation trade-off of distributed-memory elliptic PDE
-solvers.
-
-
+\subsection{Use of LLMs}
+Chat GPT was heavily used to write the bash file and python file for performing the strong scaling figures. It was also used to understand the PETSc code and to write explanations in the report. The LLM was used to understand the mathematical formulation of the problem. The LLM was also used to generate the LaTeX code for the report, including the figures and tables.
 \end{document}

@@ -69,8 +69,8 @@ function inertial_part(A, coords)
     M = Symmetric([Syy -Sxy;
                    -Sxy Sxx])
 
-    eigvals, eigvecs = eigs(M; nev=1, which=:SM)
-    eigv = real.(eigvecs[:, 1])
+    eig = eigen(M)
+    eigv = eig.vectors[:, argmin(eig.values)]
 
     p1, p2 = partition(coords, eigv)
 
@@ -93,14 +93,16 @@ S_{yy} & -S_{xy} \\
 \end{pmatrix}
 \]
 is assembled as a symmetric matrix. The eigenvector associated with the smallest eigenvalue of
-\texttt{M} defines the principal inertial direction of the point set. In the implementation, this
-eigenvector is computed by calling \texttt{eigs} with \texttt{nev=1} and \texttt{which=:SM}, which selects the
-eigenpair of smallest magnitude. Since the matrix is real and symmetric, the resulting eigenvector
-is converted to its real part and stored in \texttt{eigv}.\\
+\texttt{M} minimizes the sum of squared distances of the vertices from the corresponding line. Equivalently,
+the resulting line follows the direction of largest spatial spread of the point cloud. Since \texttt{M} is only
+a \(2\times 2\) dense symmetric matrix, the standard dense routine \texttt{eigen} is sufficient and avoids
+unnecessary use of ARPACK on such a small problem. The selected eigenvector is stored in \texttt{eigv}.\\
 The actual split is then performed by the auxiliary routine \texttt{partition(coords, eigv)}. This
 routine projects the vertex coordinates onto the inertial direction and separates the vertices into
 two sets, denoted by \texttt{p1} and \texttt{p2}. These two sets correspond to the two sides of the
-bisecting line. Finally, the partition vector is updated by assigning label \texttt{1} to all vertices in \texttt{p1} and label \texttt{2} to all vertices in \texttt{p2}. The returned vector \texttt{p} therefore contains the bisection of the graph induced by the inertial direction.
+bisecting line. Finally, the partition vector is updated by assigning label \texttt{1} to all vertices in
+\texttt{p1} and label \texttt{2} to all vertices in \texttt{p2}. The returned vector \texttt{p} therefore contains
+the bisection of the graph induced by the inertial direction.
 
 \subsubsection{Spectral Bisection Algorithm}
 
@@ -117,20 +119,26 @@ function spectral_part(A)
 
     if n == 1
         return ones(Int, 1)
+    elseif n == 2
+        return [1, 2]
     end
 
-    # 1. Construct the Laplacian matrix.
-    D = Diagonal(vec(sum(A, dims=2)))
-    L = Symmetric(Matrix(D - A))
+    # 1. Construct the sparse graph Laplacian.
+    d = vec(sum(A, dims=2))
+    L = spdiagm(0 => d) - A
 
-    # 2. Compute eigendecomposition.
-    eig = eigen(L)
+    # 2. Compute the Fiedler vector.
+    if n <= 4
+        eig = eigen(Symmetric(Matrix(L)))
+        perm = sortperm(eig.values)
+        fiedler_vec = eig.vectors[:, perm[2]]
+    else
+        eigvals, eigvecs = eigs(L; nev=2, which=:SM)
+        perm = sortperm(real(eigvals))
+        fiedler_vec = real.(eigvecs[:, perm[2]])
+    end
 
-    # 3. Take eigenvector associated with second smallest eigenvalue.
-    perm = sortperm(eig.values)
-    fiedler_vec = eig.vectors[:, perm[2]]
-
-    # 4. Balanced partition by sorting the Fiedler vector.
+    # 3. Balanced partition by sorting the Fiedler vector.
     order = sortperm(fiedler_vec)
 
     p = ones(Int, n)
@@ -148,21 +156,20 @@ of vertices \texttt{n}. A special case is included for graphs with a single vert
 meaningful bisection can be performed, and the function simply returns a partition vector containing
 one label.\\
 
-The first step of the algorithm consists in constructing the graph Laplacian. The diagonal matrix
-\texttt{D} contains the degrees of the vertices, computed by summing the rows of the adjacency matrix.
-The Laplacian is then assembled as
+The first step of the algorithm consists in constructing the graph Laplacian. The vector \texttt{d}
+contains the degrees of the vertices, computed by summing the rows of the adjacency matrix. The
+Laplacian is then assembled in sparse form as
 \[
 L = D - A.
 \]
-In the implementation, the matrix is explicitly converted to a symmetric matrix using
-\texttt{Symmetric(Matrix(D - A))}. This is consistent with the fact that, for an undirected graph, the
-Laplian is real and symmetric.\\
-The spectral information of the graph is then obtained by computing the eigendecomposition of
-\texttt{L}. The eigenvalues are sorted in increasing order, and the eigenvector associated with the
-second smallest eigenvalue is selected. This vector is the Fiedler vector. The smallest eigenvalue of
-the Laplacian is associated with the constant eigenvector and does not provide a useful separation of
-the graph. The second smallest eigenvector, instead, contains information about the weakest connected
-direction of the graph and is therefore used to define the bisection.\\
+Keeping \texttt{L} sparse is important because the adjacency matrices of mesh graphs are sparse, and
+forming a dense matrix would destroy this structure unnecessarily.\\
+
+The spectral information of the graph is then obtained from the eigenvectors of \texttt{L}. For the
+general case, the implementation uses \texttt{eigs} from ARPACK to compute only the two eigenpairs
+of smallest magnitude. This is sufficient because the first eigenvector of the Laplacian corresponds to
+the constant mode, while the second eigenvector is the Fiedler vector used for the bisection. A small
+dense fallback is used only for very small subgraphs, where ARPACK is not appropriate.\\
 
 In the theoretical version of spectral bisection, the split can be obtained by comparing the components
 of the Fiedler vector with a threshold, often chosen as zero or as the median value. In this implementation,
@@ -174,7 +181,9 @@ unbalanced subdomains.\\
 
 Finally, the partition vector \texttt{p} is returned. Its entries contain the labels of the two subdomains:
 vertices assigned label \texttt{1} belong to the first part, while vertices assigned label \texttt{2} belong to
-the second part.
+the second part. In disconnected or nearly disconnected subgraphs, the Fiedler vector may not be unique;
+therefore, the exact shape of the spectral partition can be sensitive to eigenvalue degeneracies. This is
+one reason why the partitions are inspected together with their edge-cuts and part sizes.
 
 \subsubsection{Results}
 The script \texttt{main\_bench.jl} was used to run the four bisection strategies on the toy
@@ -223,15 +232,15 @@ geometrical split less adapted to the graph structure. In this case, the coordin
 cuts separate the mesh in a rather direct left-right fashion, while spectral bisection and METIS
 produce more irregular interfaces that better reflect the connectivity of the mesh.\\
 
-Some surprising or clearly sub-optimal partitions can also be observed. In particular, for
-\texttt{barth4} the METIS and spectral results appear very unbalanced visually, with one part
-concentrated around only a small region near the centre of the mesh. A similar behaviour appears
-for the \texttt{3elt} mesh in the METIS and spectral plots, where one color occupies almost the
-entire mesh and the other is concentrated in a very small central region. This suggests that either
-the partition labels are not being displayed as expected, or that the returned partition is not a
-proper balanced bisection for these cases. Since recursive bisection relies on each split producing
-two meaningful subdomains, such cases should be checked carefully by verifying the number of
-vertices assigned to each part in addition to the edge-cut value.\\
+Some partitions may appear visually surprising. In particular, for meshes such as \texttt{barth4},
+\texttt{3elt}, and \texttt{ukerbe1}, the spectral and METIS partitions sometimes contain one part that
+occupies a relatively small physical region of the plotted domain. This should not immediately be
+interpreted as poor load balance. The balance constraint is imposed on the number of graph vertices,
+not on the physical area covered by each part. Therefore, in highly refined regions, a geometrically small
+subdomain may still contain a large number of vertices. For this reason, the visual inspection of the
+partitions should always be complemented by the edge-cut values and, when needed, by the number of
+vertices assigned to each part. This distinction is particularly important for non-uniform meshes, where
+physical area and graph size are not proportional.\\
 
 The additional structured meshes further illustrate the difference between geometrical and
 connectivity-based partitioning. For the regular meshes \texttt{mesh1e1}, \texttt{mesh2e1}, and
@@ -254,13 +263,11 @@ several internal circular holes. In this case, the coordinate and inertial metho
 mostly straight cuts, separating the mesh approximately into upper and lower parts. This is
 reasonable from the point of view of the global geometry, but it does not explicitly account for
 the connectivity around the notch and the locally refined region. The spectral and METIS
-partitions instead place the separator very close to this narrow central region. This behaviour is
+partitions instead place the separator close to this narrow central region. This behaviour is
 consistent with the graph-based objective, since cutting through a geometrical bottleneck can
-reduce the number of edges crossing between the two parts. However, the METIS partition appears
-visually suspicious, since one part is concentrated in a very small region close to the notch while
-the rest of the mesh belongs to the other part. As for the previous anomalous cases, this should be
-checked against the actual part sizes printed by the script, because a low edge-cut is meaningful
-only if the balance constraint is also satisfied.\\
+reduce the number of edges crossing between the two parts. Although some of these graph-based
+partitions may occupy a small physical area, this is not necessarily a sign of poor balance, because
+the local mesh density near the notch is much higher than in the coarser parts of the domain.\\
 
 Overall, the results confirm the expected trade-off between geometrical and graph-based
 partitioning. Coordinate and inertial bisection are cheap and produce simple cuts, but they may
@@ -549,10 +556,10 @@ function rec_bisection(method, levels, A, coords=zeros(0), vn=zeros(0))
             return
         end
 
-        # Cannot further bisect a subgraph with one vertex.
-        if length(vertices) <= 1
-            p[vertices] .= index
-            return
+        # A subgraph with fewer vertices than requested final parts
+        # cannot be split into 2^level non-empty parts.
+        if length(vertices) < 2^level
+            error("Recursive bisection failed: not enough vertices for the requested number of parts.")
         end
 
         # Extract induced subgraph.
@@ -584,19 +591,14 @@ function rec_bisection(method, levels, A, coords=zeros(0), vn=zeros(0))
         labels = sort(unique(local_p))
 
         if length(labels) != 2
-            # This should not happen if the bisection routines are correct,
-            # but it avoids crashing on pathological small subgraphs.
-            p[vertices] .= index
-            return
+            error("Bisection failed: expected 2 parts, got labels = $labels")
         end
 
         vertices_1 = vertices[findall(local_p .== labels[1])]
         vertices_2 = vertices[findall(local_p .== labels[2])]
 
-        # Safety check.
         if isempty(vertices_1) || isempty(vertices_2)
-            p[vertices] .= index
-            return
+            error("Bisection failed: one child partition is empty.")
         end
 
         # Each child branch contains 2^(level-1) final labels.
@@ -608,6 +610,13 @@ function rec_bisection(method, levels, A, coords=zeros(0), vn=zeros(0))
     end
 
     recursion(collect(1:n), levels, 1)
+
+    expected_parts = 2^levels
+    actual_parts = sort(unique(p))
+
+    if length(actual_parts) != expected_parts
+        error("Expected $expected_parts parts, got $(length(actual_parts)): $actual_parts")
+    end
 
     return p
 
@@ -629,9 +638,10 @@ recursion tree.\\
 
 The stopping criterion is reached when \texttt{level == 0}. In this case, no further bisection is
 required, and all vertices of the current subgraph are assigned the current final label
-\texttt{index}. A second stopping condition is included for subgraphs with zero or one vertex. Such
-subgraphs cannot be meaningfully bisected, so they are also assigned directly to the current part.
-This makes the implementation robust when recursive bisection reaches very small subgraphs.\\
+\texttt{index}. Before performing a split, the routine also checks that the current subgraph contains
+at least \(2^{\texttt{level}}\) vertices. Otherwise, it would be impossible to split it into the requested
+number of non-empty final parts. In such a case the routine raises an error, rather than silently
+returning a partition with fewer than \(2^\ell\) parts.\\
 
 If further splitting is required, the induced subgraph is extracted as
 \texttt{A\_sub = A[vertices, vertices]}. The chosen bisection method is then applied to this
@@ -641,10 +651,11 @@ as \texttt{coords\_sub}. The routine therefore uses the same local numbering ins
 method, but maps the result back to the original vertex indices through the array \texttt{vertices}.\\
 
 After the local bisection has been computed, the algorithm extracts the two labels returned by the
-bisection method. If two valid labels are not found, or if one of the two parts is empty, the current
-subgraph is assigned directly to the current label. This is a safeguard against pathological cases
-or very small subgraphs. Otherwise, the vertices are separated into \texttt{vertices\_1} and
-\texttt{vertices\_2}, corresponding to the two children of the recursion tree.\\
+bisection method. The implementation explicitly checks that exactly two non-empty child partitions
+have been produced. If this is not the case, an error is raised. This behaviour is preferable during
+benchmarking, because silently assigning the whole subgraph to a single label would produce fewer than
+the requested \(2^\ell\) final parts and would make the edge-cut values misleading.\\
+
 The label offset is computed as
 \[
     \texttt{offset} = 2^{\texttt{level}-1}.
@@ -657,15 +668,18 @@ the first branch eventually receives labels \(1\) and \(2\), while the second br
 and consistent with the recursion tree.\\
 
 Finally, the recursion is initialized on the full vertex set \texttt{collect(1:n)} with the prescribed
-number of levels and initial label \(1\). The returned vector \texttt{p} contains the final
-\(2^\ell\)-way partition of the graph.
+number of levels and initial label \(1\). After the recursion terminates, the implementation verifies
+that exactly \(2^\ell\) different labels have been produced. The returned vector \texttt{p} contains
+the final \(2^\ell\)-way partition of the graph.
 
 \subsubsection{Results}
 The recursive bisection procedure was tested by generating \(p=8\) and \(p=16\) partitions.
 For the recursive algorithms, this corresponds respectively to three and four levels of recursive
-bisection. In addition to the recursive versions of coordinate, inertial, spectral, and METIS
-bisection, we also compare against the direct \(k\)-way partitioning routine of METIS. The latter
-does not build the partition by repeatedly bisecting the graph, but computes the \(p\)-way
+bisection. Listing~\ref{lst:recursive_bisection} shows the recursive driver used for the coordinate,
+inertial, and spectral bisection methods implemented above. The recursive METIS partition and the
+direct METIS \(k\)-way partition are instead computed using the METIS routines provided in the
+skeleton code. The comparison is useful because recursive bisection constructs the final partition
+through a sequence of two-way splits, while the \(k\)-way METIS routine computes the \(p\)-way
 partition directly.
 
 As in the two-way case, the quality of the partition can be assessed through the total edge-cut,
@@ -718,21 +732,27 @@ The corresponding partitions are shown in Figures~\ref{fig:3elt_recursive_partit
 \label{tab:recursive_edgecuts_first}
 \end{table}
 
+In the plots, small physical subdomains should not automatically be interpreted as unbalanced
+partitions. The load-balancing criterion is based on the number of graph vertices assigned to each
+part, whereas the figures show the physical geometry of the mesh. For highly non-uniform meshes,
+a small geometrical region can contain many vertices because of local refinement. Therefore, the
+edge-cut values in Table~\ref{tab:recursive_edgecuts_first} should be interpreted together with the
+vertex counts of the parts when assessing the quality of the partition.\\
+
 The first qualitative difference is visible when comparing the recursive geometrical methods with
 the graph-based methods. Coordinate and inertial recursive bisection tend to preserve the
 structure of the first geometrical cuts: the final subdomains are mostly obtained by repeatedly
 splitting the mesh along approximately straight directions. This gives partitions that are easy to
-interpret geometrically, but it may also create long interfaces when the mesh density is non-uniform.
+interpret geometrically, but it may also create long interfaces when the mesh density is non-uniform.\\
 
 For the \texttt{3elt} mesh, the recursive coordinate and inertial methods generate partitions that
-follow the global shape of the point cloud. However, for \(p=16\), several subdomains become very
-small and are concentrated near the highly refined central region. This is a consequence of applying
-balanced bisections recursively to a mesh with strongly non-uniform element sizes. The spectral and
-METIS recursive partitions are more strongly influenced by the graph connectivity. In some of the
-plots, especially for \texttt{3elt}, this leads to partitions that appear visually unbalanced, with many
-labels concentrated close to the central refinement. This should be checked carefully against the
-actual number of vertices per part, because a low visual area does not necessarily imply a low
-number of vertices in a highly refined mesh.
+follow the global shape of the point cloud. For \(p=16\), several subdomains occupy small physical
+regions close to the highly refined central part of the mesh. This is expected for a non-uniform mesh:
+recursive bisection balances the number of graph vertices, not the physical area of the subdomains.
+The spectral and METIS recursive partitions are more strongly influenced by the graph connectivity,
+and therefore also allocate several labels close to the central refinement. These plots illustrate why
+geometrical area alone is not a reliable indicator of load balance for unstructured meshes; the visual
+inspection should be interpreted together with the part sizes and edge-cut values.\\
 
 For the \texttt{airfoil1} mesh, the effect of the airfoil geometry and the refined wake region is more
 pronounced. The recursive coordinate and inertial partitions divide the domain into large geometric
@@ -741,7 +761,7 @@ weakest graph connections. The spectral and METIS recursive partitions adapt mor
 regions around the airfoil and the wake. In particular, several parts are placed around the leading
 edge, trailing edge, and wake, where the mesh is much denser. This behaviour is expected, since
 these regions contain many vertices and therefore require more subdomains if the partition is to
-remain balanced in terms of graph vertices rather than physical area.
+remain balanced in terms of graph vertices rather than physical area.\\
 
 For the \texttt{barth4} and \texttt{crack} meshes, the same qualitative behaviour can be observed,
 but the effect of the geometry is different. The \texttt{barth4} mesh has a strongly non-uniform
@@ -749,7 +769,7 @@ vertex distribution, with many vertices concentrated around the central region. 
 some recursive partitions appear to occupy a very small physical area near the centre of the mesh.
 This does not necessarily imply that the partition is unbalanced in terms of graph vertices, since
 the central region is much more densely discretized than the outer part of the domain. Nevertheless,
-these plots show a limitation of interpreting graph partitions only from their geometrical area.
+these plots show a limitation of interpreting graph partitions only from their geometrical area.\\
 
 The \texttt{crack} mesh is instead characterized by a localized internal feature around the centre.
 The recursive coordinate and inertial methods generate partitions that remain mostly aligned with
@@ -758,7 +778,7 @@ from the crack and much smaller regions around the refined centre. The spectral 
 methods are more sensitive to the graph connectivity near the crack and tend to isolate the refined
 central region more strongly. This is expected, because the high local mesh density around the crack
 contains many graph vertices and therefore receives several subdomains when the partition is balanced
-by vertex count.
+by vertex count.\\
 
 The \texttt{mesh3e1} mesh is useful as a reference case because it is much more regular than the
 previous unstructured examples. In this case, the recursive coordinate and inertial methods produce
@@ -767,7 +787,7 @@ mesh is close to structured, these geometrical cuts are already quite reasonable
 METIS-based methods also produce compact subdomains, but their interfaces are less constrained by
 coordinate directions and can adapt to the graph connectivity. For this mesh, the visual difference
 between the methods is less dramatic than for highly non-uniform meshes such as \texttt{airfoil1},
-\texttt{barth4}, or \texttt{crack}.
+\texttt{barth4}, or \texttt{crack}.\\
 
 The \texttt{netz4504\_dual} mesh has a more complex geometry, with large coarse cells in the upper
 part and a much finer structured region near the bottom boundary. This makes the recursive
@@ -776,7 +796,7 @@ the domain according to its global geometric extent, producing long vertical or 
 By contrast, the spectral and METIS partitions allocate several smaller parts close to the refined
 bottom region. This is consistent with the fact that graph partitioning balances the number of
 vertices rather than the physical area of the subdomains. Therefore, regions that are geometrically
-small but highly discretized may receive several partition labels.
+small but highly discretized may receive several partition labels.\\
 
 The \texttt{stufe} mesh contains a step-like geometry, with two refined diagonal regions and
 a relatively coarse outer rectangular structure. The recursive coordinate and inertial methods
@@ -785,7 +805,7 @@ the parts tend to form vertical or horizontal blocks, with smaller subdomains ap
 the refined regions. The graph-based methods produce more irregular partitions, especially for
 \(p=16\), because the separator is allowed to follow the local mesh connectivity rather than a
 global coordinate direction. This gives a less visually regular decomposition, but it can reduce
-the number of edges crossing between parts.
+the number of edges crossing between parts.\\
 
 The \texttt{ukerbe1} mesh is one of the most challenging examples, because it combines a large
 structured geometry, several circular holes, and a pronounced notch-like feature near the centre.
@@ -796,7 +816,7 @@ close to the central notch, which acts as a natural bottleneck of the graph. Thi
 behaviour for graph partitioning: cutting through a narrow, highly connected transition region can
 reduce the final edge-cut. However, as in the previous non-uniform meshes, some partitions appear
 to occupy a small physical area. This should not immediately be interpreted as poor load balance,
-since the local mesh density is much higher near the notch.
+since the local mesh density is much higher near the notch.\\
 
 The comparison with METIS \(k\)-way partitioning is useful because it shows the difference between
 recursively applying a two-way partitioner and computing the final \(p\)-way partition directly.
@@ -1289,13 +1309,666 @@ additional recursion levels.
 
 \newpage
 \section{HPC software frameworks [50 points]}
+
 \subsection{Mathematical Formulation}
 
-\subsection{PETS Implementation}
+In this section we solve the two-dimensional Poisson problem with homogeneous
+Dirichlet boundary conditions,
+\begin{equation*}
+\begin{aligned}
+    -\Delta u &= f \qquad &&\text{in } \Omega,\\
+    u &= 0 \qquad &&\text{on } \partial \Omega,
+\end{aligned}
+\label{eq:poisson_continuous}
+\end{equation*}
+where the computational domain is the unit square
+\begin{equation*}
+    \Omega = (0,1)^2,
+\end{equation*}
+and the source term is constant,
+\begin{equation*}
+    f(x_1,x_2) = 20.
+\end{equation*}
+In Cartesian coordinates the Laplace operator is
+\begin{equation*}
+    \Delta u =
+    \frac{\partial^2 u}{\partial x_1^2}
+    +
+    \frac{\partial^2 u}{\partial x_2^2}.
+\end{equation*}
+The homogeneous Dirichlet condition imposes that the solution is zero on the
+whole boundary of the square. Therefore, the expected qualitative behaviour is
+a positive solution in the interior, symmetric with respect to the two midlines
+of the square, and attaining its maximum close to the centre of the domain.
+
+The domain is discretized by a uniform Cartesian grid with \(m_x\) grid points
+in the \(x_1\)-direction and \(m_y\) grid points in the \(x_2\)-direction,
+including boundary points. The mesh widths are
+\begin{equation*}
+    h_x = \frac{1}{m_x-1},
+    \qquad
+    h_y = \frac{1}{m_y-1}.
+\end{equation*}
+The grid points are
+\begin{equation*}
+    x_i = i h_x, \qquad i=0,\ldots,m_x-1,
+\end{equation*}
+and
+\begin{equation*}
+    y_j = j h_y, \qquad j=0,\ldots,m_y-1.
+\end{equation*}
+The numerical approximation of \(u(x_i,y_j)\) is denoted by
+\begin{equation*}
+    u_{i,j} \approx u(x_i,y_j).
+\end{equation*}
+
+For an interior grid point, namely for
+\[
+    1 \leq i \leq m_x-2,
+    \qquad
+    1 \leq j \leq m_y-2,
+\]
+the second derivatives are approximated with second-order centred finite
+differences:
+\begin{equation*}
+    \frac{\partial^2 u}{\partial x_1^2}(x_i,y_j)
+    =
+    \frac{u_{i-1,j} - 2u_{i,j} + u_{i+1,j}}{h_x^2}
+    +
+    \mathcal{O}(h_x^2),
+\end{equation*}
+and
+\begin{equation*}
+    \frac{\partial^2 u}{\partial x_2^2}(x_i,y_j)
+    =
+    \frac{u_{i,j-1} - 2u_{i,j} + u_{i,j+1}}{h_y^2}
+    +
+    \mathcal{O}(h_y^2).
+\end{equation*}
+Substituting these approximations into \(-\Delta u = 20\) gives
+\begin{equation*}
+    -
+    \frac{u_{i-1,j} - 2u_{i,j} + u_{i+1,j}}{h_x^2}
+    -
+    \frac{u_{i,j-1} - 2u_{i,j} + u_{i,j+1}}{h_y^2}
+    =
+    20.
+%\label{eq:fd_unscaled}
+\end{equation*}
+Equivalently,
+\begin{equation*}
+    \left(\frac{2}{h_x^2}+\frac{2}{h_y^2}\right)u_{i,j}
+    -
+    \frac{1}{h_x^2}
+    \left(u_{i-1,j}+u_{i+1,j}\right)
+    -
+    \frac{1}{h_y^2}
+    \left(u_{i,j-1}+u_{i,j+1}\right)
+    =
+    20.
+%\label{eq:fd_standard_stencil}
+\end{equation*}
+This is the standard five-point finite-difference stencil for the negative
+Laplacian.
+
+In the implementation, the equation is multiplied by \(h_x h_y\). This does not
+change the solution of the linear system, but leads to the coefficients used in
+the assembled PETSc matrix:
+\begin{equation}
+    2\left(\frac{h_x}{h_y}+\frac{h_y}{h_x}\right)u_{i,j}
+    -
+    \frac{h_y}{h_x}
+    \left(u_{i-1,j}+u_{i+1,j}\right)
+    -
+    \frac{h_x}{h_y}
+    \left(u_{i,j-1}+u_{i,j+1}\right)
+    =
+    20 h_x h_y.
+\label{eq:fd_scaled_stencil} 
+\end{equation}
+Therefore, the matrix stencil used for an interior point is
+\begin{equation}
+\begin{array}{ccc}
+        & -h_x/h_y &        \\[2mm]
+ -h_y/h_x
+        & 2(h_x/h_y+h_y/h_x)
+        & -h_y/h_x \\[2mm]
+        & -h_x/h_y &
+\end{array}
+\label{eq:matrix_stencil} 
+\end{equation}
+where the horizontal neighbours correspond to the coefficients
+\(-h_y/h_x\), while the vertical neighbours correspond to the coefficients
+\(-h_x/h_y\).
+
+The boundary condition is imposed strongly. If a node lies on the boundary,
+that is if
+\[
+    i=0, \quad i=m_x-1, \quad j=0, \quad \text{or} \quad j=m_y-1,
+\]
+then the discrete equation is replaced by
+\begin{equation*}
+    u_{i,j} = 0.
+\end{equation*}
+In matrix form, this corresponds to inserting an identity row for every
+boundary degree of freedom:
+\begin{equation*}
+    A_{kk}=1,
+    \qquad
+    b_k=0.
+\end{equation*}
+For interior degrees of freedom, the finite-difference equations define a sparse
+linear system
+\begin{equation*}
+    A \mathbf{u} = \mathbf{b},
+\label{eq:linear_system}
+\end{equation*}
+where \(\mathbf{u}\) contains the nodal values \(u_{i,j}\). If the interior
+unknowns are ordered lexicographically, for example with index
+\[
+    k = i + m_x j,
+\]
+then each row of \(A\) contains at most five nonzero entries, corresponding to
+the centre point and its four nearest neighbours. Since the operator is the
+negative Laplacian with homogeneous Dirichlet boundary conditions, the resulting
+matrix is symmetric positive definite on the constrained problem. This property
+motivates the use of Krylov methods for symmetric positive definite systems,
+such as the conjugate-gradient method.
+
+\subsection{PETSc Implementation}
+
+The Poisson problem was implemented in C using PETSc. The code uses the PETSc
+distributed array abstraction \texttt{DMDA}, which is particularly convenient
+for finite-difference discretizations on structured grids. The distributed array
+stores the two-dimensional Cartesian layout of the grid and distributes grid
+points among MPI processes. In this way, each process assembles only the rows of
+the matrix and the entries of the right-hand side vector that belong to its
+local portion of the grid.
+
+The main PETSc objects used in the code are:
+\[
+    \texttt{DM}, \qquad \texttt{KSP}, \qquad \texttt{Mat}, \qquad \texttt{Vec}.
+\]
+The \texttt{DM} object describes the distributed structured grid, while the
+\texttt{KSP} object manages the linear solver. The matrix and the right-hand
+side are assembled through callback functions registered with the \texttt{KSP}
+object.
+
+\begin{lstlisting}[style=grayverbatim, caption={Creation of the PETSc solver and distributed grid}, label={lst:petsc_setup}]
+PetscCall(PetscInitialize(&argc, &argv, NULL, help));
+
+PetscCall(KSPCreate(PETSC_COMM_WORLD, &ksp));
+
+PetscCall(DMDACreate2d(
+    PETSC_COMM_WORLD,
+    DM_BOUNDARY_NONE,
+    DM_BOUNDARY_NONE,
+    DMDA_STENCIL_STAR,
+    3, 3,
+    PETSC_DECIDE, PETSC_DECIDE,
+    1, 1,
+    NULL, NULL,
+    &da));
+
+PetscCall(DMSetFromOptions(da));
+PetscCall(DMSetUp(da));
+
+PetscCall(DMDASetUniformCoordinates(da, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0));
+PetscCall(DMDASetFieldName(da, 0, "Solution"));
+
+PetscCall(KSPSetDM(ksp, da));
+PetscCall(KSPSetComputeRHS(ksp, ComputeRHS, NULL));
+PetscCall(KSPSetComputeOperators(ksp, ComputeMatrix, NULL));
+
+PetscCall(KSPSetFromOptions(ksp));
+PetscCall(KSPSetUp(ksp));
+
+PetscCall(KSPSolve(ksp, NULL, NULL));
+\end{lstlisting}
+
+The call to \texttt{DMDACreate2d} creates a two-dimensional distributed array.
+The options
+\[
+    \texttt{DM\_BOUNDARY\_NONE}
+\]
+are used because the problem does not have periodic boundary conditions. The
+option
+\[
+    \texttt{DMDA\_STENCIL\_STAR}
+\]
+corresponds to the five-point stencil of the finite-difference discretization:
+each interior point couples only to itself and to its north, south, east, and
+west neighbours. The stencil width is set to one, consistently with the
+second-order centred discretization.
+
+The grid is initialized with default size \(3 \times 3\), but this value can be
+overridden from the command line by PETSc options such as
+\begin{lstlisting}[style=grayverbatim, caption={Example of runtime grid-size selection}, label={lst:grid_options}]
+-da_grid_x 512 -da_grid_y 512
+\end{lstlisting}
+This is useful because it allows the same executable to be used for several
+problem resolutions without recompilation.
+
+The right-hand side vector is assembled in the function \texttt{ComputeRHS}.
+Each MPI process first obtains the portion of the grid that it owns through
+\texttt{DMDAGetCorners}. Then it writes the corresponding local entries of the
+right-hand side vector. Boundary entries are set to zero, while interior entries
+are set to \(20 h_x h_y\), consistently with the scaled finite-difference
+equation \eqref{eq:fd_scaled_stencil}.
+
+\begin{lstlisting}[style=grayverbatim, caption={Assembly of the right-hand side vector}, label={lst:compute_rhs}]
+PetscCall(DMDAGetInfo(da, NULL, &mx, &my, NULL,
+                      NULL, NULL, NULL, NULL,
+                      NULL, NULL, NULL, NULL, NULL));
+
+Hx = 1.0 / (PetscReal)(mx - 1);
+Hy = 1.0 / (PetscReal)(my - 1);
+
+PetscCall(DMDAGetCorners(da, &xs, &ys, NULL, &xm, &ym, NULL));
+PetscCall(DMDAVecGetArray(da, b, &array));
+
+for (j = ys; j < ys + ym; j++) {
+  for (i = xs; i < xs + xm; i++) {
+
+    if (i == 0 || j == 0 || i == mx - 1 || j == my - 1) {
+      array[j][i] = 0.0;
+    } else {
+      array[j][i] = 20.0 * Hx * Hy;
+    }
+
+  }
+}
+
+PetscCall(DMDAVecRestoreArray(da, b, &array));
+PetscCall(VecAssemblyBegin(b));
+PetscCall(VecAssemblyEnd(b));
+\end{lstlisting}
+
+The matrix is assembled in the function \texttt{ComputeMatrix}. Boundary nodes
+are treated by inserting an identity row. For interior nodes, the five-point
+stencil \eqref{eq:matrix_stencil} is inserted using \texttt{MatSetValuesStencil}.
+Using stencil indices avoids manually converting the two-dimensional grid
+indices \((i,j)\) into global algebraic indices.
+
+\begin{lstlisting}[style=grayverbatim, caption={Assembly of the finite-difference matrix}, label={lst:compute_matrix}]
+Hx = 1.0 / (PetscReal)(mx - 1);
+Hy = 1.0 / (PetscReal)(my - 1);
+
+HxdHy = Hx / Hy;
+HydHx = Hy / Hx;
+
+PetscCall(DMDAGetCorners(da, &xs, &ys, NULL, &xm, &ym, NULL));
+
+for (j = ys; j < ys + ym; j++) {
+  for (i = xs; i < xs + xm; i++) {
+
+    row.i = i;
+    row.j = j;
+
+    if (i == 0 || j == 0 || i == mx - 1 || j == my - 1) {
+
+      v[0] = 1.0;
+      PetscCall(MatSetValuesStencil(jac, 1, &row, 1, &row,
+                                    v, INSERT_VALUES));
+
+    } else {
+
+      PetscInt ncols = 0;
+
+      if (j - 1 > 0) {
+        v[ncols]     = -HxdHy;
+        col[ncols].i = i;
+        col[ncols].j = j - 1;
+        ncols++;
+      }
+
+      if (i - 1 > 0) {
+        v[ncols]     = -HydHx;
+        col[ncols].i = i - 1;
+        col[ncols].j = j;
+        ncols++;
+      }
+
+      v[ncols]     = 2.0 * (HxdHy + HydHx);
+      col[ncols].i = i;
+      col[ncols].j = j;
+      ncols++;
+
+      if (i + 1 < mx - 1) {
+        v[ncols]     = -HydHx;
+        col[ncols].i = i + 1;
+        col[ncols].j = j;
+        ncols++;
+      }
+
+      if (j + 1 < my - 1) {
+        v[ncols]     = -HxdHy;
+        col[ncols].i = i;
+        col[ncols].j = j + 1;
+        ncols++;
+      }
+
+      PetscCall(MatSetValuesStencil(jac, 1, &row, ncols, col,
+                                    v, INSERT_VALUES));
+    }
+  }
+}
+
+PetscCall(MatAssemblyBegin(jac, MAT_FINAL_ASSEMBLY));
+PetscCall(MatAssemblyEnd(jac, MAT_FINAL_ASSEMBLY));
+
+PetscCall(MatSetOption(jac, MAT_SYMMETRIC, PETSC_TRUE));
+\end{lstlisting}
+
+Boundary neighbours are not inserted in the matrix for interior rows. This is
+consistent with the homogeneous Dirichlet condition, because boundary values are
+known and equal to zero. If the boundary condition were non-homogeneous, the
+contribution of neighbouring boundary values would instead have to be moved to
+the right-hand side.
+
+The implementation does not hard-code a specific Krylov method or
+preconditioner. Instead, it calls
+\[
+    \texttt{KSPSetFromOptions(ksp)},
+\]
+which allows the solver configuration to be chosen at runtime from the PETSc
+options database. Since the assembled operator is symmetric positive definite,
+a natural choice is the conjugate-gradient method. In the runs reported here,
+the linear system was solved with a Krylov method selected through PETSc options,
+for example
+\begin{lstlisting}[style=grayverbatim, caption={Example PETSc solver options for the Poisson problem}, label={lst:petsc_solver_options}]
+-ksp_type cg -pc_type jacobi -ksp_rtol 1e-10 -ksp_monitor
+\end{lstlisting}
+For larger grids, a multigrid preconditioner such as PETSc's algebraic multigrid
+preconditioner can also be used by changing only the runtime options, for
+example
+\begin{lstlisting}[style=grayverbatim, caption={Example PETSc options using algebraic multigrid}, label={lst:petsc_gamg_options}]
+-ksp_type cg -pc_type gamg -ksp_rtol 1e-10 -ksp_monitor
+\end{lstlisting}
+This separation between the discretization code and the solver configuration is
+one of the main advantages of PETSc: the same application code can be tested
+with different iterative methods, tolerances, and preconditioners without
+modifying or recompiling the source code.
+
+After solving the system, the numerical solution is written to an ASCII file
+containing the coordinates and the corresponding solution value. Since the
+solution vector is distributed across MPI processes, the output is performed
+using synchronized PETSc ASCII printing.
+
+\begin{lstlisting}[style=grayverbatim, caption={Writing the distributed solution to file}, label={lst:write_solution}]
+PetscCall(PetscViewerASCIIOpen(PETSC_COMM_WORLD, filename, &viewer));
+PetscCall(PetscViewerASCIIPrintf(viewer, "# x y u\n"));
+
+PetscCall(DMDAVecGetArrayRead(da, x, &array));
+PetscCall(PetscViewerASCIIPushSynchronized(viewer));
+
+for (j = ys; j < ys + ym; j++) {
+  for (i = xs; i < xs + xm; i++) {
+    PetscReal xcoord = ((PetscReal)i) * Hx;
+    PetscReal ycoord = ((PetscReal)j) * Hy;
+    PetscReal value  = PetscRealPart(array[j][i]);
+
+    PetscCall(PetscViewerASCIISynchronizedPrintf(
+        viewer,
+        "%.16e %.16e %.16e\n",
+        (double)xcoord,
+        (double)ycoord,
+        (double)value));
+  }
+}
+
+PetscCall(PetscViewerFlush(viewer));
+PetscCall(PetscViewerASCIIPopSynchronized(viewer));
+PetscCall(DMDAVecRestoreArrayRead(da, x, &array));
+PetscCall(PetscViewerDestroy(&viewer));
+\end{lstlisting}
 
 \subsection{Visualization}
 
+The computed solution was exported as a file containing triples
+\[
+    (x_i,y_j,u_{i,j}),
+\]
+which were then postprocessed in Python to generate a heatmap and a three-
+dimensional surface plot. These visualizations are shown in
+Figure~\ref{fig:poisson_solution_visualization}.
+
+\begin{figure}[h]
+    \centering
+
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../02_petsc/02_poisson_petsc/application/solution_heatmap.pdf}
+        \caption{Heatmap of the numerical solution.}
+        \label{fig:poisson_heatmap}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../02_petsc/02_poisson_petsc/application/solution_surface.pdf}
+        \caption{Surface plot of the numerical solution.}
+        \label{fig:poisson_surface}
+    \end{subfigure}
+
+    \caption{Approximate solution of the Poisson problem
+    \(-\Delta u = 20\) in \(\Omega=(0,1)^2\), with homogeneous Dirichlet
+    boundary conditions on \(\partial\Omega\). The solution is zero on the
+    boundary and positive in the interior, with a maximum close to the centre
+    of the domain, as expected from the symmetry of the problem and the
+    positivity of the source term.}
+    \label{fig:poisson_solution_visualization}
+\end{figure}
+
+The plots confirm the expected qualitative structure of the solution. Because
+the forcing term is positive and the boundary values are zero, the discrete
+solution is positive inside the domain and vanishes on the boundary. Moreover,
+since both the geometry and the source term are symmetric with respect to the
+lines \(x_1=1/2\) and \(x_2=1/2\), the numerical solution is also symmetric.
+The maximum is attained near the centre of the square, while the solution
+decreases smoothly towards zero when approaching the boundary. This behaviour
+is consistent with the maximum principle for the Poisson equation and provides
+a qualitative validation of the finite-difference discretization and PETSc
+implementation.
+
 \subsection{Strong Scaling Analysis}
+
+The final part of the PETSc study consists of a strong scaling experiment for
+the two-dimensional Poisson solver.\\
+For a fixed grid resolution \(n \times n\), let
+\[
+    T_p
+\]
+denote the median runtime obtained with \(p\) MPI processes. The strong scaling
+speedup is defined as
+\begin{equation*}
+    S_p = \frac{T_1}{T_p},
+    \label{eq:strong_speedup}
+\end{equation*}
+where \(T_1\) is the runtime of the corresponding serial run. The ideal strong
+scaling behaviour is
+\begin{equation*}
+    S_p^{\mathrm{ideal}} = p,
+\end{equation*}
+which is equivalent to
+\begin{equation*}
+    T_p^{\mathrm{ideal}} = \frac{T_1}{p}.
+\end{equation*}
+The corresponding parallel efficiency is
+\begin{equation*}
+    E_p = \frac{S_p}{p}
+        = \frac{T_1}{pT_p}.
+    %\label{eq:parallel_efficiency}
+\end{equation*}
+In the plots, this quantity is reported in percent as \(100E_p\). A value close
+to \(100\%\) means that doubling the number of processes almost halves the
+runtime, while a lower value indicates that communication, synchronization, and
+parallel overheads are becoming significant compared with the local computation.
+
+The strong scaling experiment was performed on the Euler cluster using one MPI
+process per node. This choice makes the scaling study a genuine multi-node MPI
+experiment and avoids mixing the effects of intra-node and inter-node
+parallelism.
+
+\begin{lstlisting}[style=grayverbatim, caption={SLURM configuration used for the strong scaling study}, label={lst:strong_scaling_slurm}]
+#SBATCH --job-name=poisson_strong_petsc
+#SBATCH --nodes=32
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=02:00:00
+#SBATCH --constraint=EPYC_7763
+
+module purge
+module load stack/2025-06
+module load gcc/12.2.0
+module load openmpi/5.0.5
+module load petsc/3.22.1
+\end{lstlisting}
+
+The benchmark was run for the two representative grid resolutions
+\[
+    n = 512,
+    \qquad
+    n = 1024,
+\]
+and for
+\[
+    p = 1,2,4,8,16,32
+\]
+MPI processes. Although the benchmark script was initially prepared to also
+allow a run with \(n=2048\), this case was not included in the final strong
+scaling campaign and is therefore not shown in the plots. The final discussion
+is thus based only on the completed and plotted measurements for
+\(n=512\) and \(n=1024\).
+
+For each pair \((n,p)\), three repetitions were performed and the median value
+was used in the plots. This reduces the influence of occasional runtime
+fluctuations caused by system noise, network contention, or temporary load
+variations on the cluster.
+
+\begin{lstlisting}[style=grayverbatim, caption={Representative benchmark loop for the strong scaling experiment}, label={lst:strong_scaling_loop}]
+RESOLUTIONS=(512 1024)
+PROCS=(1 2 4 8 16 32)
+REPS=3
+
+PETSC_OPTS="-ksp_type cg -pc_type gamg -ksp_rtol 1e-8 -ksp_converged_reason"
+
+for n in "${RESOLUTIONS[@]}"; do
+  for p in "${PROCS[@]}"; do
+    for rep in $(seq 1 "$REPS"); do
+
+      mpirun \
+        --hostfile "$HOSTFILE" \
+        -np "$p" \
+        --map-by ppr:1:node \
+        --bind-to core \
+        ./poisson2d_benchmark \
+        -da_grid_x "$n" -da_grid_y "$n" \
+        $PETSC_OPTS
+
+    done
+  done
+done
+\end{lstlisting}
+
+The PETSc linear solver was configured at runtime as
+\[
+    \texttt{-ksp\_type cg -pc\_type gamg -ksp\_rtol 1e-8}.
+\]
+This means that the linear system was solved using the conjugate-gradient
+method, preconditioned by PETSc's algebraic multigrid preconditioner
+\texttt{GAMG}. This is a suitable choice for the present problem because the
+finite-difference discretization of the negative Laplacian with homogeneous
+Dirichlet boundary conditions gives a symmetric positive definite linear
+system. Moreover, multigrid-type preconditioners are well suited for elliptic
+operators such as the Poisson operator, since they are designed to reduce errors
+over several length scales efficiently.
+
+Figure~\ref{fig:strong_scaling_total_time} shows the median time to solution as
+a function of the number of MPI processes. The runtime decreases when increasing
+the process count, showing that the PETSc implementation is able to exploit
+parallelism. However, the scaling is not ideal over the full range of process
+counts. This is expected in a strong scaling setting: as \(p\) increases, the
+local subdomain assigned to each MPI rank becomes smaller, and the relative
+cost of communication and synchronization increases.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_time_to_solution.pdf}
+    \caption{Strong scaling of the PETSc two-dimensional Poisson solver. The
+    plot reports the median total time to solution for the grid resolutions
+    \(n=512\) and \(n=1024\). The global problem size is fixed while the number
+    of MPI processes, and therefore the number of nodes, is increased.}
+    \label{fig:strong_scaling_total_time}
+\end{figure}
+
+A useful way to interpret the result is to distinguish the total time from the
+linear-solve time. The total time includes not only the Krylov solve, but also
+the PETSc setup, creation of the distributed grid, matrix and vector assembly,
+and other initialization costs. By contrast, the solve time isolates the
+\texttt{KSPSolve} phase, which is the most relevant part for assessing the
+parallel performance of the iterative linear solver itself.
+
+Figure~\ref{fig:strong_scaling_solve_time} shows the strong scaling behaviour
+of the \texttt{KSPSolve} phase. The solve time decreases more clearly than the
+total time, especially for the larger resolution. This confirms that the
+parallelization of the algebraic solve is effective. The larger grid
+\(n=1024\) provides more work per MPI process than the smaller grid \(n=512\),
+and therefore has a better computation-to-communication ratio. As a result, it
+is expected to scale better to larger process counts.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_solve_time.pdf}
+    \caption{Strong scaling of the PETSc solver phase. The plot reports the
+    median time spent inside \texttt{KSPSolve}. Compared with the total runtime,
+    this isolates the performance of the Krylov solver and preconditioner from
+    setup and output costs.}
+    \label{fig:strong_scaling_solve_time}
+\end{figure}
+
+The difference between the two resolutions is also visible in the parallel
+efficiency, shown in Figure~\ref{fig:strong_scaling_efficiency}. For small
+numbers of processes, the efficiency remains relatively high, meaning that the
+additional nodes are still effectively used. As the number of processes grows,
+the efficiency decreases. This behaviour is typical of strong scaling:
+eventually, the local amount of work per process becomes too small to amortize
+the fixed overheads of communication, synchronization, and PETSc object
+management.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_efficiency.pdf}
+    \caption{Parallel efficiency based on the median total time to solution.
+    The efficiency is computed as \(E_p = T_1/(pT_p)\). The decrease in
+    efficiency at larger process counts reflects the increasing relative
+    importance of communication and parallel overheads in the strong scaling
+    regime.}
+    \label{fig:strong_scaling_efficiency}
+\end{figure}
+
+The efficiency degradation is more pronounced for the smaller grid
+\(n=512\). This is because, for a fixed number of processes, each MPI rank owns
+fewer grid points than in the \(n=1024\) case. Since the finite-difference
+operator uses only nearest-neighbour couplings, the computational work scales
+roughly with the number of local grid points, while communication is associated
+with the interfaces between neighbouring subdomains. When the local subdomains
+become small, the ratio between interface size and subdomain area increases.
+Consequently, communication and synchronization represent a larger fraction of
+the total runtime.
+
+For the larger grid \(n=1024\), the scaling is better because each process has
+more local work to perform. This delays the onset of the overhead-dominated
+regime. In other words, the larger problem size provides enough computation to
+make the use of additional nodes more effective. This is the standard behaviour
+expected from a strong scaling study of a domain-decomposed PDE solver.
+
+Overall, the results show that the PETSc implementation successfully solves the
+Poisson problem in parallel and benefits from increasing the number of MPI
+processes. The best scaling is observed for the larger grid, while the smaller
+grid reaches the strong-scaling limit earlier. This is consistent with the
+structure of the finite-difference discretization and with the expected
+communication-to-computation trade-off of distributed-memory elliptic PDE
+solvers.
 
 
 \end{document}

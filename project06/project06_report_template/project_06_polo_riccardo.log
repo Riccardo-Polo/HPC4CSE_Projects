@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.2.17)  5 MAY 2026 13:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.2.17)  6 MAY 2026 11:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1010,148 +1010,153 @@ Underfull \hbox (badness 10000) in paragraph at lines 83--86
 
 [2]
 
-Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 113.
+Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 115.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 146--150
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 156--166
+Underfull \hbox (badness 10000) in paragraph at lines 154--158
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--174
+Underfull \hbox (badness 10000) in paragraph at lines 164--167
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 168--173
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 210--217
+Underfull \hbox (badness 10000) in paragraph at lines 174--181
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 218--225
+Underfull \hbox (badness 10000) in paragraph at lines 219--226
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 226--235
+Underfull \hbox (badness 10000) in paragraph at lines 227--234
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 236--243
+Underfull \hbox (badness 10000) in paragraph at lines 235--244
 
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 244--251
+Underfull \hbox (badness 10000) in paragraph at lines 245--252
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 252--264
+Underfull \hbox (badness 10000) in paragraph at lines 253--260
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 261--271
 
  []
 
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/3elt_coordinate_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/3elt_coordinate_bisection.pdf, id=115, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/3elt_coordinate_bisection.pdf, id=121, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/3elt_coordinate_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/3elt_coordinate_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/3elt_coordinate_bisection.pdf  used on input line 276.
+Package pdftex.def Info: ../01_graph/images/bisection/3elt_coordinate_bisection.pdf  used on input line 283.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/3elt_inertial_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/3elt_inertial_bisection.pdf, id=116, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/3elt_inertial_bisection.pdf, id=122, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/3elt_inertial_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/3elt_inertial_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/3elt_inertial_bisection.pdf  used on input line 281.
+Package pdftex.def Info: ../01_graph/images/bisection/3elt_inertial_bisection.pdf  used on input line 288.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/3elt_spectral_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/3elt_spectral_bisection.pdf, id=117, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/3elt_spectral_bisection.pdf, id=123, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/3elt_spectral_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/3elt_spectral_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/3elt_spectral_bisection.pdf  used on input line 286.
+Package pdftex.def Info: ../01_graph/images/bisection/3elt_spectral_bisection.pdf  used on input line 293.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/3elt_metis_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/3elt_metis_bisection.pdf, id=118, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/3elt_metis_bisection.pdf, id=124, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/3elt_metis_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/3elt_metis_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/3elt_metis_bisection.pdf  used on input line 291.
+Package pdftex.def Info: ../01_graph/images/bisection/3elt_metis_bisection.pdf  used on input line 298.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/airfoil1_coordinate_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/airfoil1_coordinate_bisection.pdf, id=119, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/airfoil1_coordinate_bisection.pdf, id=125, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/airfoil1_coordinate_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/airfoil1_coordinate_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/airfoil1_coordinate_bisection.pdf  used on input line 302.
+Package pdftex.def Info: ../01_graph/images/bisection/airfoil1_coordinate_bisection.pdf  used on input line 309.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/airfoil1_inertial_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/airfoil1_inertial_bisection.pdf, id=120, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/airfoil1_inertial_bisection.pdf, id=126, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/airfoil1_inertial_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/airfoil1_inertial_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/airfoil1_inertial_bisection.pdf  used on input line 307.
+Package pdftex.def Info: ../01_graph/images/bisection/airfoil1_inertial_bisection.pdf  used on input line 314.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/airfoil1_spectral_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/airfoil1_spectral_bisection.pdf, id=121, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/airfoil1_spectral_bisection.pdf, id=127, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/airfoil1_spectral_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/airfoil1_spectral_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/airfoil1_spectral_bisection.pdf  used on input line 312.
+Package pdftex.def Info: ../01_graph/images/bisection/airfoil1_spectral_bisection.pdf  used on input line 319.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/airfoil1_metis_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/airfoil1_metis_bisection.pdf, id=122, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/airfoil1_metis_bisection.pdf, id=128, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/airfoil1_metis_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/airfoil1_metis_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/airfoil1_metis_bisection.pdf  used on input line 317.
+Package pdftex.def Info: ../01_graph/images/bisection/airfoil1_metis_bisection.pdf  used on input line 324.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/barth4_coordinate_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/barth4_coordinate_bisection.pdf, id=123, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/barth4_coordinate_bisection.pdf, id=129, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/barth4_coordinate_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/barth4_coordinate_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/barth4_coordinate_bisection.pdf  used on input line 328.
+Package pdftex.def Info: ../01_graph/images/bisection/barth4_coordinate_bisection.pdf  used on input line 335.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/barth4_inertial_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/barth4_inertial_bisection.pdf, id=124, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/barth4_inertial_bisection.pdf, id=130, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/barth4_inertial_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/barth4_inertial_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/barth4_inertial_bisection.pdf  used on input line 333.
+Package pdftex.def Info: ../01_graph/images/bisection/barth4_inertial_bisection.pdf  used on input line 340.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/barth4_spectral_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/barth4_spectral_bisection.pdf, id=125, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/barth4_spectral_bisection.pdf, id=131, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/barth4_spectral_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/barth4_spectral_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/barth4_spectral_bisection.pdf  used on input line 338.
+Package pdftex.def Info: ../01_graph/images/bisection/barth4_spectral_bisection.pdf  used on input line 345.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/barth4_metis_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/barth4_metis_bisection.pdf, id=126, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/barth4_metis_bisection.pdf, id=132, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/barth4_metis_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/barth4_metis_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/barth4_metis_bisection.pdf  used on input line 343.
+Package pdftex.def Info: ../01_graph/images/bisection/barth4_metis_bisection.pdf  used on input line 350.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1159,34 +1164,34 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/crack_coordinate_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/crack_coordinate_bisection.pdf, id=127, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/crack_coordinate_bisection.pdf, id=133, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/crack_coordinate_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/crack_coordinate_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/crack_coordinate_bisection.pdf  used on input line 354.
+Package pdftex.def Info: ../01_graph/images/bisection/crack_coordinate_bisection.pdf  used on input line 361.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/crack_inertial_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/crack_inertial_bisection.pdf, id=128, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/crack_inertial_bisection.pdf, id=134, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/crack_inertial_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/crack_inertial_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/crack_inertial_bisection.pdf  used on input line 359.
+Package pdftex.def Info: ../01_graph/images/bisection/crack_inertial_bisection.pdf  used on input line 366.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/crack_spectral_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/crack_spectral_bisection.pdf, id=129, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/crack_spectral_bisection.pdf, id=135, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/crack_spectral_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/crack_spectral_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/crack_spectral_bisection.pdf  used on input line 364.
+Package pdftex.def Info: ../01_graph/images/bisection/crack_spectral_bisection.pdf  used on input line 371.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/crack_metis_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/crack_metis_bisection.pdf, id=130, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/crack_metis_bisection.pdf, id=136, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/crack_metis_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/crack_metis_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/crack_metis_bisection.pdf  used on input line 369.
+Package pdftex.def Info: ../01_graph/images/bisection/crack_metis_bisection.pdf  used on input line 376.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1194,34 +1199,34 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/mesh1e1_coordinate_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/mesh1e1_coordinate_bisection.pdf, id=131, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/mesh1e1_coordinate_bisection.pdf, id=137, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/mesh1e1_coordinate_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/mesh1e1_coordinate_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/mesh1e1_coordinate_bisection.pdf  used on input line 380.
+Package pdftex.def Info: ../01_graph/images/bisection/mesh1e1_coordinate_bisection.pdf  used on input line 387.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/mesh1e1_inertial_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/mesh1e1_inertial_bisection.pdf, id=132, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/mesh1e1_inertial_bisection.pdf, id=138, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/mesh1e1_inertial_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/mesh1e1_inertial_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/mesh1e1_inertial_bisection.pdf  used on input line 385.
+Package pdftex.def Info: ../01_graph/images/bisection/mesh1e1_inertial_bisection.pdf  used on input line 392.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/mesh1e1_spectral_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/mesh1e1_spectral_bisection.pdf, id=133, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/mesh1e1_spectral_bisection.pdf, id=139, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/mesh1e1_spectral_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/mesh1e1_spectral_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/mesh1e1_spectral_bisection.pdf  used on input line 390.
+Package pdftex.def Info: ../01_graph/images/bisection/mesh1e1_spectral_bisection.pdf  used on input line 397.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/mesh1e1_metis_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/mesh1e1_metis_bisection.pdf, id=134, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/mesh1e1_metis_bisection.pdf, id=140, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/mesh1e1_metis_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/mesh1e1_metis_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/mesh1e1_metis_bisection.pdf  used on input line 395.
+Package pdftex.def Info: ../01_graph/images/bisection/mesh1e1_metis_bisection.pdf  used on input line 402.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1229,34 +1234,34 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/mesh2e1_coordinate_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/mesh2e1_coordinate_bisection.pdf, id=135, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/mesh2e1_coordinate_bisection.pdf, id=141, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/mesh2e1_coordinate_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/mesh2e1_coordinate_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/mesh2e1_coordinate_bisection.pdf  used on input line 406.
+Package pdftex.def Info: ../01_graph/images/bisection/mesh2e1_coordinate_bisection.pdf  used on input line 413.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/mesh2e1_inertial_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/mesh2e1_inertial_bisection.pdf, id=136, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/mesh2e1_inertial_bisection.pdf, id=142, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/mesh2e1_inertial_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/mesh2e1_inertial_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/mesh2e1_inertial_bisection.pdf  used on input line 411.
+Package pdftex.def Info: ../01_graph/images/bisection/mesh2e1_inertial_bisection.pdf  used on input line 418.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/mesh2e1_spectral_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/mesh2e1_spectral_bisection.pdf, id=137, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/mesh2e1_spectral_bisection.pdf, id=143, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/mesh2e1_spectral_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/mesh2e1_spectral_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/mesh2e1_spectral_bisection.pdf  used on input line 416.
+Package pdftex.def Info: ../01_graph/images/bisection/mesh2e1_spectral_bisection.pdf  used on input line 423.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/mesh2e1_metis_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/mesh2e1_metis_bisection.pdf, id=138, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/mesh2e1_metis_bisection.pdf, id=144, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/mesh2e1_metis_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/mesh2e1_metis_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/mesh2e1_metis_bisection.pdf  used on input line 421.
+Package pdftex.def Info: ../01_graph/images/bisection/mesh2e1_metis_bisection.pdf  used on input line 428.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1264,34 +1269,34 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/mesh3e1_coordinate_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/mesh3e1_coordinate_bisection.pdf, id=139, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/mesh3e1_coordinate_bisection.pdf, id=145, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/mesh3e1_coordinate_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/mesh3e1_coordinate_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/mesh3e1_coordinate_bisection.pdf  used on input line 432.
+Package pdftex.def Info: ../01_graph/images/bisection/mesh3e1_coordinate_bisection.pdf  used on input line 439.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/mesh3e1_inertial_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/mesh3e1_inertial_bisection.pdf, id=140, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/mesh3e1_inertial_bisection.pdf, id=146, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/mesh3e1_inertial_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/mesh3e1_inertial_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/mesh3e1_inertial_bisection.pdf  used on input line 437.
+Package pdftex.def Info: ../01_graph/images/bisection/mesh3e1_inertial_bisection.pdf  used on input line 444.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/mesh3e1_spectral_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/mesh3e1_spectral_bisection.pdf, id=141, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/mesh3e1_spectral_bisection.pdf, id=147, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/mesh3e1_spectral_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/mesh3e1_spectral_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/mesh3e1_spectral_bisection.pdf  used on input line 442.
+Package pdftex.def Info: ../01_graph/images/bisection/mesh3e1_spectral_bisection.pdf  used on input line 449.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/mesh3e1_metis_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/mesh3e1_metis_bisection.pdf, id=142, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/mesh3e1_metis_bisection.pdf, id=148, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/mesh3e1_metis_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/mesh3e1_metis_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/mesh3e1_metis_bisection.pdf  used on input line 447.
+Package pdftex.def Info: ../01_graph/images/bisection/mesh3e1_metis_bisection.pdf  used on input line 454.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1299,34 +1304,34 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/netz4504_dual_coordinate_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/netz4504_dual_coordinate_bisection.pdf, id=143, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/netz4504_dual_coordinate_bisection.pdf, id=149, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/netz4504_dual_coordinate_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/netz4504_dual_coordinate_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/netz4504_dual_coordinate_bisection.pdf  used on input line 458.
+Package pdftex.def Info: ../01_graph/images/bisection/netz4504_dual_coordinate_bisection.pdf  used on input line 465.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/netz4504_dual_inertial_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/netz4504_dual_inertial_bisection.pdf, id=144, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/netz4504_dual_inertial_bisection.pdf, id=150, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/netz4504_dual_inertial_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/netz4504_dual_inertial_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/netz4504_dual_inertial_bisection.pdf  used on input line 463.
+Package pdftex.def Info: ../01_graph/images/bisection/netz4504_dual_inertial_bisection.pdf  used on input line 470.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/netz4504_dual_spectral_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/netz4504_dual_spectral_bisection.pdf, id=145, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/netz4504_dual_spectral_bisection.pdf, id=151, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/netz4504_dual_spectral_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/netz4504_dual_spectral_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/netz4504_dual_spectral_bisection.pdf  used on input line 468.
+Package pdftex.def Info: ../01_graph/images/bisection/netz4504_dual_spectral_bisection.pdf  used on input line 475.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/netz4504_dual_metis_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/netz4504_dual_metis_bisection.pdf, id=146, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/netz4504_dual_metis_bisection.pdf, id=152, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/netz4504_dual_metis_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/netz4504_dual_metis_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/netz4504_dual_metis_bisection.pdf  used on input line 473.
+Package pdftex.def Info: ../01_graph/images/bisection/netz4504_dual_metis_bisection.pdf  used on input line 480.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1334,34 +1339,34 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/stufe_coordinate_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/stufe_coordinate_bisection.pdf, id=147, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/stufe_coordinate_bisection.pdf, id=153, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/stufe_coordinate_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/stufe_coordinate_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/stufe_coordinate_bisection.pdf  used on input line 484.
+Package pdftex.def Info: ../01_graph/images/bisection/stufe_coordinate_bisection.pdf  used on input line 491.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/stufe_inertial_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/stufe_inertial_bisection.pdf, id=148, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/stufe_inertial_bisection.pdf, id=154, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/stufe_inertial_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/stufe_inertial_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/stufe_inertial_bisection.pdf  used on input line 489.
+Package pdftex.def Info: ../01_graph/images/bisection/stufe_inertial_bisection.pdf  used on input line 496.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/stufe_spectral_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/stufe_spectral_bisection.pdf, id=149, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/stufe_spectral_bisection.pdf, id=155, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/stufe_spectral_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/stufe_spectral_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/stufe_spectral_bisection.pdf  used on input line 494.
+Package pdftex.def Info: ../01_graph/images/bisection/stufe_spectral_bisection.pdf  used on input line 501.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/stufe_metis_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/stufe_metis_bisection.pdf, id=150, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/stufe_metis_bisection.pdf, id=156, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/stufe_metis_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/stufe_metis_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/stufe_metis_bisection.pdf  used on input line 499.
+Package pdftex.def Info: ../01_graph/images/bisection/stufe_metis_bisection.pdf  used on input line 506.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1369,34 +1374,34 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/ukerbe1_coordinate_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/ukerbe1_coordinate_bisection.pdf, id=151, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/ukerbe1_coordinate_bisection.pdf, id=157, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/ukerbe1_coordinate_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/ukerbe1_coordinate_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/ukerbe1_coordinate_bisection.pdf  used on input line 510.
+Package pdftex.def Info: ../01_graph/images/bisection/ukerbe1_coordinate_bisection.pdf  used on input line 517.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/ukerbe1_inertial_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/ukerbe1_inertial_bisection.pdf, id=152, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/ukerbe1_inertial_bisection.pdf, id=158, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/ukerbe1_inertial_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/ukerbe1_inertial_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/ukerbe1_inertial_bisection.pdf  used on input line 515.
+Package pdftex.def Info: ../01_graph/images/bisection/ukerbe1_inertial_bisection.pdf  used on input line 522.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/ukerbe1_spectral_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/ukerbe1_spectral_bisection.pdf, id=153, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/ukerbe1_spectral_bisection.pdf, id=159, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/ukerbe1_spectral_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/ukerbe1_spectral_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/ukerbe1_spectral_bisection.pdf  used on input line 520.
+Package pdftex.def Info: ../01_graph/images/bisection/ukerbe1_spectral_bisection.pdf  used on input line 527.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/ukerbe1_metis_bisection.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/bisection/ukerbe1_metis_bisection.pdf, id=154, 602.25pt x 602.25pt>
+<../01_graph/images/bisection/ukerbe1_metis_bisection.pdf, id=160, 602.25pt x 602.25pt>
 File: ../01_graph/images/bisection/ukerbe1_metis_bisection.pdf Graphic file (type pdf)
 <use ../01_graph/images/bisection/ukerbe1_metis_bisection.pdf>
-Package pdftex.def Info: ../01_graph/images/bisection/ukerbe1_metis_bisection.pdf  used on input line 525.
+Package pdftex.def Info: ../01_graph/images/bisection/ukerbe1_metis_bisection.pdf  used on input line 532.
 (pdftex.def)             Requested size: 112.67548pt x 112.67348pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1424,7 +1429,7 @@ pdfTeX warning: pdflatex (file ../01_graph/images/bisection/airfoil1_spectral_bi
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/airfoil1_metis_bisection.pdf): PDF inclusion: multiple pdfs with page group included in a single page
 >]
 
-Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 535.
+Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 542.
 
 [6 <../01_graph/images/bisection/barth4_coordinate_bisection.pdf> <../01_graph/images/bisection/barth4_inertial_bisection.pdf
 
@@ -1517,719 +1522,770 @@ pdfTeX warning: pdflatex (file ../01_graph/images/bisection/ukerbe1_spectral_bis
 
 pdfTeX warning: pdflatex (file ../01_graph/images/bisection/ukerbe1_metis_bisection.pdf): PDF inclusion: multiple pdfs with page group included in a single page
 >]
-LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 580.
+LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 587.
  (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmtt.fd
 File: ts1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 ) [8]
-Underfull \hbox (badness 10000) in paragraph at lines 616--621
+Underfull \hbox (badness 10000) in paragraph at lines 625--630
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 622--629
+Underfull \hbox (badness 10000) in paragraph at lines 631--638
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 630--635
+Underfull \hbox (badness 10000) in paragraph at lines 639--645
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 636--642
+Underfull \hbox (badness 10000) in paragraph at lines 646--652
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 651--658
+Underfull \hbox (badness 10000) in paragraph at lines 653--658
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 662--669
 
  []
 
 [9]
+Underfull \hbox (badness 10000) in paragraph at lines 735--741
 
-LaTeX Warning: Reference `fig:ukerbe1_recursive_partitions' on page 10 undefined on input line 676.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 742--747
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 748--756
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 757--765
+
+ []
 
 [10]
+Underfull \hbox (badness 10000) in paragraph at lines 766--773
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 774--782
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 783--791
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 792--800
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 801--809
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 810--820
+
+ []
+
+[11]
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/3elt_coordinate_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/3elt_coordinate_recursive08.pdf, id=760, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/3elt_coordinate_recursive08.pdf, id=776, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/3elt_coordinate_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/3elt_coordinate_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/3elt_coordinate_recursive08.pdf  used on input line 813.
+Package pdftex.def Info: ../01_graph/images/recursive/3elt_coordinate_recursive08.pdf  used on input line 833.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/3elt_inertial_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/3elt_inertial_recursive08.pdf, id=761, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/3elt_inertial_recursive08.pdf, id=777, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/3elt_inertial_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/3elt_inertial_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/3elt_inertial_recursive08.pdf  used on input line 818.
+Package pdftex.def Info: ../01_graph/images/recursive/3elt_inertial_recursive08.pdf  used on input line 838.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/3elt_spectral_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/3elt_spectral_recursive08.pdf, id=762, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/3elt_spectral_recursive08.pdf, id=778, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/3elt_spectral_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/3elt_spectral_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/3elt_spectral_recursive08.pdf  used on input line 823.
+Package pdftex.def Info: ../01_graph/images/recursive/3elt_spectral_recursive08.pdf  used on input line 843.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/3elt_metis_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/3elt_metis_recursive08.pdf, id=763, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/3elt_metis_recursive08.pdf, id=779, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/3elt_metis_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/3elt_metis_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/3elt_metis_recursive08.pdf  used on input line 828.
+Package pdftex.def Info: ../01_graph/images/recursive/3elt_metis_recursive08.pdf  used on input line 848.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/3elt_metis_kway08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/3elt_metis_kway08.pdf, id=764, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/3elt_metis_kway08.pdf, id=780, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/3elt_metis_kway08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/3elt_metis_kway08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/3elt_metis_kway08.pdf  used on input line 833.
+Package pdftex.def Info: ../01_graph/images/recursive/3elt_metis_kway08.pdf  used on input line 853.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/3elt_coordinate_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/3elt_coordinate_recursive16.pdf, id=765, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/3elt_coordinate_recursive16.pdf, id=781, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/3elt_coordinate_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/3elt_coordinate_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/3elt_coordinate_recursive16.pdf  used on input line 841.
+Package pdftex.def Info: ../01_graph/images/recursive/3elt_coordinate_recursive16.pdf  used on input line 861.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
-Underfull \hbox (badness 1215) in paragraph at lines 842--842
+Underfull \hbox (badness 1215) in paragraph at lines 862--862
 [][][]|\OT1/cmr/m/n/9 Co-or-di-nate, $\OML/cmm/m/it/9 p \OT1/cmr/m/n/9 =
  []
 
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/3elt_inertial_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/3elt_inertial_recursive16.pdf, id=766, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/3elt_inertial_recursive16.pdf, id=782, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/3elt_inertial_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/3elt_inertial_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/3elt_inertial_recursive16.pdf  used on input line 846.
+Package pdftex.def Info: ../01_graph/images/recursive/3elt_inertial_recursive16.pdf  used on input line 866.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/3elt_spectral_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/3elt_spectral_recursive16.pdf, id=767, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/3elt_spectral_recursive16.pdf, id=783, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/3elt_spectral_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/3elt_spectral_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/3elt_spectral_recursive16.pdf  used on input line 851.
+Package pdftex.def Info: ../01_graph/images/recursive/3elt_spectral_recursive16.pdf  used on input line 871.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/3elt_metis_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/3elt_metis_recursive16.pdf, id=768, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/3elt_metis_recursive16.pdf, id=784, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/3elt_metis_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/3elt_metis_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/3elt_metis_recursive16.pdf  used on input line 856.
+Package pdftex.def Info: ../01_graph/images/recursive/3elt_metis_recursive16.pdf  used on input line 876.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/3elt_metis_kway16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/3elt_metis_kway16.pdf, id=769, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/3elt_metis_kway16.pdf, id=785, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/3elt_metis_kway16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/3elt_metis_kway16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/3elt_metis_kway16.pdf  used on input line 861.
+Package pdftex.def Info: ../01_graph/images/recursive/3elt_metis_kway16.pdf  used on input line 881.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/airfoil1_coordinate_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/airfoil1_coordinate_recursive08.pdf, id=770, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/airfoil1_coordinate_recursive08.pdf, id=786, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/airfoil1_coordinate_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/airfoil1_coordinate_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_coordinate_recursive08.pdf  used on input line 873.
+Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_coordinate_recursive08.pdf  used on input line 893.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/airfoil1_inertial_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/airfoil1_inertial_recursive08.pdf, id=771, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/airfoil1_inertial_recursive08.pdf, id=787, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/airfoil1_inertial_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/airfoil1_inertial_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_inertial_recursive08.pdf  used on input line 878.
+Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_inertial_recursive08.pdf  used on input line 898.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/airfoil1_spectral_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/airfoil1_spectral_recursive08.pdf, id=772, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/airfoil1_spectral_recursive08.pdf, id=788, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/airfoil1_spectral_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/airfoil1_spectral_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_spectral_recursive08.pdf  used on input line 883.
+Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_spectral_recursive08.pdf  used on input line 903.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/airfoil1_metis_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/airfoil1_metis_recursive08.pdf, id=773, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/airfoil1_metis_recursive08.pdf, id=789, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/airfoil1_metis_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/airfoil1_metis_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_metis_recursive08.pdf  used on input line 888.
+Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_metis_recursive08.pdf  used on input line 908.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/airfoil1_metis_kway08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/airfoil1_metis_kway08.pdf, id=774, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/airfoil1_metis_kway08.pdf, id=790, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/airfoil1_metis_kway08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/airfoil1_metis_kway08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_metis_kway08.pdf  used on input line 893.
+Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_metis_kway08.pdf  used on input line 913.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/airfoil1_coordinate_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/airfoil1_coordinate_recursive16.pdf, id=775, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/airfoil1_coordinate_recursive16.pdf, id=791, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/airfoil1_coordinate_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/airfoil1_coordinate_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_coordinate_recursive16.pdf  used on input line 901.
+Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_coordinate_recursive16.pdf  used on input line 921.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
-Underfull \hbox (badness 1215) in paragraph at lines 902--902
+Underfull \hbox (badness 1215) in paragraph at lines 922--922
 [][][]|\OT1/cmr/m/n/9 Co-or-di-nate, $\OML/cmm/m/it/9 p \OT1/cmr/m/n/9 =
  []
 
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/airfoil1_inertial_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/airfoil1_inertial_recursive16.pdf, id=776, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/airfoil1_inertial_recursive16.pdf, id=792, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/airfoil1_inertial_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/airfoil1_inertial_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_inertial_recursive16.pdf  used on input line 906.
+Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_inertial_recursive16.pdf  used on input line 926.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/airfoil1_spectral_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/airfoil1_spectral_recursive16.pdf, id=777, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/airfoil1_spectral_recursive16.pdf, id=793, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/airfoil1_spectral_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/airfoil1_spectral_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_spectral_recursive16.pdf  used on input line 911.
+Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_spectral_recursive16.pdf  used on input line 931.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/airfoil1_metis_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/airfoil1_metis_recursive16.pdf, id=778, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/airfoil1_metis_recursive16.pdf, id=794, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/airfoil1_metis_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/airfoil1_metis_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_metis_recursive16.pdf  used on input line 916.
+Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_metis_recursive16.pdf  used on input line 936.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/airfoil1_metis_kway16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/airfoil1_metis_kway16.pdf, id=779, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/airfoil1_metis_kway16.pdf, id=795, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/airfoil1_metis_kway16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/airfoil1_metis_kway16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_metis_kway16.pdf  used on input line 921.
+Package pdftex.def Info: ../01_graph/images/recursive/airfoil1_metis_kway16.pdf  used on input line 941.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/barth4_coordinate_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/barth4_coordinate_recursive08.pdf, id=780, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/barth4_coordinate_recursive08.pdf, id=796, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/barth4_coordinate_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/barth4_coordinate_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/barth4_coordinate_recursive08.pdf  used on input line 933.
+Package pdftex.def Info: ../01_graph/images/recursive/barth4_coordinate_recursive08.pdf  used on input line 953.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/barth4_inertial_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/barth4_inertial_recursive08.pdf, id=781, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/barth4_inertial_recursive08.pdf, id=797, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/barth4_inertial_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/barth4_inertial_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/barth4_inertial_recursive08.pdf  used on input line 938.
+Package pdftex.def Info: ../01_graph/images/recursive/barth4_inertial_recursive08.pdf  used on input line 958.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/barth4_spectral_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/barth4_spectral_recursive08.pdf, id=782, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/barth4_spectral_recursive08.pdf, id=798, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/barth4_spectral_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/barth4_spectral_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/barth4_spectral_recursive08.pdf  used on input line 943.
+Package pdftex.def Info: ../01_graph/images/recursive/barth4_spectral_recursive08.pdf  used on input line 963.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/barth4_metis_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/barth4_metis_recursive08.pdf, id=783, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/barth4_metis_recursive08.pdf, id=799, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/barth4_metis_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/barth4_metis_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/barth4_metis_recursive08.pdf  used on input line 948.
+Package pdftex.def Info: ../01_graph/images/recursive/barth4_metis_recursive08.pdf  used on input line 968.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/barth4_metis_kway08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/barth4_metis_kway08.pdf, id=784, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/barth4_metis_kway08.pdf, id=800, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/barth4_metis_kway08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/barth4_metis_kway08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/barth4_metis_kway08.pdf  used on input line 953.
+Package pdftex.def Info: ../01_graph/images/recursive/barth4_metis_kway08.pdf  used on input line 973.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/barth4_coordinate_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/barth4_coordinate_recursive16.pdf, id=785, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/barth4_coordinate_recursive16.pdf, id=801, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/barth4_coordinate_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/barth4_coordinate_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/barth4_coordinate_recursive16.pdf  used on input line 961.
+Package pdftex.def Info: ../01_graph/images/recursive/barth4_coordinate_recursive16.pdf  used on input line 981.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
-Underfull \hbox (badness 1215) in paragraph at lines 962--962
+Underfull \hbox (badness 1215) in paragraph at lines 982--982
 [][][]|\OT1/cmr/m/n/9 Co-or-di-nate, $\OML/cmm/m/it/9 p \OT1/cmr/m/n/9 =
  []
 
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/barth4_inertial_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/barth4_inertial_recursive16.pdf, id=786, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/barth4_inertial_recursive16.pdf, id=802, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/barth4_inertial_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/barth4_inertial_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/barth4_inertial_recursive16.pdf  used on input line 966.
+Package pdftex.def Info: ../01_graph/images/recursive/barth4_inertial_recursive16.pdf  used on input line 986.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/barth4_spectral_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/barth4_spectral_recursive16.pdf, id=787, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/barth4_spectral_recursive16.pdf, id=803, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/barth4_spectral_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/barth4_spectral_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/barth4_spectral_recursive16.pdf  used on input line 971.
+Package pdftex.def Info: ../01_graph/images/recursive/barth4_spectral_recursive16.pdf  used on input line 991.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/barth4_metis_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/barth4_metis_recursive16.pdf, id=788, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/barth4_metis_recursive16.pdf, id=804, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/barth4_metis_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/barth4_metis_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/barth4_metis_recursive16.pdf  used on input line 976.
+Package pdftex.def Info: ../01_graph/images/recursive/barth4_metis_recursive16.pdf  used on input line 996.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/barth4_metis_kway16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/barth4_metis_kway16.pdf, id=789, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/barth4_metis_kway16.pdf, id=805, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/barth4_metis_kway16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/barth4_metis_kway16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/barth4_metis_kway16.pdf  used on input line 981.
+Package pdftex.def Info: ../01_graph/images/recursive/barth4_metis_kway16.pdf  used on input line 1001.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/crack_coordinate_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/crack_coordinate_recursive08.pdf, id=790, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/crack_coordinate_recursive08.pdf, id=806, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/crack_coordinate_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/crack_coordinate_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/crack_coordinate_recursive08.pdf  used on input line 993.
+Package pdftex.def Info: ../01_graph/images/recursive/crack_coordinate_recursive08.pdf  used on input line 1013.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/crack_inertial_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/crack_inertial_recursive08.pdf, id=791, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/crack_inertial_recursive08.pdf, id=807, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/crack_inertial_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/crack_inertial_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/crack_inertial_recursive08.pdf  used on input line 998.
+Package pdftex.def Info: ../01_graph/images/recursive/crack_inertial_recursive08.pdf  used on input line 1018.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/crack_spectral_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/crack_spectral_recursive08.pdf, id=792, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/crack_spectral_recursive08.pdf, id=808, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/crack_spectral_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/crack_spectral_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/crack_spectral_recursive08.pdf  used on input line 1003.
+Package pdftex.def Info: ../01_graph/images/recursive/crack_spectral_recursive08.pdf  used on input line 1023.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/crack_metis_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/crack_metis_recursive08.pdf, id=793, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/crack_metis_recursive08.pdf, id=809, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/crack_metis_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/crack_metis_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/crack_metis_recursive08.pdf  used on input line 1008.
+Package pdftex.def Info: ../01_graph/images/recursive/crack_metis_recursive08.pdf  used on input line 1028.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/crack_metis_kway08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/crack_metis_kway08.pdf, id=794, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/crack_metis_kway08.pdf, id=810, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/crack_metis_kway08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/crack_metis_kway08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/crack_metis_kway08.pdf  used on input line 1013.
+Package pdftex.def Info: ../01_graph/images/recursive/crack_metis_kway08.pdf  used on input line 1033.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/crack_coordinate_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/crack_coordinate_recursive16.pdf, id=795, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/crack_coordinate_recursive16.pdf, id=811, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/crack_coordinate_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/crack_coordinate_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/crack_coordinate_recursive16.pdf  used on input line 1021.
+Package pdftex.def Info: ../01_graph/images/recursive/crack_coordinate_recursive16.pdf  used on input line 1041.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
-Underfull \hbox (badness 1215) in paragraph at lines 1022--1022
+Underfull \hbox (badness 1215) in paragraph at lines 1042--1042
 [][][]|\OT1/cmr/m/n/9 Co-or-di-nate, $\OML/cmm/m/it/9 p \OT1/cmr/m/n/9 =
  []
 
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/crack_inertial_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/crack_inertial_recursive16.pdf, id=796, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/crack_inertial_recursive16.pdf, id=812, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/crack_inertial_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/crack_inertial_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/crack_inertial_recursive16.pdf  used on input line 1026.
+Package pdftex.def Info: ../01_graph/images/recursive/crack_inertial_recursive16.pdf  used on input line 1046.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/crack_spectral_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/crack_spectral_recursive16.pdf, id=797, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/crack_spectral_recursive16.pdf, id=813, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/crack_spectral_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/crack_spectral_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/crack_spectral_recursive16.pdf  used on input line 1031.
+Package pdftex.def Info: ../01_graph/images/recursive/crack_spectral_recursive16.pdf  used on input line 1051.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/crack_metis_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/crack_metis_recursive16.pdf, id=798, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/crack_metis_recursive16.pdf, id=814, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/crack_metis_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/crack_metis_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/crack_metis_recursive16.pdf  used on input line 1036.
+Package pdftex.def Info: ../01_graph/images/recursive/crack_metis_recursive16.pdf  used on input line 1056.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/crack_metis_kway16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/crack_metis_kway16.pdf, id=799, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/crack_metis_kway16.pdf, id=815, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/crack_metis_kway16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/crack_metis_kway16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/crack_metis_kway16.pdf  used on input line 1041.
+Package pdftex.def Info: ../01_graph/images/recursive/crack_metis_kway16.pdf  used on input line 1061.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/mesh3e1_coordinate_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/mesh3e1_coordinate_recursive08.pdf, id=800, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/mesh3e1_coordinate_recursive08.pdf, id=816, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/mesh3e1_coordinate_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/mesh3e1_coordinate_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_coordinate_recursive08.pdf  used on input line 1053.
+Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_coordinate_recursive08.pdf  used on input line 1073.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/mesh3e1_inertial_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/mesh3e1_inertial_recursive08.pdf, id=801, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/mesh3e1_inertial_recursive08.pdf, id=817, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/mesh3e1_inertial_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/mesh3e1_inertial_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_inertial_recursive08.pdf  used on input line 1058.
+Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_inertial_recursive08.pdf  used on input line 1078.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/mesh3e1_spectral_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/mesh3e1_spectral_recursive08.pdf, id=802, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/mesh3e1_spectral_recursive08.pdf, id=818, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/mesh3e1_spectral_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/mesh3e1_spectral_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_spectral_recursive08.pdf  used on input line 1063.
+Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_spectral_recursive08.pdf  used on input line 1083.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/mesh3e1_metis_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/mesh3e1_metis_recursive08.pdf, id=803, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/mesh3e1_metis_recursive08.pdf, id=819, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/mesh3e1_metis_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/mesh3e1_metis_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_metis_recursive08.pdf  used on input line 1068.
+Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_metis_recursive08.pdf  used on input line 1088.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/mesh3e1_metis_kway08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/mesh3e1_metis_kway08.pdf, id=804, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/mesh3e1_metis_kway08.pdf, id=820, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/mesh3e1_metis_kway08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/mesh3e1_metis_kway08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_metis_kway08.pdf  used on input line 1073.
+Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_metis_kway08.pdf  used on input line 1093.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/mesh3e1_coordinate_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/mesh3e1_coordinate_recursive16.pdf, id=805, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/mesh3e1_coordinate_recursive16.pdf, id=821, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/mesh3e1_coordinate_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/mesh3e1_coordinate_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_coordinate_recursive16.pdf  used on input line 1081.
+Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_coordinate_recursive16.pdf  used on input line 1101.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
-Underfull \hbox (badness 1215) in paragraph at lines 1082--1082
+Underfull \hbox (badness 1215) in paragraph at lines 1102--1102
 [][][]|\OT1/cmr/m/n/9 Co-or-di-nate, $\OML/cmm/m/it/9 p \OT1/cmr/m/n/9 =
  []
 
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/mesh3e1_inertial_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/mesh3e1_inertial_recursive16.pdf, id=806, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/mesh3e1_inertial_recursive16.pdf, id=822, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/mesh3e1_inertial_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/mesh3e1_inertial_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_inertial_recursive16.pdf  used on input line 1086.
+Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_inertial_recursive16.pdf  used on input line 1106.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/mesh3e1_spectral_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/mesh3e1_spectral_recursive16.pdf, id=807, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/mesh3e1_spectral_recursive16.pdf, id=823, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/mesh3e1_spectral_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/mesh3e1_spectral_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_spectral_recursive16.pdf  used on input line 1091.
+Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_spectral_recursive16.pdf  used on input line 1111.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/mesh3e1_metis_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/mesh3e1_metis_recursive16.pdf, id=808, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/mesh3e1_metis_recursive16.pdf, id=824, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/mesh3e1_metis_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/mesh3e1_metis_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_metis_recursive16.pdf  used on input line 1096.
+Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_metis_recursive16.pdf  used on input line 1116.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/mesh3e1_metis_kway16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/mesh3e1_metis_kway16.pdf, id=809, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/mesh3e1_metis_kway16.pdf, id=825, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/mesh3e1_metis_kway16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/mesh3e1_metis_kway16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_metis_kway16.pdf  used on input line 1101.
+Package pdftex.def Info: ../01_graph/images/recursive/mesh3e1_metis_kway16.pdf  used on input line 1121.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/netz4504_dual_coordinate_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/netz4504_dual_coordinate_recursive08.pdf, id=810, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/netz4504_dual_coordinate_recursive08.pdf, id=826, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/netz4504_dual_coordinate_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/netz4504_dual_coordinate_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_coordinate_recursive08.pdf  used on input line 1113.
+Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_coordinate_recursive08.pdf  used on input line 1133.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/netz4504_dual_inertial_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/netz4504_dual_inertial_recursive08.pdf, id=811, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/netz4504_dual_inertial_recursive08.pdf, id=827, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/netz4504_dual_inertial_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/netz4504_dual_inertial_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_inertial_recursive08.pdf  used on input line 1118.
+Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_inertial_recursive08.pdf  used on input line 1138.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/netz4504_dual_spectral_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/netz4504_dual_spectral_recursive08.pdf, id=812, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/netz4504_dual_spectral_recursive08.pdf, id=828, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/netz4504_dual_spectral_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/netz4504_dual_spectral_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_spectral_recursive08.pdf  used on input line 1123.
+Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_spectral_recursive08.pdf  used on input line 1143.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/netz4504_dual_metis_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/netz4504_dual_metis_recursive08.pdf, id=813, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/netz4504_dual_metis_recursive08.pdf, id=829, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/netz4504_dual_metis_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/netz4504_dual_metis_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_metis_recursive08.pdf  used on input line 1128.
+Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_metis_recursive08.pdf  used on input line 1148.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/netz4504_dual_metis_kway08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/netz4504_dual_metis_kway08.pdf, id=814, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/netz4504_dual_metis_kway08.pdf, id=830, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/netz4504_dual_metis_kway08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/netz4504_dual_metis_kway08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_metis_kway08.pdf  used on input line 1133.
+Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_metis_kway08.pdf  used on input line 1153.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/netz4504_dual_coordinate_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/netz4504_dual_coordinate_recursive16.pdf, id=815, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/netz4504_dual_coordinate_recursive16.pdf, id=831, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/netz4504_dual_coordinate_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/netz4504_dual_coordinate_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_coordinate_recursive16.pdf  used on input line 1141.
+Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_coordinate_recursive16.pdf  used on input line 1161.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
-Underfull \hbox (badness 1215) in paragraph at lines 1142--1142
+Underfull \hbox (badness 1215) in paragraph at lines 1162--1162
 [][][]|\OT1/cmr/m/n/9 Co-or-di-nate, $\OML/cmm/m/it/9 p \OT1/cmr/m/n/9 =
  []
 
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/netz4504_dual_inertial_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/netz4504_dual_inertial_recursive16.pdf, id=816, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/netz4504_dual_inertial_recursive16.pdf, id=832, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/netz4504_dual_inertial_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/netz4504_dual_inertial_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_inertial_recursive16.pdf  used on input line 1146.
+Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_inertial_recursive16.pdf  used on input line 1166.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/netz4504_dual_spectral_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/netz4504_dual_spectral_recursive16.pdf, id=817, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/netz4504_dual_spectral_recursive16.pdf, id=833, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/netz4504_dual_spectral_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/netz4504_dual_spectral_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_spectral_recursive16.pdf  used on input line 1151.
+Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_spectral_recursive16.pdf  used on input line 1171.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/netz4504_dual_metis_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/netz4504_dual_metis_recursive16.pdf, id=818, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/netz4504_dual_metis_recursive16.pdf, id=834, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/netz4504_dual_metis_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/netz4504_dual_metis_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_metis_recursive16.pdf  used on input line 1156.
+Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_metis_recursive16.pdf  used on input line 1176.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/netz4504_dual_metis_kway16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/netz4504_dual_metis_kway16.pdf, id=819, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/netz4504_dual_metis_kway16.pdf, id=835, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/netz4504_dual_metis_kway16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/netz4504_dual_metis_kway16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_metis_kway16.pdf  used on input line 1161.
+Package pdftex.def Info: ../01_graph/images/recursive/netz4504_dual_metis_kway16.pdf  used on input line 1181.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/stufe_coordinate_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/stufe_coordinate_recursive08.pdf, id=820, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/stufe_coordinate_recursive08.pdf, id=836, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/stufe_coordinate_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/stufe_coordinate_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/stufe_coordinate_recursive08.pdf  used on input line 1173.
+Package pdftex.def Info: ../01_graph/images/recursive/stufe_coordinate_recursive08.pdf  used on input line 1193.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/stufe_inertial_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/stufe_inertial_recursive08.pdf, id=821, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/stufe_inertial_recursive08.pdf, id=837, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/stufe_inertial_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/stufe_inertial_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/stufe_inertial_recursive08.pdf  used on input line 1178.
+Package pdftex.def Info: ../01_graph/images/recursive/stufe_inertial_recursive08.pdf  used on input line 1198.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/stufe_spectral_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/stufe_spectral_recursive08.pdf, id=822, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/stufe_spectral_recursive08.pdf, id=838, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/stufe_spectral_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/stufe_spectral_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/stufe_spectral_recursive08.pdf  used on input line 1183.
+Package pdftex.def Info: ../01_graph/images/recursive/stufe_spectral_recursive08.pdf  used on input line 1203.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/stufe_metis_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/stufe_metis_recursive08.pdf, id=823, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/stufe_metis_recursive08.pdf, id=839, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/stufe_metis_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/stufe_metis_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/stufe_metis_recursive08.pdf  used on input line 1188.
+Package pdftex.def Info: ../01_graph/images/recursive/stufe_metis_recursive08.pdf  used on input line 1208.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/stufe_metis_kway08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/stufe_metis_kway08.pdf, id=824, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/stufe_metis_kway08.pdf, id=840, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/stufe_metis_kway08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/stufe_metis_kway08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/stufe_metis_kway08.pdf  used on input line 1193.
+Package pdftex.def Info: ../01_graph/images/recursive/stufe_metis_kway08.pdf  used on input line 1213.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/stufe_coordinate_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/stufe_coordinate_recursive16.pdf, id=825, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/stufe_coordinate_recursive16.pdf, id=841, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/stufe_coordinate_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/stufe_coordinate_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/stufe_coordinate_recursive16.pdf  used on input line 1201.
+Package pdftex.def Info: ../01_graph/images/recursive/stufe_coordinate_recursive16.pdf  used on input line 1221.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
-Underfull \hbox (badness 1215) in paragraph at lines 1202--1202
+Underfull \hbox (badness 1215) in paragraph at lines 1222--1222
 [][][]|\OT1/cmr/m/n/9 Co-or-di-nate, $\OML/cmm/m/it/9 p \OT1/cmr/m/n/9 =
  []
 
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/stufe_inertial_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/stufe_inertial_recursive16.pdf, id=826, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/stufe_inertial_recursive16.pdf, id=842, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/stufe_inertial_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/stufe_inertial_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/stufe_inertial_recursive16.pdf  used on input line 1206.
+Package pdftex.def Info: ../01_graph/images/recursive/stufe_inertial_recursive16.pdf  used on input line 1226.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/stufe_spectral_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/stufe_spectral_recursive16.pdf, id=827, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/stufe_spectral_recursive16.pdf, id=843, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/stufe_spectral_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/stufe_spectral_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/stufe_spectral_recursive16.pdf  used on input line 1211.
+Package pdftex.def Info: ../01_graph/images/recursive/stufe_spectral_recursive16.pdf  used on input line 1231.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/stufe_metis_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/stufe_metis_recursive16.pdf, id=828, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/stufe_metis_recursive16.pdf, id=844, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/stufe_metis_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/stufe_metis_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/stufe_metis_recursive16.pdf  used on input line 1216.
+Package pdftex.def Info: ../01_graph/images/recursive/stufe_metis_recursive16.pdf  used on input line 1236.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/stufe_metis_kway16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/stufe_metis_kway16.pdf, id=829, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/stufe_metis_kway16.pdf, id=845, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/stufe_metis_kway16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/stufe_metis_kway16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/stufe_metis_kway16.pdf  used on input line 1221.
+Package pdftex.def Info: ../01_graph/images/recursive/stufe_metis_kway16.pdf  used on input line 1241.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/ukerbe1_coordinate_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/ukerbe1_coordinate_recursive08.pdf, id=830, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/ukerbe1_coordinate_recursive08.pdf, id=846, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/ukerbe1_coordinate_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/ukerbe1_coordinate_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_coordinate_recursive08.pdf  used on input line 1233.
+Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_coordinate_recursive08.pdf  used on input line 1253.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/ukerbe1_inertial_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/ukerbe1_inertial_recursive08.pdf, id=831, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/ukerbe1_inertial_recursive08.pdf, id=847, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/ukerbe1_inertial_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/ukerbe1_inertial_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_inertial_recursive08.pdf  used on input line 1238.
+Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_inertial_recursive08.pdf  used on input line 1258.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/ukerbe1_spectral_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/ukerbe1_spectral_recursive08.pdf, id=832, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/ukerbe1_spectral_recursive08.pdf, id=848, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/ukerbe1_spectral_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/ukerbe1_spectral_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_spectral_recursive08.pdf  used on input line 1243.
+Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_spectral_recursive08.pdf  used on input line 1263.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/ukerbe1_metis_recursive08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/ukerbe1_metis_recursive08.pdf, id=833, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/ukerbe1_metis_recursive08.pdf, id=849, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/ukerbe1_metis_recursive08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/ukerbe1_metis_recursive08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_metis_recursive08.pdf  used on input line 1248.
+Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_metis_recursive08.pdf  used on input line 1268.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/ukerbe1_metis_kway08.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/ukerbe1_metis_kway08.pdf, id=834, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/ukerbe1_metis_kway08.pdf, id=850, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/ukerbe1_metis_kway08.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/ukerbe1_metis_kway08.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_metis_kway08.pdf  used on input line 1253.
+Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_metis_kway08.pdf  used on input line 1273.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/ukerbe1_coordinate_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/ukerbe1_coordinate_recursive16.pdf, id=835, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/ukerbe1_coordinate_recursive16.pdf, id=851, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/ukerbe1_coordinate_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/ukerbe1_coordinate_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_coordinate_recursive16.pdf  used on input line 1261.
+Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_coordinate_recursive16.pdf  used on input line 1281.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
-Underfull \hbox (badness 1215) in paragraph at lines 1262--1262
+Underfull \hbox (badness 1215) in paragraph at lines 1282--1282
 [][][]|\OT1/cmr/m/n/9 Co-or-di-nate, $\OML/cmm/m/it/9 p \OT1/cmr/m/n/9 =
  []
 
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/ukerbe1_inertial_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/ukerbe1_inertial_recursive16.pdf, id=836, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/ukerbe1_inertial_recursive16.pdf, id=852, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/ukerbe1_inertial_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/ukerbe1_inertial_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_inertial_recursive16.pdf  used on input line 1266.
+Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_inertial_recursive16.pdf  used on input line 1286.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/ukerbe1_spectral_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/ukerbe1_spectral_recursive16.pdf, id=837, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/ukerbe1_spectral_recursive16.pdf, id=853, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/ukerbe1_spectral_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/ukerbe1_spectral_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_spectral_recursive16.pdf  used on input line 1271.
+Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_spectral_recursive16.pdf  used on input line 1291.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/ukerbe1_metis_recursive16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/ukerbe1_metis_recursive16.pdf, id=838, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/ukerbe1_metis_recursive16.pdf, id=854, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/ukerbe1_metis_recursive16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/ukerbe1_metis_recursive16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_metis_recursive16.pdf  used on input line 1276.
+Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_metis_recursive16.pdf  used on input line 1296.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
 
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/ukerbe1_metis_kway16.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<../01_graph/images/recursive/ukerbe1_metis_kway16.pdf, id=839, 602.25pt x 602.25pt>
+<../01_graph/images/recursive/ukerbe1_metis_kway16.pdf, id=855, 602.25pt x 602.25pt>
 File: ../01_graph/images/recursive/ukerbe1_metis_kway16.pdf Graphic file (type pdf)
 <use ../01_graph/images/recursive/ukerbe1_metis_kway16.pdf>
-Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_metis_kway16.pdf  used on input line 1281.
+Package pdftex.def Info: ../01_graph/images/recursive/ukerbe1_metis_kway16.pdf  used on input line 1301.
 (pdftex.def)             Requested size: 89.20053pt x 89.19409pt.
-[11] [12 <../01_graph/images/recursive/3elt_coordinate_recursive08.pdf> <../01_graph/images/recursive/3elt_inertial_recursive08.pdf
+[12 <../01_graph/images/recursive/3elt_coordinate_recursive08.pdf> <../01_graph/images/recursive/3elt_inertial_recursive08.pdf
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/3elt_inertial_recursive08.pdf): PDF inclusion: multiple pdfs with page group included in a single page
 > <../01_graph/images/recursive/3elt_spectral_recursive08.pdf
@@ -2457,14 +2513,79 @@ pdfTeX warning: pdflatex (file ../01_graph/images/recursive/ukerbe1_metis_recurs
 > <../01_graph/images/recursive/ukerbe1_metis_kway16.pdf
 
 pdfTeX warning: pdflatex (file ../01_graph/images/recursive/ukerbe1_metis_kway16.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->] [16] (./project_06_polo_riccardo.aux)
+>] [16]
+
+Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 1497.
+
+[17]
+
+Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 1546.
+
+
+Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 1559.
+
+[18]
+
+Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 1593.
+
+[19]
+
+Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 1679.
+
+
+Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 1685.
+
+
+Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 1698.
+
+[20]
+<../02_petsc/02_poisson_petsc/application/solution_heatmap.pdf, id=1979, 433.11815pt x 370.69154pt>
+File: ../02_petsc/02_poisson_petsc/application/solution_heatmap.pdf Graphic file (type pdf)
+<use ../02_petsc/02_poisson_petsc/application/solution_heatmap.pdf>
+Package pdftex.def Info: ../02_petsc/02_poisson_petsc/application/solution_heatmap.pdf  used on input line 1741.
+(pdftex.def)             Requested size: 225.34381pt x 192.86252pt.
+<../02_petsc/02_poisson_petsc/application/solution_surface.pdf, id=1980, 476.88179pt x 383.98657pt>
+File: ../02_petsc/02_poisson_petsc/application/solution_surface.pdf Graphic file (type pdf)
+<use ../02_petsc/02_poisson_petsc/application/solution_surface.pdf>
+Package pdftex.def Info: ../02_petsc/02_poisson_petsc/application/solution_surface.pdf  used on input line 1748.
+(pdftex.def)             Requested size: 225.34381pt x 181.44632pt.
+ [21 <../02_petsc/02_poisson_petsc/application/solution_heatmap.pdf> <../02_petsc/02_poisson_petsc/application/solution_surface.pdf>]
+
+Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 1812.
+
+
+Package Listings Warning: Unknown column format `fullflexiblenumberstyle' on input line 1848.
+
+[22]
+<../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_time_to_solution.pdf, id=2116, 505.89pt x 346.89601pt>
+File: ../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_time_to_solution.pdf Graphic file (type pdf)
+<use ../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_time_to_solution.pdf>
+Package pdftex.def Info: ../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_time_to_solution.pdf  used on input line 1896.
+(pdftex.def)             Requested size: 352.10284pt x 241.44402pt.
+<../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_solve_time.pdf, id=2118, 505.89pt x 346.89601pt>
+File: ../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_solve_time.pdf Graphic file (type pdf)
+<use ../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_solve_time.pdf>
+Package pdftex.def Info: ../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_solve_time.pdf  used on input line 1921.
+(pdftex.def)             Requested size: 352.10284pt x 241.44402pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[23 <../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_time_to_solution.pdf>]
+<../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_efficiency.pdf, id=2180, 505.89pt x 346.89601pt>
+File: ../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_efficiency.pdf Graphic file (type pdf)
+<use ../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_efficiency.pdf>
+Package pdftex.def Info: ../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_efficiency.pdf  used on input line 1940.
+(pdftex.def)             Requested size: 352.10284pt x 241.44402pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[24 <../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_solve_time.pdf>] [25 <../02_petsc/02_poisson_petsc/strong_scaling/figures/strong_scaling_efficiency.pdf>] (./project_06_polo_riccardo.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
-
-
-LaTeX Warning: There were undefined references.
 
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
@@ -2476,18 +2597,18 @@ Package logreq Info: Writing requests to 'project_06_polo_riccardo.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 47516 strings out of 474222
- 1140159 string characters out of 5748733
- 2499061 words of memory out of 5000000
- 69005 multiletter control sequences out of 15000+600000
- 564639 words of font info for 60 fonts, out of 8000000 for 9000
+ 47799 strings out of 474222
+ 1146807 string characters out of 5748733
+ 2537804 words of memory out of 5000000
+ 69071 multiletter control sequences out of 15000+600000
+ 565258 words of font info for 62 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  110i,11n,107p,11026b,1988s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on project_06_polo_riccardo.pdf (16 pages, 8340329 bytes).
+Output written on project_06_polo_riccardo.pdf (25 pages, 8917900 bytes).
 PDF statistics:
- 1952 PDF objects out of 2073 (max. 8388607)
- 1369 compressed objects within 14 object streams
- 187 named destinations out of 1000 (max. 500000)
- 722 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2482 PDF objects out of 2487 (max. 8388607)
+ 1691 compressed objects within 17 object streams
+ 402 named destinations out of 1000 (max. 500000)
+ 747 words of extra memory for PDF output out of 10000 (max. 10000000)
 

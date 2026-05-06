@@ -1,6 +1,7 @@
 *.aux
-*.bcd
+*.bcf
 *.log
 *.xml
 *.gz
 *.synctex
+*.out

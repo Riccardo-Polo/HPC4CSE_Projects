@@ -1,0 +1,9 @@
+Run failed or no RESULT line: n=512 p=32 rep=2. See outputs/strong_n512_p32_rep2.log
+Run failed or no RESULT line: n=2048 p=1 rep=1. See outputs/strong_n2048_p1_rep1.log
+Run failed or no RESULT line: n=2048 p=1 rep=2. See outputs/strong_n2048_p1_rep2.log
+Run failed or no RESULT line: n=2048 p=1 rep=3. See outputs/strong_n2048_p1_rep3.log
+Run failed or no RESULT line: n=2048 p=2 rep=1. See outputs/strong_n2048_p2_rep1.log
+Run failed or no RESULT line: n=2048 p=2 rep=2. See outputs/strong_n2048_p2_rep2.log
+Run failed or no RESULT line: n=2048 p=2 rep=3. See outputs/strong_n2048_p2_rep3.log
+Run failed or no RESULT line: n=2048 p=32 rep=2. See outputs/strong_n2048_p32_rep2.log
+[2026-05-06T10:53:02.190+02:00] error: Detected 6 oom_kill events in StepId=65531933.batch. Some of the step tasks have been OOM Killed.

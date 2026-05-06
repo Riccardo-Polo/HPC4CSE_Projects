@@ -40,7 +40,7 @@ make all
 # Representative fixed problem sizes for strong scaling.
 # n=256 is intentionally small and shows the overhead limit; n=512 and n=1024
 # are more representative for multi-node scaling.
-RESOLUTIONS=(256 512 1024)
+RESOLUTIONS=(512 1024 2048)
 PROCS=(1 2 4 8 16 32)
 REPS=3
 

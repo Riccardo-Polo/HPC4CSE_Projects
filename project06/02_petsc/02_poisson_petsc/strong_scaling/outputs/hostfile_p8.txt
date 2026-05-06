@@ -1,0 +1,8 @@
+eu-a2p-341 slots=1
+eu-a2p-342 slots=1
+eu-a2p-343 slots=1
+eu-a2p-345 slots=1
+eu-a2p-347 slots=1
+eu-a2p-348 slots=1
+eu-a2p-349 slots=1
+eu-a2p-350 slots=1

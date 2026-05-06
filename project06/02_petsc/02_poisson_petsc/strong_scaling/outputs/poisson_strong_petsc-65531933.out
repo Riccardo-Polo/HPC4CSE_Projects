@@ -1,0 +1,94 @@
+Running on nodes: eu-a2p-[341-343,345,347-350,352-358,360-367,369-374,376-377,380]
+Working directory: /cluster/home/ripolo/hpc_projects/project06/02_petsc/02_poisson_petsc/strong_scaling
+Loaded modules:
+
+Currently Loaded Modules:
+  1) stack/2025-06   3) openmpi/5.0.5   5) gnuplot/6.0.0
+  2) gcc/12.2.0      4) petsc/3.22.1
+
+ 
+
+PETSc-related environment:
+PETSC_ROOT=/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/petsc-3.22.1-f6jbqk2kgnpcezu5t5w33lkkkhqn2w77
+PETSC_DIR=/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/petsc-3.22.1-f6jbqk2kgnpcezu5t5w33lkkkhqn2w77
+PETSC_ARCH=
+PKG_CONFIG_PATH=/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/petsc-3.22.1-f6jbqk2kgnpcezu5t5w33lkkkhqn2w77/lib/pkgconfig:/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/openmpi-5.0.5-sgwczqurudpaxrrb56wa4utphv6nqczv/lib/pkgconfig
+mpicc=/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/openmpi-5.0.5-sgwczqurudpaxrrb56wa4utphv6nqczv/bin/mpicc
+mpicxx=/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/openmpi-5.0.5-sgwczqurudpaxrrb56wa4utphv6nqczv/bin/mpicxx
+rm -f poisson2d_benchmark poisson2d_benchmark.o walltime.o
+PETSC_ROOT=/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/petsc-3.22.1-f6jbqk2kgnpcezu5t5w33lkkkhqn2w77
+PETSC_DIR=/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/petsc-3.22.1-f6jbqk2kgnpcezu5t5w33lkkkhqn2w77
+PETSC_ARCH=
+PKG_CONFIG_PATH=/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/petsc-3.22.1-f6jbqk2kgnpcezu5t5w33lkkkhqn2w77/lib/pkgconfig:/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/openmpi-5.0.5-sgwczqurudpaxrrb56wa4utphv6nqczv/lib/pkgconfig
+PETSC_PKG=PETSc
+PETSC_OK=yes
+CC=/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/openmpi-5.0.5-sgwczqurudpaxrrb56wa4utphv6nqczv/bin/mpicc
+CXX=/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/openmpi-5.0.5-sgwczqurudpaxrrb56wa4utphv6nqczv/bin/mpic++
+CPPFLAGS=
+CFLAGS=-O3 -Wall -fPIC -Wall -Wwrite-strings -Wno-unknown-pragmas -Wno-lto-type-mismatch -Wno-stringop-overflow -fstack-protector -fvisibility=hidden -Wall -Wwrite-strings -Wno-unknown-pragmas -Wno-lto-type-mismatch -Wno-stringop-overflow -fstack-protector -fvisibility=hidden -g -O -fopenmp -fopenmp
+CXXFLAGS=-O3 -Wall
+LDFLAGS=-L/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/petsc-3.22.1-f6jbqk2kgnpcezu5t5w33lkkkhqn2w77/lib -Wl,-rpath,/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/petsc-3.22.1-f6jbqk2kgnpcezu5t5w33lkkkhqn2w77/lib
+LDLIBS=-lpetsc -lm
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/openmpi-5.0.5-sgwczqurudpaxrrb56wa4utphv6nqczv/bin/mpicc  -O3 -Wall -fPIC -Wall -Wwrite-strings -Wno-unknown-pragmas -Wno-lto-type-mismatch -Wno-stringop-overflow -fstack-protector -fvisibility=hidden -Wall -Wwrite-strings -Wno-unknown-pragmas -Wno-lto-type-mismatch -Wno-stringop-overflow -fstack-protector -fvisibility=hidden -g -O  -fopenmp -fopenmp -c -o poisson2d_benchmark.o poisson2d_benchmark.c
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/openmpi-5.0.5-sgwczqurudpaxrrb56wa4utphv6nqczv/bin/mpic++  -O3 -Wall -c -o walltime.o walltime.cpp
+/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/openmpi-5.0.5-sgwczqurudpaxrrb56wa4utphv6nqczv/bin/mpic++ -L/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/petsc-3.22.1-f6jbqk2kgnpcezu5t5w33lkkkhqn2w77/lib  -Wl,-rpath,/cluster/software/stacks/2025-06/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/petsc-3.22.1-f6jbqk2kgnpcezu5t5w33lkkkhqn2w77/lib -o poisson2d_benchmark poisson2d_benchmark.o walltime.o -lpetsc -lm
+PETSC_OPTS=-ksp_type cg -pc_type gamg -ksp_rtol 1e-8 -ksp_converged_reason
+n=512 p=1 rep=1
+n=512 p=1 rep=2
+n=512 p=1 rep=3
+n=512 p=2 rep=1
+n=512 p=2 rep=2
+n=512 p=2 rep=3
+n=512 p=4 rep=1
+n=512 p=4 rep=2
+n=512 p=4 rep=3
+n=512 p=8 rep=1
+n=512 p=8 rep=2
+n=512 p=8 rep=3
+n=512 p=16 rep=1
+n=512 p=16 rep=2
+n=512 p=16 rep=3
+n=512 p=32 rep=1
+n=512 p=32 rep=2
+n=512 p=32 rep=3
+n=1024 p=1 rep=1
+n=1024 p=1 rep=2
+n=1024 p=1 rep=3
+n=1024 p=2 rep=1
+n=1024 p=2 rep=2
+n=1024 p=2 rep=3
+n=1024 p=4 rep=1
+n=1024 p=4 rep=2
+n=1024 p=4 rep=3
+n=1024 p=8 rep=1
+n=1024 p=8 rep=2
+n=1024 p=8 rep=3
+n=1024 p=16 rep=1
+n=1024 p=16 rep=2
+n=1024 p=16 rep=3
+n=1024 p=32 rep=1
+n=1024 p=32 rep=2
+n=1024 p=32 rep=3
+n=2048 p=1 rep=1
+n=2048 p=1 rep=2
+n=2048 p=1 rep=3
+n=2048 p=2 rep=1
+n=2048 p=2 rep=2
+n=2048 p=2 rep=3
+n=2048 p=4 rep=1
+n=2048 p=4 rep=2
+n=2048 p=4 rep=3
+n=2048 p=8 rep=1
+n=2048 p=8 rep=2
+n=2048 p=8 rep=3
+n=2048 p=16 rep=1
+n=2048 p=16 rep=2
+n=2048 p=16 rep=3
+n=2048 p=32 rep=1
+n=2048 p=32 rep=2
+n=2048 p=32 rep=3
+Wrote results/strong_scaling_summary.csv
+Wrote per-resolution data files in figures/
+Wrote figures/strong_scaling_time_to_solution.pdf
+Wrote figures/strong_scaling_solve_time.pdf
+Wrote figures/strong_scaling_efficiency.pdf

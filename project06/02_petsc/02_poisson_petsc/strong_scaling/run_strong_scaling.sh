@@ -70,43 +70,41 @@ for n in "${RESOLUTIONS[@]}"; do
     fi
 
     for rep in $(seq 1 "$REPS"); do
-      echo "n=$n p=$p rep=$rep"
-      LOG="outputs/strong_n${n}_p${p}_rep${rep}.log"
+    echo "n=$n p=$p rep=$rep"
 
-      set +e
-      if [[ -n "$HOSTLIST" ]]; then
-        srun --nodes="$p" --ntasks="$p" --ntasks-per-node=1 \
-          --cpus-per-task=1 --cpu-bind=cores --nodelist="$HOSTLIST" \
-          ./poisson2d_benchmark \
-          -da_grid_x "$n" -da_grid_y "$n" \
-          $PETSC_OPTS \
-          > "$LOG" 2>&1
-      else
-        srun --nodes="$p" --ntasks="$p" --ntasks-per-node=1 \
-          --cpus-per-task=1 --cpu-bind=cores \
-          ./poisson2d_benchmark \
-          -da_grid_x "$n" -da_grid_y "$n" \
-          $PETSC_OPTS \
-          > "$LOG" 2>&1
-      fi
-      status=$?
-      set -e
+    LOG="outputs/strong_n${n}_p${p}_rep${rep}.log"
 
-      line=$(grep '^RESULT,' "$LOG" | tail -n 1 || true)
+    HOSTFILE="outputs/hostfile_p${p}.txt"
+    scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n "$p" | awk '{print $1" slots=1"}' > "$HOSTFILE"
 
-      if (( status != 0 )) || [[ -z "${line:-}" ]]; then
-        echo "Run failed or no RESULT line: n=$n p=$p rep=$rep. See $LOG" >&2
-        continue
-      fi
+    set +e
+    mpirun \
+      --hostfile "$HOSTFILE" \
+      -np "$p" \
+      --map-by ppr:1:node \
+      --bind-to core \
+      ./poisson2d_benchmark \
+      -da_grid_x "$n" -da_grid_y "$n" \
+      $PETSC_OPTS \
+      > "$LOG" 2>&1
+    status=$?
+    set -e
 
-      IFS=',' read -r _ np mx my total setup solve its <<< "$line"
+    line=$(grep '^RESULT,' "$LOG" | tail -n 1 || true)
 
-      if [[ "$np" -ne "$p" ]]; then
-        echo "Wrong MPI size: requested p=$p but program reported np=$np. See $LOG" >&2
-        continue
-      fi
+    if (( status != 0 )) || [[ -z "${line:-}" ]]; then
+      echo "Run failed or no RESULT line: n=$n p=$p rep=$rep. See $LOG" >&2
+      continue
+    fi
 
-      echo "$n,$np,$rep,$total,$setup,$solve,$its" >> "$RAW"
+    IFS=',' read -r _ np mx my total setup solve its <<< "$line"
+
+    if [[ "$np" -ne "$p" ]]; then
+      echo "Wrong MPI size: requested p=$p but program reported np=$np. See $LOG" >&2
+      continue
+    fi
+
+    echo "$n,$np,$rep,$total,$setup,$solve,$its" >> "$RAW"
     done
   done
 done

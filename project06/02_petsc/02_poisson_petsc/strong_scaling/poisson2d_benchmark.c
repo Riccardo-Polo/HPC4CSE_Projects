@@ -22,6 +22,7 @@ static char help[] = "Solves 2D Poisson Equation using second-order centered fin
 #include <petscdmda.h>
 #include <petscksp.h>
 #include <mpi.h>
+#include "walltime.h"
 
 extern PetscErrorCode ComputeMatrix(KSP, Mat, Mat, void *);
 extern PetscErrorCode ComputeRHS(KSP, Vec, void *);
@@ -54,12 +55,21 @@ int main(int argc, char **argv)
   PetscCall(DMDASetUniformCoordinates(da, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0));
   PetscCall(DMDASetFieldName(da, 0, "Solution"));
 
-  PetscReal total_start, setup_start, setup_end, solve_start, solve_end;
+  double total_start, total_end;
+  double setup_start, setup_end;
+  double solve_start, solve_end;
+  double local_times[3], max_times[3];
   PetscBool write_solution = PETSC_FALSE;
   PetscMPIInt nprocs;
   PetscInt mx, my, its;
 
-  PetscCall(PetscTime(&total_start));
+  /*
+     Use the project walltime() routine rather than PETSc's timer. Since this
+     is an MPI code, the reported times are the maximum over all ranks, which is
+     the relevant wall-clock time-to-solution for strong-scaling measurements.
+  */
+  PetscCallMPI(MPI_Barrier(PETSC_COMM_WORLD));
+  total_start = walltime();
 
   PetscCall(KSPSetDM(ksp, da));
   PetscCall(KSPSetComputeRHS(ksp, ComputeRHS, NULL));
@@ -67,25 +77,34 @@ int main(int argc, char **argv)
 
   PetscCall(KSPSetFromOptions(ksp));
 
-  PetscCall(PetscTime(&setup_start));
+  PetscCallMPI(MPI_Barrier(PETSC_COMM_WORLD));
+  setup_start = walltime();
   PetscCall(KSPSetUp(ksp));
-  PetscCall(PetscTime(&setup_end));
+  PetscCallMPI(MPI_Barrier(PETSC_COMM_WORLD));
+  setup_end = walltime();
 
-  PetscCall(PetscTime(&solve_start));
+  PetscCallMPI(MPI_Barrier(PETSC_COMM_WORLD));
+  solve_start = walltime();
   PetscCall(KSPSolve(ksp, NULL, NULL));
-  PetscCall(PetscTime(&solve_end));
+  PetscCallMPI(MPI_Barrier(PETSC_COMM_WORLD));
+  solve_end = walltime();
+
+  total_end = solve_end;
+
+  local_times[0] = total_end - total_start;
+  local_times[1] = setup_end - setup_start;
+  local_times[2] = solve_end - solve_start;
+  PetscCallMPI(MPI_Reduce(local_times, max_times, 3, MPI_DOUBLE, MPI_MAX, 0, PETSC_COMM_WORLD));
 
   PetscCall(KSPGetIterationNumber(ksp, &its));
   PetscCall(KSPGetDM(ksp, &da));
   PetscCall(DMDAGetInfo(da, NULL, &mx, &my, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
-  MPI_Comm_size(PETSC_COMM_WORLD, &nprocs);
+  PetscCallMPI(MPI_Comm_size(PETSC_COMM_WORLD, &nprocs));
 
   PetscCall(PetscPrintf(PETSC_COMM_WORLD,
       "RESULT,%d,%" PetscInt_FMT ",%" PetscInt_FMT ",%.10e,%.10e,%.10e,%" PetscInt_FMT "\n",
       (int)nprocs, mx, my,
-      (double)(solve_end - total_start),
-      (double)(setup_end - setup_start),
-      (double)(solve_end - solve_start),
+      max_times[0], max_times[1], max_times[2],
       its));
 
   PetscCall(PetscOptionsGetBool(NULL, NULL, "-write_solution", &write_solution, NULL));

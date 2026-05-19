@@ -113,7 +113,11 @@ Thus we can caompute the theoretical peak performance of an NVIDIA GeForce RTX 2
   P_{\text{FP64}} &= n_{\text{SMs}} \cdot \frac{n_{\text{cores per SM}}}{TP_{\text{FP64}}} \cdot n_{FMA} \cdot f \\ &= 68 \cdot \frac{64}{2} \cdot 2 \text{FP64} \cdot 1.545 \text{GHz} = 13.46 \text{ TFLOPS}
 \end{align*}
 
-
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{../01_performance/GPU_true.pdf}
+  \caption{Simplified GPU architecture for an NVIDIA GeForce RTX 2080 Ti}
+\end{figure}
 \subsection{Memory hierarchies and bandwidth [5 Points]}
 From Listing \ref{lst:deviceQuery} we can get the following informations
 \begin{itemize}
@@ -121,6 +125,7 @@ From Listing \ref{lst:deviceQuery} we can get the following informations
   \item L2 Cache Size: $5.767$ MB
   \item L1 and Shared Memory per SM
 \end{itemize}
+
 
 \subsection{Performance model: A simple roofline model [5 Points]}
 

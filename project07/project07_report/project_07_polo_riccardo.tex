@@ -1,0 +1,138 @@
+\documentclass[unicode,10pt,a4paper,oneside,numbers=endperiod,openany]{scrartcl}
+\usepackage[backend=biber,style=numeric]{biblatex}
+\addbibresource{references.bib}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepgfplotslibrary{colorbrewer} % better colors
+\pgfplotsset{compat=1.18}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{graphicx}
+\lstdefinestyle{grayverbatim}{
+  basicstyle=\ttfamily,%
+  backgroundcolor=\color{gray!10},%
+  frame=single,%
+  framesep=3pt,%
+  breaklines=true,%
+  columns=fullflexible%
+  numberstyle = \tiny,%
+  stepnumber = 1,%
+  numbersep = 5pt,%
+  numbers = left%
+}
+\definecolor{lightbluehighlight}{RGB}{204,232,255}
+\input{assignment.sty}
+
+\begin{document}
+
+
+\setassignment
+\setduedate{\textbf{Friday} 29 May 2026, 18:00~(Europe/Zurich)}
+
+\serieheader{High-Performance Computing Lab for CSE}{2026}
+            {Student: Riccardo Polo}
+            {Discussed with: FULL NAME}
+            {Solution for Project 7}{}
+\newline
+
+\assignmentpolicy
+
+\section{GPU architecture and performance characteristics [15 Points]}
+
+\subsection{Peak performance [5 Points]}
+\begin{lstlisting}[style=grayverbatim,caption={Output of the \texttt{deviceQuery} CUDA sample.},language=bash,label={lst:deviceQuery}]
+ripolo@eu-login-23:~/cuda-samples/Samples/1_Utilities/deviceQuery/build$ srun --gpus=rtx_2080:1 ./deviceQuery
+srun: job 66431453 queued and waiting for resources
+srun: job 66431453 has been allocated resources
+/cluster/home/ripolo/cuda-samples/Samples/1_Utilities/deviceQuery/build/./deviceQuery Starting...
+
+ CUDA Device Query (Runtime API) version (CUDART static linking)
+
+Detected 1 CUDA Capable device(s)
+
+Device 0: "NVIDIA GeForce RTX 2080 Ti"
+  CUDA Driver Version / Runtime Version          13.0 / 13.0
+  CUDA Capability Major/Minor version number:    7.5
+  Total amount of global memory:                 10821 MBytes (11346575360 bytes)
+  (068) Multiprocessors, (064) CUDA Cores/MP:    4352 CUDA Cores
+  GPU Max Clock rate:                            1545 MHz (1.54 GHz)
+  Memory Clock rate:                             7000 Mhz
+  Memory Bus Width:                              352-bit
+  L2 Cache Size:                                 5767168 bytes
+  Maximum Texture Dimension Size (x,y,z)         1D=(131072), 2D=(131072, 65536), 3D=(16384, 16384, 16384)
+  Maximum Layered 1D Texture Size, (num) layers  1D=(32768), 2048 layers
+  Maximum Layered 2D Texture Size, (num) layers  2D=(32768, 32768), 2048 layers
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       49152 bytes
+  Total shared memory per multiprocessor:        65536 bytes
+  Total number of registers available per block: 65536
+  Warp size:                                     32
+  Maximum number of threads per multiprocessor:  1024
+  Maximum number of threads per block:           1024
+  Max dimension size of a thread block (x,y,z): (1024, 1024, 64)
+  Max dimension size of a grid size    (x,y,z): (2147483647, 65535, 65535)
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             512 bytes
+  Concurrent copy and kernel execution:          Yes with 3 copy engine(s)
+  Run time limit on kernels:                     No
+  Integrated GPU sharing Host Memory:            No
+  Support host page-locked memory mapping:       Yes
+  Alignment requirement for Surfaces:            Yes
+  Device has ECC support:                        Disabled
+  Device supports Unified Addressing (UVA):      Yes
+  Device supports Managed Memory:                Yes
+  Device supports Compute Preemption:            Yes
+  Supports Cooperative Kernel Launch:            Yes
+  Device PCI Domain ID / Bus ID / location ID:   0 / 34 / 0
+  Compute Mode:
+     < Default (multiple host threads can use ::cudaSetDevice() with device simultaneously) >
+
+deviceQuery, CUDA Driver = CUDART, CUDA Driver Version = 13.0, CUDA Runtime Version = 13.0, NumDevs = 1
+Result = PASS 
+\end{lstlisting}
+
+From listing \ref{lst:deviceQuery} we can derive that:
+\begin{itemize}
+  \item The number of Streaming Multiprocessors (SMs) is $n_{\text{SMs}} = 68$
+  \item The number of CUDA cores per SM is $n_{\text{cores per SM}} = 64$ 
+  \item The GPU maximumclock frequency is $f = 1.545$ GHz
+\end{itemize}
+
+From listing \ref{lst:deviceQuery} we can also see that the CUDA Compute Capability is $7.5$ and from reffff we get that
+\begin{itemize}
+  \item For single precision (FP32) FMAs $TP_{\text{FP32}}=\frac{64}{64}=1$
+  \item For double precision (FP64) FMAs $TP_{\text{FP64}}=\frac{64}{32}=2$
+\end{itemize}
+Thus we can caompute the theoretical peak performance of an NVIDIA GeForce RTX 2080 Ti for single and double precision as:
+\begin{align*}
+  P_{\text{FP32}} &= n_{\text{SMs}} \cdot \frac{n_{\text{cores per SM}}}{TP_{\text{FP32}}} \cdot n_{FMA} \cdot f\\ &= 68 \cdot \frac{64}{1} \cdot 2 \text{FP32} \cdot 1.545 \text{GHz} = 6.73 \text{ TFLOPS} \\
+  P_{\text{FP64}} &= n_{\text{SMs}} \cdot \frac{n_{\text{cores per SM}}}{TP_{\text{FP64}}} \cdot n_{FMA} \cdot f \\ &= 68 \cdot \frac{64}{2} \cdot 2 \text{FP64} \cdot 1.545 \text{GHz} = 13.46 \text{ TFLOPS}
+\end{align*}
+
+
+\subsection{Memory hierarchies and bandwidth [5 Points]}
+From Listing \ref{lst:deviceQuery} we can get the following informations
+\begin{itemize}
+  \item Global Memory : $10,821$ GB
+  \item L2 Cache Size: $5.767$ MB
+  \item L1 and Shared Memory per SM
+\end{itemize}
+
+\subsection{Performance model: A simple roofline model [5 Points]}
+
+
+\section{Introduction to CUDA [50 Points]}
+
+\subsection{Implement the simple kernels [30 Points]}
+
+\subsection{Implement the scalar product kernel [20 Points]}
+
+
+\section{Non-linear PDE mini-app with CUDA: The Fisher equation [35 Points]}
+
+
+\end{document}

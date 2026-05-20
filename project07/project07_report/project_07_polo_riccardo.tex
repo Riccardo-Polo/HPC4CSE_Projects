@@ -133,6 +133,60 @@ From Listing \ref{lst:deviceQuery} we can get the following informations
 \section{Introduction to CUDA [50 Points]}
 
 \subsection{Implement the simple kernels [30 Points]}
+For the double format we have following output:
+\begin{lstlisting}[style=grayverbatim,caption={Output of the simple kernels for the double format.},language=bash,label={lst:simple_kernels_double}]
+ripolo@eu-login-11:~/hpc_projects/project07/02cuda/simple_kernels$ srun --gpus=rtx_2080:1 ./benchmark
+srun: job 171788 queued and waiting for resources
+srun: job 171788 has been allocated resources
+[benchmark] axpy: warmup=5 runs=25 avg_time=0.363086 ms
+Compute utilization = 46.2073 GFLOPS/s
+Memory utilization = 554.487 GB/s
+first = 4, last = 4, expected = 4
+[benchmark] add scaled diff: warmup=5 runs=25 avg_time=0.477494 ms
+Compute utilization = 52.704 GFLOPS/s
+Memory utilization = 562.176 GB/s
+first = 1.6, last = 1.6, expected = 1.6
+[benchmark] scaled diff: warmup=5 runs=25 avg_time=0.363736 ms
+Compute utilization = 46.1247 GFLOPS/s
+Memory utilization = 553.496 GB/s
+first = 0.6, last = 0.6, expected = 0.6
+[benchmark] scale: warmup=5 runs=25 avg_time=0.247412 ms
+Compute utilization = 33.9054 GFLOPS/s
+Memory utilization = 542.486 GB/s
+first = 0.1, last = 0.1, expected = 0.1
+[benchmark] linear combination: warmup=5 runs=25 avg_time=0.363924 ms
+Compute utilization = 69.1512 GFLOPS/s
+Memory utilization = 553.21 GB/s
+first = 1.5, last = 1.5, expected = 1.5
+ripolo@eu-login-11:~/hpc_projects/project07/02cuda/simple_kernels$
+\end{lstlisting}
+
+For float format we have the following output:
+\begin{lstlisting}[style=grayverbatim,caption={Output of the simple kernels for the float format.},language=bash,label={lst:simple_kernels_float}]
+ripolo@eu-login-11:~/hpc_projects/project07/02cuda/simple_kernels$ srun --gpus=rtx_2080:1 ./benchmark
+srun: job 172188 queued and waiting for resources
+srun: job 172188 has been allocated resources
+[benchmark] axpy: warmup=5 runs=25 avg_time=0.182811 ms
+Compute utilization = 91.7736 GFLOPS/s
+Memory utilization = 550.642 GB/s
+first = 4, last = 4, expected = 4
+[benchmark] add scaled diff: warmup=5 runs=25 avg_time=0.239703 ms
+Compute utilization = 104.988 GFLOPS/s
+Memory utilization = 559.933 GB/s
+first = 1.6, last = 1.6, expected = 1.6
+[benchmark] scaled diff: warmup=5 runs=25 avg_time=0.182762 ms
+Compute utilization = 91.798 GFLOPS/s
+Memory utilization = 550.788 GB/s
+first = 0.6, last = 0.6, expected = 0.6
+[benchmark] scale: warmup=5 runs=25 avg_time=0.125165 ms
+Compute utilization = 67.0205 GFLOPS/s
+Memory utilization = 536.164 GB/s
+first = 0.1, last = 0.1, expected = 0.1
+[benchmark] linear combination: warmup=5 runs=25 avg_time=0.182696 ms
+Compute utilization = 137.747 GFLOPS/s
+Memory utilization = 550.989 GB/s
+first = 1.5, last = 1.5, expected = 1.5
+\end{lstlisting}
 
 \subsection{Implement the scalar product kernel [20 Points]}
 

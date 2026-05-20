@@ -26,98 +26,92 @@ __global__ void diffusion(real_t* const s_old,
                real_t* const bndS,
                int nx) {
     // TODO: study matrix add example in mat_add/mat_add.cu
-    using data::options;
-
-    using data::bndE;
-    using data::bndW;
-    using data::bndN;
-    using data::bndS;
-
     int iend = nx-1;
     int jend = nx-1;
 
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
+    int idx = i + j * nx;
 
     if (i > 0 && i < iend && j > 0 && j < jend) {
         // interior points
-        f(i,j) = -(4+alpha)*s_new(i,j)
-                        + s_new(i-1,j) + s_new(i+1,j)
-                        + s_new(i,j-1) + s_new(i,j+1)
-                        + beta*s_new(i,j)*(1-s_new(i,j))
-                        + alpha*s_old(i,j);
+        f[idx] = -(4+alpha)*s_new[idx]
+                        + s_new[idx-1] + s_new[idx+1]
+                        + s_new[idx-nx] + s_new[idx+nx]
+                        + beta*s_new[idx]*(1-s_new[idx])
+                        + alpha*s_old[idx];
     }
 
     else if (i==iend && j > 0 && j < jend) {
         // east interior boundary
-        f(i,j) = -(4+alpha)*s_new(i,j)
-                        + s_new(i-1,j) + bndE[j]
-                        + s_new(i,j-1) + s_new(i,j+1)
-                        + beta*s_new(i,j)*(1-s_new(i,j))
-                        + alpha*s_old(i,j);
+        f[idx] = -(4+alpha)*s_new[idx]
+                        + s_new[idx-1] + bndE[j]
+                        + s_new[idx-nx] + s_new[idx+nx]
+                        + beta*s_new[idx]*(1-s_new[idx])
+                        + alpha*s_old[idx];
     }
     
     else if (i==1 && j > 0 && j < jend) {
         // west interior boundary
-        f(i,j) = -(4+alpha)*s_new(i,j)
-                    + bndW[j] + s_new(i+1,j)
-                    + s_new(i,j-1) + s_new(i,j+1)
-                    + beta*s_new(i,j)*(1-s_new(i,j))
-                    + alpha*s_old(i,j);
+        f[idx] = -(4+alpha)*s_new[idx]
+                    + bndW[j] + s_new[idx+1]
+                    + s_new[idx-nx] + s_new[idx+nx]
+                    + beta*s_new[idx]*(1-s_new[idx])
+                    + alpha*s_old[idx];
     }
 
     else if(j==jend && i > 0 && i < iend) {
         // north interior boundary
-        f(i,j) = -(4+alpha)*s_new(i,j)
-                        + s_new(i-1,j) + s_new(i+1,j)
-                        + s_new(i,j-1) + bndN[i]
-                        + beta*s_new(i,j)*(1-s_new(i,j))
-                        + alpha*s_old(i,j);
+        f[idx] = -(4+alpha)*s_new[idx]
+                        + s_new[idx-1] + s_new[idx+1]
+                        + s_new[idx-nx] + bndN[i]
+                        + beta*s_new[idx]*(1-s_new[idx])
+                        + alpha*s_old[idx];
     }
 
     else if(j==1 && i > 0 && i < iend) {
         // south interior boundary
-        f(i,j) = -(4+alpha)*s_new(i,j)
-                    + s_new(i-1,j) + s_new(i+1,j)
-                    + bndS[i] + s_new(i,j+1)
-                    + beta*s_new(i,j)*(1-s_new(i,j))
-                    + alpha*s_old(i,j);
+        f[idx] = -(4+alpha)*s_new[idx]
+                    + s_new[idx-1] + s_new[idx+1]
+                    + bndS[i] + s_new[idx+nx]
+                    + beta*s_new[idx]*(1-s_new[idx])
+                    + alpha*s_old[idx];
     }
 
     else if (i==iend && j==jend) {
         // NE corner
-        f(i,j) = -(4+alpha)*s_new(i,j)
-                    + s_new(i-1,j) + bndE[j]
-                    + s_new(i,j-1) + bndN[i]
-                    + beta*s_new(i,j)*(1-s_new(i,j))
-                    + alpha*s_old(i,j);
+        f[idx] = -(4+alpha)*s_new[idx]
+                    + s_new[idx-1] + bndE[j]
+                    + s_new[idx-nx] + bndN[i]
+                    + beta*s_new[idx]*(1-s_new[idx])
+                    + alpha*s_old[idx];
     }
     
     else if (i==1 && j==jend) {
         // NW corner
-        f(i,j) = -(4+alpha)*s_new(i,j)
-                + 0.1 + s_new(i+1,j)
-                + s_new(i,j-1) + bndN[i]
-                + beta*s_new(i,j)*(1-s_new(i,j))
-                + alpha*s_old(i,j);
+        f[idx] = -(4+alpha)*s_new[idx]
+                + 0.1 + s_new[idx+1]
+                + s_new[idx-nx] + bndN[i]
+                + beta*s_new[idx]*(1-s_new[idx])
+                + alpha*s_old[idx];
     }
 
     else if(i == iend && j == 1) {
         // SE corner
-        f(i,j) = -(4+alpha)*s_new(i,j)
-                + s_new(i-1,j) + bndE[j]
-                + 0.1 + s_new(i,j+1)
-                + beta*s_new(i,j)*(1-s_new(i,j))
-                + alpha*s_old(i,j);
+        f[idx] = -(4+alpha)*s_new[idx]
+                + s_new[idx-1] + bndE[j]
+                + 0.1 + s_new[idx+nx]
+                + beta*s_new[idx]*(1-s_new[idx])
+                + alpha*s_old[idx];
     }
 
     else if(i == 1 && j == 1) {
     // SW corner
-    f(i,j) = -(4+alpha)*s_new(i,j)
-        + bndW[j] + s_new(i+1,j)
-        + bndS[i] + s_new(i,j+1)
-        + beta*s_new(i,j)*(1-s_new(i,j))
-        + alpha*s_old(i,j);
+    f[idx] = -(4+alpha)*s_new[idx]
+        + bndW[j] + s_new[idx+1]
+        + bndS[i] + s_new[idx+nx]
+        + beta*s_new[idx]*(1-s_new[idx])
+        + alpha*s_old[idx];
     }
 }
 

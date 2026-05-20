@@ -28,7 +28,11 @@ __global__ void diffusion(real_t* const s_old,
     // TODO: study matrix add example in mat_add/mat_add.cu
     using data::options;
 
-    int nx = options.nx;
+    using data::bndE;
+    using data::bndW;
+    using data::bndN;
+    using data::bndS;
+
     int iend = nx-1;
     int jend = nx-1;
 

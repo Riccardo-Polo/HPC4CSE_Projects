@@ -57,8 +57,8 @@ void benchmark_kernel(const std::string&            name,
 // fill constant value in a vector x
 __global__ void hpc_fill(real_t* x, const real_t value, const size_t N) {
     int thread = blockIdx.x * blockDim.x + threadIdx.x;
-
-    if(thread < N){
+    int stride = blockDim.x * gridDim.x;
+    for (; thread < N; thread += stride) {
         x[thread] = value;
     }
 }
@@ -72,11 +72,12 @@ __global__ void hpc_fill(real_t* x, const real_t value, const size_t N) {
 __global__ void hpc_dot(real_t* const x, real_t* const y, real_t* result,
                         size_t const N) {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if ( i < N )
-    {
+    int stride = blockDim.x * gridDim.x;
+    for (; i < N; i += stride) {
         atomicAdd(result, x[i] * y[i]);
     }
 }
+
 
 int main(int argc, char* argv[]) {
 

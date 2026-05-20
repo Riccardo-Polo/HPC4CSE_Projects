@@ -15,13 +15,13 @@ set -e
 module load stack gcc cuda
 module list
 
-# print CPU model
-lscpu | grep "Model name"
+# print GPU model
+lsgpu | grep "Model name"
 
 # run (srun: run job on cluster with provided resources/allocation)
 srun hostname
 
-lscpu
+lsgpu
 free -h --si
 hwloc-ls --whole-system --no-io --of console
 hwloc-ls --whole-system --no-io --of pdf GPU_true.pdf

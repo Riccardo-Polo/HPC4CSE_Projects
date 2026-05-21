@@ -21,6 +21,11 @@ KERNEL_POINTS_1 = [
     ("dot32", 2.0 / (4.0 * 4.0), 1.22839),
 ]
 
+KERNEL_POINTS_2 = [
+    ("dot64_2", 2.0 / (4.0 * 8.0), 71.948),
+    ("dot32_2", 2.0 / (4.0 * 4.0), 140.226),
+]
+
 
 
 
@@ -92,6 +97,27 @@ def main():
 
     point_colors = ["tab:green", "tab:olive", "tab:cyan", "tab:orange", "tab:purple"]
     for (name, intensity_value, performance_value), color in zip(KERNEL_POINTS_1, point_colors):
+        ax.scatter(
+            [intensity_value],
+            [performance_value],
+            color=color,
+            s=70,
+            zorder=10,
+        )
+        ax.annotate(
+            name,
+            xy=(intensity_value, performance_value),
+            xytext=(8, 0),
+            textcoords="offset points",
+            ha="left",
+            va="center",
+            color=color,
+            fontsize=9,
+            arrowprops=dict(arrowstyle="->", color=color, lw=0.9),
+        )
+
+    point_colors = ["tab:green", "tab:olive", "tab:cyan", "tab:orange", "tab:purple"]
+    for (name, intensity_value, performance_value), color in zip(KERNEL_POINTS_2, point_colors):
         ax.scatter(
             [intensity_value],
             [performance_value],

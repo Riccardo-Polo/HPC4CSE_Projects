@@ -142,9 +142,6 @@ From \ref{lst:simple_kernels_double} we can retrieve the points in table \ref{ta
 
 
 \begin{lstlisting}[style=grayverbatim,caption={Output of the simple kernels for the double format.},language=bash,label={lst:simple_kernels_double}]
-ripolo@eu-login-11:~/hpc_projects/project07/02cuda/simple_kernels$ srun --gpus=rtx_2080:1 ./benchmark
-srun: job 171788 queued and waiting for resources
-srun: job 171788 has been allocated resources
 [benchmark] axpy: warmup=5 runs=25 avg_time=0.363086 ms
 Compute utilization = 46.2073 GFLOPS/s
 Memory utilization = 554.487 GB/s
@@ -202,9 +199,6 @@ linear combination & 137.747 & $3/(3\cdot 4)$ \\
 \end{table}
 
 \begin{lstlisting}[style=grayverbatim,caption={Output of the simple kernels for the float format.},language=bash,label={lst:simple_kernels_float}]
-ripolo@eu-login-11:~/hpc_projects/project07/02cuda/simple_kernels$ srun --gpus=rtx_2080:1 ./benchmark
-srun: job 172188 queued and waiting for resources
-srun: job 172188 has been allocated resources
 [benchmark] axpy: warmup=5 runs=25 avg_time=0.182811 ms
 Compute utilization = 91.7736 GFLOPS/s
 Memory utilization = 550.642 GB/s
@@ -227,51 +221,209 @@ Memory utilization = 550.989 GB/s
 first = 1.5, last = 1.5, expected = 1.5
 \end{lstlisting}
 
-In figure \ref{fig:roofline} we can see the roofline plot for the simple kernels in single and double precision. We can see that all the kernels are memory bound, since their operational intensity is lower than the ridge point of the roofline plot. However, we can see that the compute utilization of the kernels in single precision is higher than the compute utilization of the kernels in double precision, this is because the peak performance of the GPU for single precision is higher than the peak performance for double precision.
+In figure \ref{fig:roofline_simple_kernels_double_float} we can see the roofline plot for the simple kernels in single and double precision. We can see that all the kernels are memory bound, since their operational intensity is lower than the ridge point of the roofline plot. However, we can see that the compute utilization of the kernels in single precision is higher than the compute utilization of the kernels in double precision, this is because the peak performance of the GPU for single precision is higher than the peak performance for double precision.
 
 \begin{figure}
   \centering
   \includegraphics[width=0.8\textwidth]{../02cuda/01_simple_kernels/roofline_fp32_fp64.pdf}
   \caption{Roofline plot for the simple kernels in single and double precision. The points corresponding to the kernels are highlighted in red.}
-  \label{fig:roofline_simple_kernels}
+  \label{fig:roofline_simple_kernels_double_float}
 \end{figure}
+
+
 \subsection{Implement the scalar product kernel [20 Points]}
+The CUDA implementation of the scalar product kernel is based on the use of \texttt{atomicAdd} to perform the reduction of the partial sums computed by each thread. Each thread computes a partial sum of the scalar product for a subset of the input vectors and then uses \texttt{atomicAdd} to add its partial sum to a global variable that holds the final result.\\
+The implementation of the kernel is reported in listing \ref{lst:scalar_product_kernel}.
+\begin{lstlisting}[style=grayverbatim,caption={CUDA kernel for the scalar product.},language=C++,label={lst:scalar_product_kernel}]
+int i = blockIdx.x * blockDim.x + threadIdx.x;
+int stride = blockDim.x * gridDim.x;
+for (; i < N; i += stride) {
+    atomicAdd(result, x[i] * y[i]);
+}
+\end{lstlisting}
+In this case we had to introduce a variable \texttt{stride} to allow each thread to compute the scalar product for a subset of the input vectors, since the number of threads launched by the kernel is not necessarily equal to the size of the input vectors. This is because the program is launched with a fixed number of threads per block and a fixed number of blocks (respectively $256$ and $7*68$), thus we need to allow each thread to compute the scalar product for multiple elements of the input vectors.\\
+
+In listing \ref{lst:scalar_product_double} we can see the output of the benchmark for the scalar product kernel in double precision. In table \ref{tab: scalar_product_double} we can see the compute and memory utilization for the scalar product kernel in double precision and in table \ref{tab: scalar_product_float} we can see the compute and memory utilization for the scalar product kernel in single precision.\\
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Precision  & Compute Utilization (GFLOPS/s) & Memory Utilization (GB/s) \\
+\hline
+Double & 1.22579 & 2/(4*8) \\
+Float & 1.22839 & 2/(4*4) \\
+\hline
+\end{tabular}
+\end{table}
+
 \begin{lstlisting}[style=grayverbatim,caption={Output of the scalar product kernel for the double format.},language=bash,label={lst:scalar_product_double}]
-ripolo@eu-login-20:~/hpc_projects/project07/02cuda/02_dot_product$ srun --gpus=rtx_2080:1 ./dot_prod
-srun: job 191159 queued and waiting for resources
-srun: job 191159 has been allocated resources
 [benchmark] hpc_dot: warmup=5 runs=25 avg_time=27.3736 ms
 Compute utilization = 1.22579 GFLOPS/s
 Memory utilization = 9.80636 GB/s
 Got: 16777216, expected: 16777216
 \end{lstlisting}
 
+\begin{lstlisting}[style=grayverbatim,caption={Output of the scalar product kernel for the float format.},language=bash,label={lst:scalar_product_float}]
+[benchmark] hpc_dot: warmup=5 runs=25 avg_time=27.3158 ms
+Compute utilization = 1.22839 GFLOPS/s
+Memory utilization = 4.91356 GB/s
+Got: 16777216, expected: 16777216
+\end{lstlisting}
 
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{../02cuda/02_dot_product/roofline_fp32_fp64.pdf}
+  \caption{Roofline plot for the scalar product kernel in single and double precision. The points corresponding to the kernels are highlighted in red.}
+  \label{fig:roofline_scalar_product_double_float}
+\end{figure}
+
+\newpage
 \section{Non-linear PDE mini-app with CUDA: The Fisher equation [35 Points]}
+The linear algebra kernels were implemented using the same approach as for the simple kernels, thus we do not report the implementation of the kernels in this report.\\
 
-output is 
+The implementation of the stencil operator for the finite difference discretization is reported in listing \ref{lst:stencil_operator}. The implementation of the kernel is based on the standard CUDA programming model, where each thread computes the value of the stencil operator for a single point in the grid. The kernel takes as input the old and new solution vectors, the right-hand side vector, the parameters $\alpha$ and $\beta$, the boundary conditions and the size of the grid. The kernel computes the value of the stencil operator for each point in the grid, taking into account the boundary conditions for the points on the boundaries of the grid.\\
+\begin{lstlisting}[style=grayverbatim,caption={CUDA kernel for the stencil operator.},language=C++,label={lst:stencil_operator}]
+__global__ void diffusion(real_t* const s_old,
+               real_t* const s_new,
+               real_t* f,
+               real_t alpha,
+               real_t beta,
+               real_t* const bndE,
+               real_t* const bndW,
+               real_t* const bndN,
+               real_t* const bndS,
+               int nx) {
+    
+    int iend = nx-1;
+    int jend = nx-1;
+
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int j = blockIdx.y * blockDim.y + threadIdx.y;
+    int idx = i + j * nx;
+
+    if (i > 0 && i < iend && j > 0 && j < jend) {
+        // interior points
+        f[idx] = -(4+alpha)*s_new[idx]
+                        + s_new[idx-1] + s_new[idx+1]
+                        + s_new[idx-nx] + s_new[idx+nx]
+                        + beta*s_new[idx]*(1-s_new[idx])
+                        + alpha*s_old[idx];
+    }
+
+    else if (i==iend && j > 0 && j < jend) {
+        // east interior boundary
+        f[idx] = -(4+alpha)*s_new[idx]
+                        + s_new[idx-1] + bndE[j]
+                        + s_new[idx-nx] + s_new[idx+nx]
+                        + beta*s_new[idx]*(1-s_new[idx])
+                        + alpha*s_old[idx];
+    }
+    
+    else if (i==1 && j > 0 && j < jend) {
+        // west interior boundary
+        f[idx] = -(4+alpha)*s_new[idx]
+                    + bndW[j] + s_new[idx+1]
+                    + s_new[idx-nx] + s_new[idx+nx]
+                    + beta*s_new[idx]*(1-s_new[idx])
+                    + alpha*s_old[idx];
+    }
+
+    else if(j==jend && i > 0 && i < iend) {
+        // north interior boundary
+        f[idx] = -(4+alpha)*s_new[idx]
+                        + s_new[idx-1] + s_new[idx+1]
+                        + s_new[idx-nx] + bndN[i]
+                        + beta*s_new[idx]*(1-s_new[idx])
+                        + alpha*s_old[idx];
+    }
+
+    else if(j==1 && i > 0 && i < iend) {
+        // south interior boundary
+        f[idx] = -(4+alpha)*s_new[idx]
+                    + s_new[idx-1] + s_new[idx+1]
+                    + bndS[i] + s_new[idx+nx]
+                    + beta*s_new[idx]*(1-s_new[idx])
+                    + alpha*s_old[idx];
+    }
+
+    else if (i==iend && j==jend) {
+        // NE corner
+        f[idx] = -(4+alpha)*s_new[idx]
+                    + s_new[idx-1] + bndE[j]
+                    + s_new[idx-nx] + bndN[i]
+                    + beta*s_new[idx]*(1-s_new[idx])
+                    + alpha*s_old[idx];
+    }
+    
+    else if (i==1 && j==jend) {
+        // NW corner
+        f[idx] = -(4+alpha)*s_new[idx]
+                + 0.1 + s_new[idx+1]
+                + s_new[idx-nx] + bndN[i]
+                + beta*s_new[idx]*(1-s_new[idx])
+                + alpha*s_old[idx];
+    }
+
+    else if(i == iend && j == 1) {
+        // SE corner
+        f[idx] = -(4+alpha)*s_new[idx]
+                + s_new[idx-1] + bndE[j]
+                + 0.1 + s_new[idx+nx]
+                + beta*s_new[idx]*(1-s_new[idx])
+                + alpha*s_old[idx];
+    }
+
+    else if(i == 1 && j == 1) {
+    // SW corner
+    f[idx] = -(4+alpha)*s_new[idx]
+        + bndW[j] + s_new[idx+1]
+        + bndS[i] + s_new[idx+nx]
+        + beta*s_new[idx]*(1-s_new[idx])
+        + alpha*s_old[idx];
+    }
+}
+\end{lstlisting}
+
+In listing \ref{lst:fisher} we can see the output of the benchmark for the Fisher equation mini-app. We can see that the simulation took $0.221755$ seconds and that the number of conjugate gradient iterations was $1516$ with a rate of $6836.37$ iters/second and the number of Newton iterations was $300$.\\
+
+The code works correctly as we can see from the plots in figure \ref{fig:solution} where we can see the initial and final solution of the simulation. This is consistent with the expected behavior of the Fisher equation, which describes the diffusion and growth of a population over time.
 \begin{lstlisting}[style=grayverbatim,caption={Output of the Fisher equation mini-app.},language=bash,label={lst:fisher}]
-  ripolo@eu-login-20:~/hpc_projects/project07/03_fisher$ srun --gpus=rtx_2080:1 ./main 128 100 0.005
-srun: job 192180 queued and waiting for resources
-srun: job 192180 has been allocated resources
-================================================================================
+====================================================================
                       Welcome to mini-stencil!
 version   :: CUDA
 mesh      :: 128 * 128 dx = 0.00787402
 time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
-================================================================================
---------------------------------------------------------------------------------
+====================================================================
+--------------------------------------------------------------------
 simulation took 0.221755 seconds
 1516 conjugate gradient iterations, at rate of 6836.37 iters/second
 300 Newton iterations
---------------------------------------------------------------------------------
+--------------------------------------------------------------------
 ### 128, 100, 1516, 300, 0.221755 ###
 Goodbye!
 \end{lstlisting}
 
 
-Using float the output cd
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../03_fisher/output_initial.pdf}
+        \caption{Initial solution}
+        \label{fig:initial}
+    \end{subfigure}%
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../03_fisher/output_final.pdf}
+        \caption{Final solution}
+        \label{fig:final}
+    \end{subfigure}
+    \caption{Comparison between initial and final solution}
+    \label{fig:solution}
+\end{figure}
+
 
 \printbibliography
 

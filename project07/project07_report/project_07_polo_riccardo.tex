@@ -35,21 +35,18 @@
 
 \serieheader{High-Performance Computing Lab for CSE}{2026}
             {Student: Riccardo Polo}
-            {Discussed with: FULL NAME}
+            {Discussed with: Giovanni Guidarini}
             {Solution for Project 7}{}
 \newline
 
 \assignmentpolicy
 
+\newpage
 \section{GPU architecture and performance characteristics [15 Points]}
 
 \subsection{Peak performance [5 Points]}
+Using the provided utility \texttt{deviceQuery} we can retrieve the characteristics of the NVIDIA GeForce RTX 2080 Ti GPU. The output of the utility is reported in listing \ref{lst:deviceQuery}.
 \begin{lstlisting}[style=grayverbatim,caption={Output of the \texttt{deviceQuery} CUDA sample.},language=bash,label={lst:deviceQuery}]
-ripolo@eu-login-23:~/cuda-samples/Samples/1_Utilities/deviceQuery/build$ srun --gpus=rtx_2080:1 ./deviceQuery
-srun: job 66431453 queued and waiting for resources
-srun: job 66431453 has been allocated resources
-/cluster/home/ripolo/cuda-samples/Samples/1_Utilities/deviceQuery/build/./deviceQuery Starting...
-
  CUDA Device Query (Runtime API) version (CUDART static linking)
 
 Detected 1 CUDA Capable device(s)
@@ -77,22 +74,6 @@ Device 0: "NVIDIA GeForce RTX 2080 Ti"
   Max dimension size of a grid size    (x,y,z): (2147483647, 65535, 65535)
   Maximum memory pitch:                          2147483647 bytes
   Texture alignment:                             512 bytes
-  Concurrent copy and kernel execution:          Yes with 3 copy engine(s)
-  Run time limit on kernels:                     No
-  Integrated GPU sharing Host Memory:            No
-  Support host page-locked memory mapping:       Yes
-  Alignment requirement for Surfaces:            Yes
-  Device has ECC support:                        Disabled
-  Device supports Unified Addressing (UVA):      Yes
-  Device supports Managed Memory:                Yes
-  Device supports Compute Preemption:            Yes
-  Supports Cooperative Kernel Launch:            Yes
-  Device PCI Domain ID / Bus ID / location ID:   0 / 34 / 0
-  Compute Mode:
-     < Default (multiple host threads can use ::cudaSetDevice() with device simultaneously) >
-
-deviceQuery, CUDA Driver = CUDART, CUDA Driver Version = 13.0, CUDA Runtime Version = 13.0, NumDevs = 1
-Result = PASS 
 \end{lstlisting}
 
 From listing \ref{lst:deviceQuery} we can derive that:
@@ -100,14 +81,15 @@ From listing \ref{lst:deviceQuery} we can derive that:
   \item The number of Streaming Multiprocessors (SMs) is $n_{\text{SMs}} = 68$
   \item The number of CUDA cores per SM is $n_{\text{cores per SM}} = 64$ 
   \item The GPU maximumclock frequency is $f = 1.545$ GHz
+  \item  The CUDA Compute Capability is $7.5$
 \end{itemize}
 
-From listing \ref{lst:deviceQuery} we can also see that the CUDA Compute Capability is $7.5$ and from reffff we get that
+From \cite{hpc_cuda_best_practices_guide} we can derive the following information about the number of floating point operations per FMA.
 \begin{itemize}
   \item For single precision (FP32) FMAs $TP_{\text{FP32}}=\frac{64}{64}=1$
   \item For double precision (FP64) FMAs $TP_{\text{FP64}}=\frac{64}{2}=32$
 \end{itemize}
-Thus we can caompute the theoretical peak performance of an NVIDIA GeForce RTX 2080 Ti for single and double precision as:
+Thus we can compute the theoretical peak performance of an NVIDIA GeForce RTX 2080 Ti for single and double precision as:
 \begin{align*}
   P_{\text{FP32}} &= n_{\text{SMs}} \cdot \frac{n_{\text{cores per SM}}}{TP_{\text{FP32}}} \cdot n_{FMA} \cdot f\\ &= 68 \cdot \frac{64}{1} \cdot 2 \text{FP32} \cdot 1.545 \text{GHz} = 13450,56 \text{ GFLOPS} \\
   P_{\text{FP64}} &= n_{\text{SMs}} \cdot \frac{n_{\text{cores per SM}}}{TP_{\text{FP64}}} \cdot n_{FMA} \cdot f \\ &= 68 \cdot \frac{64}{32} \cdot 2 \text{FP64} \cdot 1.545 \text{GHz} = 420,33  \text{ GFLOPS}
@@ -118,10 +100,12 @@ From Listing \ref{lst:deviceQuery} we can get the following informations
   \item Global Memory : $10821$ MiB $ =10.57 $ GiB
   \item L2 Cache Size: $5.5$ MiB
   \item L1 and Shared Memory per SM 96 KiB 
-  \item Read only memory 64 Kibytes
-  \item Registers 64 Ki registers per block, each holding 4 bytes (total 256 KB).
+  \item Read only memory $64$ KiB
+  \item Registers $64$ Ki registers per block, each holding $4$ bytes (total $256$ KiB).
+  \item Memory bus width: $W_{\text{mem}} = 352$ bits
+  \item Memory clock frequency: $f_{\text{mem}} = 7$ GHz
 \end{itemize}
-We obtain the memory bus width $W_{\text{mem}} = 352$ bits and memory clock frequency as $f_{\text{mem}} = 7$ GHz. So we can compute the (theoretical) peak memory bandwidth of a GPU as:
+So we can compute the (theoretical) peak memory bandwidth of a GPU as:
 \begin{align*}
   B_{\text{GPU}} &= \frac{W_{\text{mem}}}{8} \cdot f_{\text{mem}} \cdot 2\\
   &= \frac{352}{8} \cdot 7 \text{GHz} \cdot 2 = 616 \text{ GB/s}
@@ -135,12 +119,28 @@ $$ I_{\text{ridge, FP32}} = \frac{13450.56 \text{ GFLOPS}}{616 \text{ GB/s}} = 2
 For double precision:
 $$ I_{\text{ridge, FP64}} = \frac{420.33 \text{ GFLOPS}}{616 \text{ GB/s}} = 0.68 \text{ GLOP/byte}$$
 
-We can retrieve a roofline plot for the NVIDIA GeForce RTX 2080 Ti remembering that $P_{\text{attainable}} = \min{P_{\text{peak}}, B_{\text{GPU}} \cdot I_{\text{ridge}}}$
+We can retrieve a roofline plot for the NVIDIA GeForce RTX 2080 Ti remembering that $P_{\text{attainable}} = \min{P_{\text{peak}}, B_{\text{GPU}} \cdot I_{\text{ridge}}}$.\\
+In figure \ref{fig:roofline} we can see the roofline plot for the NVIDIA GeForce RTX 2080 Ti for single and double precision.
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{../01_performance/roofline_fp32_fp64.pdf}
+  \caption{Roofline plot for the NVIDIA GeForce RTX 2080 Ti for single and double precision.}
+  \label{fig:roofline}
+\end{figure}
 
+Thus, when the operational intensity of a kernel is lower than $I_{\text{ridge}}$ the kernel is memory bound, otherwise it is compute bound.
 \section{Introduction to CUDA [50 Points]}
 
 \subsection{Implement the simple kernels [30 Points]}
-For the double format we have following output:
+The CUDA implementation of the functions in the file \texttt{simple\_kernels.cu} is straightforward and it is based on the standard CUDA programming model. For everty function we first computed the correct index as \texttt{int i = blockIdx.x * blockDim.x + threadIdx.x} and then we check if the index is within the bounds of the input vectors by \texttt{if ( i < N )}. If the index is valid we perform the corresponding operation on the input vectors and we store the result in the output vector.\\
+In this case, since in the \texttt{benchmark.cu} file the number of blocks is computed as 
+\texttt{int blocks = (SIZE + threads - 1) / threads} and the number of threads per block is set to $256$, we do not need in principle to worrry about the number of threads and blocks, since the kernel will be launched with enough threads to cover all the elements of the input vectors. However, we need to check if the index is within the bounds of the input vectors to avoid out-of-bounds memory accesses.\\
+
+The output of the benchmark for the double format is reported in listing \ref{lst:simple_kernels_double} and for the float format in listing \ref{lst:simple_kernels_float}.\\
+From \ref{lst:simple_kernels_double} we can retrieve the points in table \ref{tab: simple_kernels_double} and from \ref{lst:simple_kernels_float} we can retrieve the points in table \ref{tab: simple_kernels_float}.
+
+
+
 \begin{lstlisting}[style=grayverbatim,caption={Output of the simple kernels for the double format.},language=bash,label={lst:simple_kernels_double}]
 ripolo@eu-login-11:~/hpc_projects/project07/02cuda/simple_kernels$ srun --gpus=rtx_2080:1 ./benchmark
 srun: job 171788 queued and waiting for resources
@@ -165,10 +165,42 @@ first = 0.1, last = 0.1, expected = 0.1
 Compute utilization = 69.1512 GFLOPS/s
 Memory utilization = 553.21 GB/s
 first = 1.5, last = 1.5, expected = 1.5
-ripolo@eu-login-11:~/hpc_projects/project07/02cuda/simple_kernels$
 \end{lstlisting}
 
-For float format we have the following output:
+\begin{table}[!h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Kernel & Compute Utilization (GFLOPS/s) & Arithmetic Intensity (FLOP/byte) \\
+\hline
+axpy & 46.2073 & $2/(3\cdot 8) $ \\
+add scaled diff & 52.704 & $3/(4\cdot 8) $ \\
+scaled diff & 46.1247 & $2/(3\cdot 8) $ \\
+scale & 33.9054 & $1/(2\cdot 8) $ \\
+linear combination & 69.1512 & $3/(3\cdot 8) $ \\
+\hline
+\end{tabular}
+\caption{Compute utilization and arithmetic intensity for the simple kernels in double precision.}
+\label{tab: simple_kernels_double}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Kernel & Compute Utilization (GFLOPS/s) & Arithmetic Intensity (FLOP/byte) \\
+\hline
+axpy & 91.7736 & $2/(3\cdot 4)$ \\
+add scaled diff & 104.988 & $3/(4\cdot 4)$ \\
+scaled diff & 91.798 & $2/(3\cdot 4)$ \\
+scale & 67.0205 & $1/(2\cdot 4)$ \\
+linear combination & 137.747 & $3/(3\cdot 4)$ \\
+\hline
+\end{tabular}
+\caption{Compute utilization and arithmetic intensity for the simple kernels in single precision.}
+\label{tab: simple_kernels_float}
+\end{table}
+
 \begin{lstlisting}[style=grayverbatim,caption={Output of the simple kernels for the float format.},language=bash,label={lst:simple_kernels_float}]
 ripolo@eu-login-11:~/hpc_projects/project07/02cuda/simple_kernels$ srun --gpus=rtx_2080:1 ./benchmark
 srun: job 172188 queued and waiting for resources
@@ -195,6 +227,14 @@ Memory utilization = 550.989 GB/s
 first = 1.5, last = 1.5, expected = 1.5
 \end{lstlisting}
 
+In figure \ref{fig:roofline} we can see the roofline plot for the simple kernels in single and double precision. We can see that all the kernels are memory bound, since their operational intensity is lower than the ridge point of the roofline plot. However, we can see that the compute utilization of the kernels in single precision is higher than the compute utilization of the kernels in double precision, this is because the peak performance of the GPU for single precision is higher than the peak performance for double precision.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{../01_performance/roofline_fp32_fp64.pdf}
+  \caption{Roofline plot for the simple kernels in single and double precision. The points corresponding to the kernels are highlighted in red.}
+  \label{fig:roofline_simple_kernels}
+\end{figure}
 \subsection{Implement the scalar product kernel [20 Points]}
 \begin{lstlisting}[style=grayverbatim,caption={Output of the scalar product kernel for the double format.},language=bash,label={lst:scalar_product_double}]
 ripolo@eu-login-20:~/hpc_projects/project07/02cuda/02_dot_product$ srun --gpus=rtx_2080:1 ./dot_prod
@@ -232,4 +272,7 @@ Goodbye!
 
 
 Using float the output cd
+
+\printbibliography
+
 \end{document}

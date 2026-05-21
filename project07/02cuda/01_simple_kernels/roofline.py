@@ -111,7 +111,10 @@ def main():
         ax.annotate(
             name,
             xy=(intensity_value, performance_value),
-            xytext=(1.08 * intensity_value, 1.08 * performance_value),
+            xytext=(8, 0),
+            textcoords="offset points",
+            ha="left",
+            va="center",
             color=color,
             fontsize=9,
             arrowprops=dict(arrowstyle="->", color=color, lw=0.9),
@@ -129,7 +132,10 @@ def main():
         ax.annotate(
             name,
             xy=(intensity_value, performance_value),
-            xytext=(1.08 * intensity_value, 1.08 * performance_value),
+            xytext=(8, 0),
+            textcoords="offset points",
+            ha="left",
+            va="center",
             color=color,
             fontsize=9,
             arrowprops=dict(arrowstyle="->", color=color, lw=0.9),

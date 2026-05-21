@@ -200,21 +200,21 @@ int main(int argc, char* argv[]) {
     tot_iters_newton = 0;
     unsigned int iters_cg = 0;
 
-        std::ofstream fid("output_initial.bov");
-    fid << "TIME: " << options.nt*options.dt << std::endl;
-        fid << "DATA_FILE: output_initial.bin" << std::endl;
-    fid << "DATA_SIZE: " << options.nx << " " << options.nx << " 1"
+    std::ofstream fid_initial("output_initial.bov");
+    fid_initial << "TIME: " << options.nt*options.dt << std::endl;
+    fid_initial << "DATA_FILE: output_initial.bin" << std::endl;
+    fid_initial << "DATA_SIZE: " << options.nx << " " << options.nx << " 1"
         << std::endl;
     if (sizeof(real_t) == sizeof(float)) {
-        fid << "DATA_FORMAT: FLOAT" << std::endl;
+        fid_initial << "DATA_FORMAT: FLOAT" << std::endl;
     } else if (sizeof(real_t) == sizeof(double)) {
-        fid << "DATA_FORMAT: DOUBLE" << std::endl;
+        fid_initial << "DATA_FORMAT: DOUBLE" << std::endl;
     }
-    fid << "VARIABLE: phi" << std::endl;
-    fid << "DATA_ENDIAN: LITTLE" << std::endl;
-    fid << "CENTERING: nodal" << std::endl;
-    fid << "BRICK_ORIGIN: " << "0. 0. 0." << std::endl;
-    fid << "BRICK_SIZE: " << (options.nx-1)*options.dx << ' '
+    fid_initial << "VARIABLE: phi" << std::endl;
+    fid_initial << "DATA_ENDIAN: LITTLE" << std::endl;
+    fid_initial << "CENTERING: nodal" << std::endl;
+    fid_initial << "BRICK_ORIGIN: " << "0. 0. 0." << std::endl;
+    fid_initial << "BRICK_SIZE: " << (options.nx-1)*options.dx << ' '
                           << (options.nx-1)*options.dx << ' '
                           << " 1.0"
         << std::endl;
@@ -297,21 +297,21 @@ int main(int argc, char* argv[]) {
     }
 
 
-    std::ofstream fid("output_final.bov");
-    fid << "TIME: " << options.nt*options.dt << std::endl;
-    fid << "DATA_FILE: output_final.bin" << std::endl;
-    fid << "DATA_SIZE: " << options.nx << " " << options.nx << " 1"
+    std::ofstream fid_final("output_final.bov");
+    fid_final << "TIME: " << options.nt*options.dt << std::endl;
+    fid_final << "DATA_FILE: output_final.bin" << std::endl;
+    fid_final << "DATA_SIZE: " << options.nx << " " << options.nx << " 1"
         << std::endl;
     if (sizeof(real_t) == sizeof(float)) {
-        fid << "DATA_FORMAT: FLOAT" << std::endl;
+        fid_final << "DATA_FORMAT: FLOAT" << std::endl;
     } else if (sizeof(real_t) == sizeof(double)) {
-        fid << "DATA_FORMAT: DOUBLE" << std::endl;
+        fid_final << "DATA_FORMAT: DOUBLE" << std::endl;
     }
-    fid << "VARIABLE: phi" << std::endl;
-    fid << "DATA_ENDIAN: LITTLE" << std::endl;
-    fid << "CENTERING: nodal" << std::endl;
-    fid << "BRICK_ORIGIN: " << "0. 0. 0." << std::endl;
-    fid << "BRICK_SIZE: " << (options.nx-1)*options.dx << ' '
+    fid_final << "VARIABLE: phi" << std::endl;
+    fid_final << "DATA_ENDIAN: LITTLE" << std::endl;
+    fid_final << "CENTERING: nodal" << std::endl;
+    fid_final << "BRICK_ORIGIN: " << "0. 0. 0." << std::endl;
+    fid_final << "BRICK_SIZE: " << (options.nx-1)*options.dx << ' '
                           << (options.nx-1)*options.dx << ' '
                           << " 1.0"
         << std::endl;

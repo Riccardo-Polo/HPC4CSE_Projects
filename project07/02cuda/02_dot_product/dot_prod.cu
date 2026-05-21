@@ -10,7 +10,7 @@
 #define SIZE 4096U * 4096U
 
 // typedef for real type
-typedef float real_t;
+typedef double real_t;
 
 void benchmark_kernel(const std::string&            name,
                       const std::function<void()>&  launch,

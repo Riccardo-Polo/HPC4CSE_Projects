@@ -56,10 +56,29 @@ __global__ void sqrt_kernel(real_t* d) {
 __global__ void hpc_dot(real_t* const x, real_t* const y, real_t* result,
                         size_t const N) {
     // TODO: put your hpc_dot from dot_product/dot_prod.cu
+    __shared__ real_t smem[256];
+    int tid = threadIdx.x;
     int i = blockIdx.x * blockDim.x + threadIdx.x;
-    int stride = blockDim.x * gridDim.x;
-    for (; i < N; i += stride) {
-        atomicAdd(result, x[i] * y[i]);
+
+    real_t local_sum = 0;
+    for (int idx = i ; idx < N; idx += blockDim.x * gridDim.x) {
+        local_sum += x[idx] * y[idx];
+    }
+
+    smem[tid] = local_sum;
+    __syncthreads();
+
+    for (int s = blockDim.x / 2; s > 0; s >>= 1) {
+        if (tid < s) {
+            smem[tid] += smem[tid + s];
+        }
+        __syncthreads();
+    }
+
+    __syncthreads();
+
+    if (tid == 0) {
+        atomicAdd(result, smem[0]);
     }
 }
 

@@ -25,7 +25,7 @@ __global__ void diffusion(real_t* const s_old,
                real_t* const bndN,
                real_t* const bndS,
                int nx) {
-    // TODO: study matrix add example in mat_add/mat_add.cu
+    
     int iend = nx-1;
     int jend = nx-1;
 

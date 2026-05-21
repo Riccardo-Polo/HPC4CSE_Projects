@@ -39,7 +39,7 @@ def read_bov_data(header):
 def plot_data(fname, save=True):
     """Plot data from VisIt BOV file."""
     header = read_bov_header(fname)
-    time = header[0]
+    time = header[0] 
     res = header[2]
     brick_origin = header[7]
     brick_size = header[8]
@@ -64,4 +64,5 @@ def plot_data(fname, save=True):
 
 
 if __name__ == "__main__":
-    plot_data("output.bov", save=True)
+    plot_data("output_final.bov", save=True)
+    plot_data("output_initial.bov", save=True)

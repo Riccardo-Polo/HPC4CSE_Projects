@@ -188,9 +188,36 @@ int main(int argc, char* argv[]) {
 
     cudaMemcpy(d_y_new, y_new.data(), nx*nx*sizeof(real_t), cudaMemcpyHostToDevice);
 
+    // write the initial condition to disk for visualization
+    {
+        FILE* output = fopen("output_initial.bin", "wb");
+        cudaMemcpy(y_new.data(), d_y_new, nx*nx*sizeof(real_t), cudaMemcpyDeviceToHost);
+        fwrite(y_new.data(), sizeof(real_t), nx * nx, output);
+        fclose(output);
+    }
+
     tot_iters_cg = 0;
     tot_iters_newton = 0;
     unsigned int iters_cg = 0;
+
+        std::ofstream fid("output_initial.bov");
+    fid << "TIME: " << options.nt*options.dt << std::endl;
+        fid << "DATA_FILE: output_initial.bin" << std::endl;
+    fid << "DATA_SIZE: " << options.nx << " " << options.nx << " 1"
+        << std::endl;
+    if (sizeof(real_t) == sizeof(float)) {
+        fid << "DATA_FORMAT: FLOAT" << std::endl;
+    } else if (sizeof(real_t) == sizeof(double)) {
+        fid << "DATA_FORMAT: DOUBLE" << std::endl;
+    }
+    fid << "VARIABLE: phi" << std::endl;
+    fid << "DATA_ENDIAN: LITTLE" << std::endl;
+    fid << "CENTERING: nodal" << std::endl;
+    fid << "BRICK_ORIGIN: " << "0. 0. 0." << std::endl;
+    fid << "BRICK_SIZE: " << (options.nx-1)*options.dx << ' '
+                          << (options.nx-1)*options.dx << ' '
+                          << " 1.0"
+        << std::endl;
 
     // start timer
     real_t time_start = walltime();
@@ -263,16 +290,16 @@ int main(int argc, char* argv[]) {
 
     // binary data
     {
-        FILE* output = fopen("output.bin", "w");
+        FILE* output = fopen("output_final.bin", "wb");
         cudaMemcpy(y_new.data(), d_y_new, nx*nx*sizeof(real_t), cudaMemcpyDeviceToHost);
         fwrite(y_new.data(), sizeof(real_t), nx * nx, output);
         fclose(output);
     }
 
 
-    std::ofstream fid("output.bov");
+    std::ofstream fid("output_final.bov");
     fid << "TIME: " << options.nt*options.dt << std::endl;
-    fid << "DATA_FILE: output.bin" << std::endl;
+    fid << "DATA_FILE: output_final.bin" << std::endl;
     fid << "DATA_SIZE: " << options.nx << " " << options.nx << " 1"
         << std::endl;
     if (sizeof(real_t) == sizeof(float)) {

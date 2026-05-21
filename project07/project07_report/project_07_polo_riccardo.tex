@@ -105,30 +105,37 @@ From listing \ref{lst:deviceQuery} we can derive that:
 From listing \ref{lst:deviceQuery} we can also see that the CUDA Compute Capability is $7.5$ and from reffff we get that
 \begin{itemize}
   \item For single precision (FP32) FMAs $TP_{\text{FP32}}=\frac{64}{64}=1$
-  \item For double precision (FP64) FMAs $TP_{\text{FP64}}=\frac{64}{32}=2$
+  \item For double precision (FP64) FMAs $TP_{\text{FP64}}=\frac{64}{2}=32$
 \end{itemize}
 Thus we can caompute the theoretical peak performance of an NVIDIA GeForce RTX 2080 Ti for single and double precision as:
 \begin{align*}
-  P_{\text{FP32}} &= n_{\text{SMs}} \cdot \frac{n_{\text{cores per SM}}}{TP_{\text{FP32}}} \cdot n_{FMA} \cdot f\\ &= 68 \cdot \frac{64}{1} \cdot 2 \text{FP32} \cdot 1.545 \text{GHz} = 6.73 \text{ TFLOPS} \\
-  P_{\text{FP64}} &= n_{\text{SMs}} \cdot \frac{n_{\text{cores per SM}}}{TP_{\text{FP64}}} \cdot n_{FMA} \cdot f \\ &= 68 \cdot \frac{64}{2} \cdot 2 \text{FP64} \cdot 1.545 \text{GHz} = 13.46 \text{ TFLOPS}
+  P_{\text{FP32}} &= n_{\text{SMs}} \cdot \frac{n_{\text{cores per SM}}}{TP_{\text{FP32}}} \cdot n_{FMA} \cdot f\\ &= 68 \cdot \frac{64}{1} \cdot 2 \text{FP32} \cdot 1.545 \text{GHz} = 13450,56 \text{ GFLOPS} \\
+  P_{\text{FP64}} &= n_{\text{SMs}} \cdot \frac{n_{\text{cores per SM}}}{TP_{\text{FP64}}} \cdot n_{FMA} \cdot f \\ &= 68 \cdot \frac{64}{32} \cdot 2 \text{FP64} \cdot 1.545 \text{GHz} = 420,33  \text{ GFLOPS}
 \end{align*}
 
-\begin{figure}[!h]
-  \centering
-  \includegraphics[width=0.8\textwidth]{../01_performance/GPU_true.pdf}
-  \caption{Simplified GPU architecture for an NVIDIA GeForce RTX 2080 Ti}
-\end{figure}
-\subsection{Memory hierarchies and bandwidth [5 Points]}
 From Listing \ref{lst:deviceQuery} we can get the following informations
 \begin{itemize}
-  \item Global Memory : $10,821$ GB
-  \item L2 Cache Size: $5.767$ MB
-  \item L1 and Shared Memory per SM
+  \item Global Memory : $10821$ MiB $ =10.57 $ GiB
+  \item L2 Cache Size: $5.5$ MiB
+  \item L1 and Shared Memory per SM 96 KiB 
+  \item Read only memory 64 Kibytes
+  \item Registers 64 Ki registers per block, each holding 4 bytes (total 256 KB).
 \end{itemize}
-
+We obtain the memory bus width $W_{\text{mem}} = 352$ bits and memory clock frequency as $f_{\text{mem}} = 7$ GHz. So we can compute the (theoretical) peak memory bandwidth of a GPU as:
+\begin{align*}
+  B_{\text{GPU}} &= \frac{W_{\text{mem}}}{8} \cdot f_{\text{mem}} \cdot 2\\
+  &= \frac{352}{8} \cdot 7 \text{GHz} \cdot 2 = 616 \text{ GB/s}
+\end{align*}
 
 \subsection{Performance model: A simple roofline model [5 Points]}
+Compute ridge points
+$$ I_{\text{ridge}} = \frac{P_{\text{peak}}}{B_{\text{GPU}}}$$
+For single precision:
+$$ I_{\text{ridge, FP32}} = \frac{13450.56 \text{ GFLOPS}}{616 \text{ GB/s}} = 21.83 \text{ GLOP/byte}$$
+For double precision:
+$$ I_{\text{ridge, FP64}} = \frac{420.33 \text{ GFLOPS}}{616 \text{ GB/s}} = 0.68 \text{ GLOP/byte}$$
 
+We can retrieve a roofline plot for the NVIDIA GeForce RTX 2080 Ti remembering that $P_{\text{attainable}} = \min{P_{\text{peak}}, B_{\text{GPU}} \cdot I_{\text{ridge}}}$
 
 \section{Introduction to CUDA [50 Points]}
 
@@ -189,9 +196,40 @@ first = 1.5, last = 1.5, expected = 1.5
 \end{lstlisting}
 
 \subsection{Implement the scalar product kernel [20 Points]}
+\begin{lstlisting}[style=grayverbatim,caption={Output of the scalar product kernel for the double format.},language=bash,label={lst:scalar_product_double}]
+ripolo@eu-login-20:~/hpc_projects/project07/02cuda/02_dot_product$ srun --gpus=rtx_2080:1 ./dot_prod
+srun: job 191159 queued and waiting for resources
+srun: job 191159 has been allocated resources
+[benchmark] hpc_dot: warmup=5 runs=25 avg_time=27.3736 ms
+Compute utilization = 1.22579 GFLOPS/s
+Memory utilization = 9.80636 GB/s
+Got: 16777216, expected: 16777216
+\end{lstlisting}
 
 
 \section{Non-linear PDE mini-app with CUDA: The Fisher equation [35 Points]}
 
+output is 
+\begin{lstlisting}[style=grayverbatim,caption={Output of the Fisher equation mini-app.},language=bash,label={lst:fisher}]
+  ripolo@eu-login-20:~/hpc_projects/project07/03_fisher$ srun --gpus=rtx_2080:1 ./main 128 100 0.005
+srun: job 192180 queued and waiting for resources
+srun: job 192180 has been allocated resources
+================================================================================
+                      Welcome to mini-stencil!
+version   :: CUDA
+mesh      :: 128 * 128 dx = 0.00787402
+time      :: 100 time steps from 0 .. 0.005
+iteration :: CG 300, Newton 50, tolerance 1e-06
+================================================================================
+--------------------------------------------------------------------------------
+simulation took 0.221755 seconds
+1516 conjugate gradient iterations, at rate of 6836.37 iters/second
+300 Newton iterations
+--------------------------------------------------------------------------------
+### 128, 100, 1516, 300, 0.221755 ###
+Goodbye!
+\end{lstlisting}
 
+
+Using float the output cd
 \end{document}

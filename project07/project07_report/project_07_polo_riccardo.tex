@@ -84,6 +84,7 @@ From listing \ref{lst:deviceQuery} we can derive that:
   \item  The CUDA Compute Capability is $7.5$
 \end{itemize}
 
+\subsection{Memory hierarchies and bandwidth [5 Points]}
 From \cite{hpc_cuda_best_practices_guide} we can derive the following information about the number of floating point operations per FMA.
 \begin{itemize}
   \item For single precision (FP32) FMAs $TP_{\text{FP32}}=\frac{64}{64}=1$
@@ -119,7 +120,9 @@ $$ I_{\text{ridge, FP32}} = \frac{13450.56 \text{ GFLOPS}}{616 \text{ GB/s}} = 2
 For double precision:
 $$ I_{\text{ridge, FP64}} = \frac{420.33 \text{ GFLOPS}}{616 \text{ GB/s}} = 0.68 \text{ GLOP/byte}$$
 
-We can retrieve a roofline plot for the NVIDIA GeForce RTX 2080 Ti remembering that $P_{\text{attainable}} = \min{P_{\text{peak}}, B_{\text{GPU}} \cdot I_{\text{ridge}}}$.\\
+We can retrieve a roofline plot for the NVIDIA GeForce RTX 2080 Ti remembering that $$P_{\mathrm{attainable}}(I)
+=
+\min \left( P_{\mathrm{peak}}, B_{\mathrm{GPU}} I \right)$$.\\
 In figure \ref{fig:roofline} we can see the roofline plot for the NVIDIA GeForce RTX 2080 Ti for single and double precision.
 \begin{figure}[!h]
   \centering
@@ -221,7 +224,16 @@ Memory utilization = 550.989 GB/s
 first = 1.5, last = 1.5, expected = 1.5
 \end{lstlisting}
 
-In figure \ref{fig:roofline_simple_kernels_double_float} we can see the roofline plot for the simple kernels in single and double precision. We can see that all the kernels are memory bound, since their operational intensity is lower than the ridge point of the roofline plot. However, we can see that the compute utilization of the kernels in single precision is higher than the compute utilization of the kernels in double precision, this is because the peak performance of the GPU for single precision is higher than the peak performance for double precision.
+Figure~\ref{fig:simple_roofline} shows that all simple linear algebra kernels are
+located far to the left of the ridge points. Therefore, their performance is
+limited by global memory bandwidth rather than by the peak floating-point
+throughput of the GPU. This is also consistent with the measured memory
+bandwidths, which are close to the theoretical peak bandwidth of
+\(616\,\mathrm{GB/s}\). The single-precision kernels reach higher GFLOP/s values
+than the corresponding double-precision kernels because each FP32 value occupies
+only 4 bytes instead of 8 bytes. Hence, for the same memory bandwidth, the
+operational intensity and the attainable floating-point rate are approximately
+twice as large.
 
 \begin{figure}
   \centering
@@ -230,51 +242,90 @@ In figure \ref{fig:roofline_simple_kernels_double_float} we can see the roofline
   \label{fig:roofline_simple_kernels_double_float}
 \end{figure}
 
-
 \subsection{Implement the scalar product kernel [20 Points]}
-The CUDA implementation of the scalar product kernel is based on the use of \texttt{atomicAdd} to perform the reduction of the partial sums computed by each thread. Each thread computes a partial sum of the scalar product for a subset of the input vectors and then uses \texttt{atomicAdd} to add its partial sum to a global variable that holds the final result.\\
-The implementation of the kernel is reported in listing \ref{lst:scalar_product_kernel}.
-\begin{lstlisting}[style=grayverbatim,caption={CUDA kernel for the scalar product.},language=C++,label={lst:scalar_product_kernel}]
+The first CUDA implementation of the scalar product is very simple: each thread
+computes some products and directly adds them to the final result using
+\texttt{atomicAdd}. This version is correct, but it is slow because many threads
+try to update the same memory location.
+
+\begin{lstlisting}[style=grayverbatim,caption={Simple CUDA kernel for the scalar product.},language=C++,label={lst:scalar_product_kernel}]
 int i = blockIdx.x * blockDim.x + threadIdx.x;
 int stride = blockDim.x * gridDim.x;
+
+// Each thread works on more than one element, jumping by the total
+// number of launched threads.
 for (; i < N; i += stride) {
+    // Simple but expensive: all threads update the same global result.
     atomicAdd(result, x[i] * y[i]);
 }
 \end{lstlisting}
-In this case we had to introduce a variable \texttt{stride} to allow each thread to compute the scalar product for a subset of the input vectors, since the number of threads launched by the kernel is not necessarily equal to the size of the input vectors. This is because the program is launched with a fixed number of threads per block and a fixed number of blocks (respectively $256$ and $7*68$), thus we need to allow each thread to compute the scalar product for multiple elements of the input vectors.\\
 
-In listing \ref{lst:scalar_product_double} we can see the output of the benchmark for the scalar product kernel in double precision. In table \ref{tab: scalar_product_double} we can see the compute and memory utilization for the scalar product kernel in double precision and in table \ref{tab: scalar_product_float} we can see the compute and memory utilization for the scalar product kernel in single precision.\\
+The optimized version first accumulates a local sum inside each thread. Then the
+partial sums of the threads in the same block are reduced using shared memory.
+Only one \texttt{atomicAdd} per block is performed, which strongly reduces the
+contention on the global result.\\
+An optimized version is the one in listing \ref{lst:scalar_product_kernel_optimized}.
+\begin{lstlisting}[style=grayverbatim,caption={Optimized CUDA kernel for the scalar product.},language=C++,label={lst:scalar_product_kernel_optimized}]
+__global__ void hpc_dot(real_t* const x, real_t* const y, real_t* result,
+                        size_t const N) {
+
+    // One partial sum per thread in the block.
+    __shared__ real_t smem[256];
+
+    int tid = threadIdx.x;
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int stride = blockDim.x * gridDim.x;
+
+    // Each thread accumulates its own part of the dot product.
+    real_t local_sum = 0.0;
+    for (int idx = i; idx < N; idx += stride) {
+        local_sum += x[idx] * y[idx];
+    }
+
+    // Store the thread-local result in shared memory.
+    smem[tid] = local_sum;
+    __syncthreads();
+
+    // Parallel reduction inside the block.
+    for (int s = blockDim.x / 2; s > 0; s >>= 1) {
+        if (tid < s) {
+            smem[tid] += smem[tid + s];
+        }
+        __syncthreads();
+    }
+
+    // Only one thread per block updates the global result.
+    if (tid == 0) {
+        atomicAdd(result, smem[0]);
+    }
+}
+\end{lstlisting}
+In table \ref{tab:scalar_product_double} we can see the compute and memory utilization for the scalar product kernel in double and single precision for both the implementations.
 
 \begin{table}[!h]
 \centering
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
-Precision  & Compute Utilization (GFLOPS/s) & Memory Utilization (GB/s) \\
+Version & Precision & Compute Utilization (GFLOP/s) & Arithmetic Intensity (FLOP/byte) \\
 \hline
-Double & 1.22579 & 2/(4*8) \\
-Float & 1.22839 & 2/(4*4) \\
+Simple atomic & Double & 1.22579 & $2/(4\cdot 8)$ \\
+Simple atomic & Float  & 1.22839 & $2/(4\cdot 4)$ \\
+Block reduction & Double & 71.948 & $2/(2\cdot 8)$ \\
+Block reduction & Float  & 140.226 & $2/(2\cdot 4)$ \\
 \hline
 \end{tabular}
+\caption{Roofline points for the scalar product kernel. The block-reduction version has a higher arithmetic intensity because the main global memory traffic is due to the two input vector reads, while the global atomic update is performed only once per block.}
+\label{tab:scalar_product_double}
 \end{table}
 
-\begin{lstlisting}[style=grayverbatim,caption={Output of the scalar product kernel for the double format.},language=bash,label={lst:scalar_product_double}]
-[benchmark] hpc_dot: warmup=5 runs=25 avg_time=27.3736 ms
-Compute utilization = 1.22579 GFLOPS/s
-Memory utilization = 9.80636 GB/s
-Got: 16777216, expected: 16777216
-\end{lstlisting}
 
-\begin{lstlisting}[style=grayverbatim,caption={Output of the scalar product kernel for the float format.},language=bash,label={lst:scalar_product_float}]
-[benchmark] hpc_dot: warmup=5 runs=25 avg_time=27.3158 ms
-Compute utilization = 1.22839 GFLOPS/s
-Memory utilization = 4.91356 GB/s
-Got: 16777216, expected: 16777216
-\end{lstlisting}
+
+
 
 \begin{figure}[!h]
   \centering
   \includegraphics[width=0.7\textwidth]{../02cuda/02_dot_product/roofline_fp32_fp64.pdf}
-  \caption{Roofline plot for the scalar product kernel in single and double precision. The points corresponding to the kernels are highlighted in red.}
+  \caption{Roofline plot for the scalar product kernel in single and double precision. The simple atomic version is very slow because many threads contend for the same global result. The block-reduction version moves upward in the roofline plot because it performs most of the reduction in shared memory and uses only one global atomic update per block.}
   \label{fig:roofline_scalar_product_double_float}
 \end{figure}
 
@@ -282,7 +333,13 @@ Got: 16777216, expected: 16777216
 \section{Non-linear PDE mini-app with CUDA: The Fisher equation [35 Points]}
 The linear algebra kernels were implemented using the same approach as for the simple kernels, thus we do not report the implementation of the kernels in this report.\\
 
-The implementation of the stencil operator for the finite difference discretization is reported in listing \ref{lst:stencil_operator}. The implementation of the kernel is based on the standard CUDA programming model, where each thread computes the value of the stencil operator for a single point in the grid. The kernel takes as input the old and new solution vectors, the right-hand side vector, the parameters $\alpha$ and $\beta$, the boundary conditions and the size of the grid. The kernel computes the value of the stencil operator for each point in the grid, taking into account the boundary conditions for the points on the boundaries of the grid.\\
+The implementation of the stencil operator is reported in listing
+\ref{lst:stencil_operator}. Each CUDA thread computes one grid point. The kernel
+first ignores the external layer of points that is not updated. Then it selects
+the four stencil values: for an internal neighbor it reads from \texttt{s\_new},
+while for a boundary neighbor it uses the corresponding boundary array. This
+keeps the formula compact and avoids writing separate cases for all edges and
+corners.
 \begin{lstlisting}[style=grayverbatim,caption={CUDA kernel for the stencil operator.},language=C++,label={lst:stencil_operator}]
 __global__ void diffusion(real_t* const s_old,
                real_t* const s_new,
@@ -295,97 +352,37 @@ __global__ void diffusion(real_t* const s_old,
                real_t* const bndS,
                int nx) {
     
-    int iend = nx-1;
-    int jend = nx-1;
+    int iend = nx - 1;
+    int jend = nx - 1;
 
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
+
+    // Ignore threads outside the active computational domain.
+    // The CUDA grid may contain more threads than needed.
+    if (i < 1 || i > iend || j < 1 || j > jend) {
+        return;
+    }
+
     int idx = i + j * nx;
+    real_t center = s_new[idx];
 
-    if (i > 0 && i < iend && j > 0 && j < jend) {
-        // interior points
-        f[idx] = -(4+alpha)*s_new[idx]
-                        + s_new[idx-1] + s_new[idx+1]
-                        + s_new[idx-nx] + s_new[idx+nx]
-                        + beta*s_new[idx]*(1-s_new[idx])
-                        + alpha*s_old[idx];
-    }
+    // Use boundary values when the stencil reaches the physical boundary.
+    // Otherwise, use the neighboring value from the grid.
+    real_t west  = (i == 1)    ? bndW[j] : s_new[idx - 1];
+    real_t east  = (i == iend) ? bndE[j] : s_new[idx + 1];
+    real_t south = (j == 1)    ? bndS[i] : s_new[idx - nx];
+    real_t north = (j == jend) ? bndN[i] : s_new[idx + nx];
 
-    else if (i==iend && j > 0 && j < jend) {
-        // east interior boundary
-        f[idx] = -(4+alpha)*s_new[idx]
-                        + s_new[idx-1] + bndE[j]
-                        + s_new[idx-nx] + s_new[idx+nx]
-                        + beta*s_new[idx]*(1-s_new[idx])
-                        + alpha*s_old[idx];
-    }
-    
-    else if (i==1 && j > 0 && j < jend) {
-        // west interior boundary
-        f[idx] = -(4+alpha)*s_new[idx]
-                    + bndW[j] + s_new[idx+1]
-                    + s_new[idx-nx] + s_new[idx+nx]
-                    + beta*s_new[idx]*(1-s_new[idx])
-                    + alpha*s_old[idx];
-    }
-
-    else if(j==jend && i > 0 && i < iend) {
-        // north interior boundary
-        f[idx] = -(4+alpha)*s_new[idx]
-                        + s_new[idx-1] + s_new[idx+1]
-                        + s_new[idx-nx] + bndN[i]
-                        + beta*s_new[idx]*(1-s_new[idx])
-                        + alpha*s_old[idx];
-    }
-
-    else if(j==1 && i > 0 && i < iend) {
-        // south interior boundary
-        f[idx] = -(4+alpha)*s_new[idx]
-                    + s_new[idx-1] + s_new[idx+1]
-                    + bndS[i] + s_new[idx+nx]
-                    + beta*s_new[idx]*(1-s_new[idx])
-                    + alpha*s_old[idx];
-    }
-
-    else if (i==iend && j==jend) {
-        // NE corner
-        f[idx] = -(4+alpha)*s_new[idx]
-                    + s_new[idx-1] + bndE[j]
-                    + s_new[idx-nx] + bndN[i]
-                    + beta*s_new[idx]*(1-s_new[idx])
-                    + alpha*s_old[idx];
-    }
-    
-    else if (i==1 && j==jend) {
-        // NW corner
-        f[idx] = -(4+alpha)*s_new[idx]
-                + 0.1 + s_new[idx+1]
-                + s_new[idx-nx] + bndN[i]
-                + beta*s_new[idx]*(1-s_new[idx])
-                + alpha*s_old[idx];
-    }
-
-    else if(i == iend && j == 1) {
-        // SE corner
-        f[idx] = -(4+alpha)*s_new[idx]
-                + s_new[idx-1] + bndE[j]
-                + 0.1 + s_new[idx+nx]
-                + beta*s_new[idx]*(1-s_new[idx])
-                + alpha*s_old[idx];
-    }
-
-    else if(i == 1 && j == 1) {
-    // SW corner
-    f[idx] = -(4+alpha)*s_new[idx]
-        + bndW[j] + s_new[idx+1]
-        + bndS[i] + s_new[idx+nx]
-        + beta*s_new[idx]*(1-s_new[idx])
-        + alpha*s_old[idx];
-    }
+    // Same stencil formula for internal points, edges, and corners.
+    f[idx] = -(4.0 + alpha) * center
+          + west + east + south + north
+          + beta * center * (1.0 - center)
+          + alpha * s_old[idx];
 }
 \end{lstlisting}
 
-In listing \ref{lst:fisher} we can see the output of the benchmark for the Fisher equation mini-app. We can see that the simulation took $0.221755$ seconds and that the number of conjugate gradient iterations was $1516$ with a rate of $6836.37$ iters/second and the number of Newton iterations was $300$.\\
+In listing \ref{lst:fisher} we can see the output of the benchmark for the Fisher equation mini-app.
 
 The code works correctly as we can see from the plots in figure \ref{fig:solution} where we can see the initial and final solution of the simulation. This is consistent with the expected behavior of the Fisher equation, which describes the diffusion and growth of a population over time.
 \begin{lstlisting}[style=grayverbatim,caption={Output of the Fisher equation mini-app.},language=bash,label={lst:fisher}]
@@ -397,11 +394,11 @@ time      :: 100 time steps from 0 .. 0.005
 iteration :: CG 300, Newton 50, tolerance 1e-06
 ====================================================================
 --------------------------------------------------------------------
-simulation took 0.221755 seconds
-1516 conjugate gradient iterations, at rate of 6836.37 iters/second
+simulation took 0.114354 seconds
+1516 conjugate gradient iterations, at rate of 13239.6  iters/second
 300 Newton iterations
 --------------------------------------------------------------------
-### 128, 100, 1516, 300, 0.221755 ###
+### 128, 100, 1514, 300, 0.114354 ###
 Goodbye!
 \end{lstlisting}
 

@@ -26,93 +26,29 @@ __global__ void diffusion(real_t* const s_old,
                real_t* const bndS,
                int nx) {
     
-    int iend = nx-1;
-    int jend = nx-1;
+    int iend = nx - 1;
+    int jend = nx - 1;
 
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (i < 1 || i > iend || j < 1 || j > jend) {
+        return;
+    }
+
     int idx = i + j * nx;
 
-    if (i > 0 && i < iend && j > 0 && j < jend) {
-        // interior points
-        f[idx] = -(4+alpha)*s_new[idx]
-                        + s_new[idx-1] + s_new[idx+1]
-                        + s_new[idx-nx] + s_new[idx+nx]
-                        + beta*s_new[idx]*(1-s_new[idx])
-                        + alpha*s_old[idx];
-    }
+    real_t center = s_new[idx];
 
-    else if (i==iend && j > 0 && j < jend) {
-        // east interior boundary
-        f[idx] = -(4+alpha)*s_new[idx]
-                        + s_new[idx-1] + bndE[j]
-                        + s_new[idx-nx] + s_new[idx+nx]
-                        + beta*s_new[idx]*(1-s_new[idx])
-                        + alpha*s_old[idx];
-    }
-    
-    else if (i==1 && j > 0 && j < jend) {
-        // west interior boundary
-        f[idx] = -(4+alpha)*s_new[idx]
-                    + bndW[j] + s_new[idx+1]
-                    + s_new[idx-nx] + s_new[idx+nx]
-                    + beta*s_new[idx]*(1-s_new[idx])
-                    + alpha*s_old[idx];
-    }
+    real_t west  = (i == 1)    ? bndW[j] : s_new[idx - 1];
+    real_t east  = (i == iend) ? bndE[j] : s_new[idx + 1];
+    real_t south = (j == 1)    ? bndS[i] : s_new[idx - nx];
+    real_t north = (j == jend) ? bndN[i] : s_new[idx + nx];
 
-    else if(j==jend && i > 0 && i < iend) {
-        // north interior boundary
-        f[idx] = -(4+alpha)*s_new[idx]
-                        + s_new[idx-1] + s_new[idx+1]
-                        + s_new[idx-nx] + bndN[i]
-                        + beta*s_new[idx]*(1-s_new[idx])
-                        + alpha*s_old[idx];
-    }
-
-    else if(j==1 && i > 0 && i < iend) {
-        // south interior boundary
-        f[idx] = -(4+alpha)*s_new[idx]
-                    + s_new[idx-1] + s_new[idx+1]
-                    + bndS[i] + s_new[idx+nx]
-                    + beta*s_new[idx]*(1-s_new[idx])
-                    + alpha*s_old[idx];
-    }
-
-    else if (i==iend && j==jend) {
-        // NE corner
-        f[idx] = -(4+alpha)*s_new[idx]
-                    + s_new[idx-1] + bndE[j]
-                    + s_new[idx-nx] + bndN[i]
-                    + beta*s_new[idx]*(1-s_new[idx])
-                    + alpha*s_old[idx];
-    }
-    
-    else if (i==1 && j==jend) {
-        // NW corner
-        f[idx] = -(4+alpha)*s_new[idx]
-                + 0.1 + s_new[idx+1]
-                + s_new[idx-nx] + bndN[i]
-                + beta*s_new[idx]*(1-s_new[idx])
-                + alpha*s_old[idx];
-    }
-
-    else if(i == iend && j == 1) {
-        // SE corner
-        f[idx] = -(4+alpha)*s_new[idx]
-                + s_new[idx-1] + bndE[j]
-                + 0.1 + s_new[idx+nx]
-                + beta*s_new[idx]*(1-s_new[idx])
-                + alpha*s_old[idx];
-    }
-
-    else if(i == 1 && j == 1) {
-    // SW corner
-    f[idx] = -(4+alpha)*s_new[idx]
-        + bndW[j] + s_new[idx+1]
-        + bndS[i] + s_new[idx+nx]
-        + beta*s_new[idx]*(1-s_new[idx])
-        + alpha*s_old[idx];
-    }
+    f[idx] = -(4.0 + alpha) * center
+           + west + east + south + north
+           + beta * center * (1.0 - center)
+           + alpha * s_old[idx];
 }
 
 } // namespace operators
